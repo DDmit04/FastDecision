@@ -56,9 +56,9 @@
                 selectedOptionIndex: -1,
             }
         },
-        created() {
+        async created() {
             this.getCurrentVoting()
-            connectWebsocket(this.votingId)
+            await connectWebsocket(this.votingId)
         },
         destroyed() {
             disconnectWebsocket()

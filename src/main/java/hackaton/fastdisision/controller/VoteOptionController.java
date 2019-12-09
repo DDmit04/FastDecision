@@ -27,7 +27,7 @@ public class VoteOptionController {
 
     @MessageMapping("/voting-websocket/{votingId}")
     @SendTo("/topic/voting/{votingId}")
-    @JsonView(VotingView.MinimalData.class)
+    @JsonView(VotingView.CoreData.class)
     public VoteOption doVote(@DestinationVariable Long votingId, Long optionId, SimpMessageHeaderAccessor ipHandshakeInterceptor) {
         VoteOption voteOption = optionRepo.findVoteOptionById(optionId);
         Voting voting = voteRepo.findVotingById(votingId);

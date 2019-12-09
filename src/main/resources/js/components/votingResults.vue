@@ -63,14 +63,19 @@
                 totalVotes: 0,
             }
         },
-        created() {
+        async created() {
             this.getCurrentVoting()
-            connectWebsocket(this.votingId)
+            await connectWebsocket(this.votingId)
         },
         mounted() {
-            addHandler((data) => {
-                let optionId = this.currentVoting.voteOptions.findIndex(option => option.id == data.id)
-                this.currentVoting.voteOptions[optionId].pluses = data.pluses
+            addHandler(async (data) => {
+                if(this.currentVoting == null) {
+                    await this.getCurrentVoting()
+                }
+                console.log(data)
+                console.log(this.currentVoting)
+                let optionId = await this.currentVoting.voteOptions.findIndex(option => option.id == data.id)
+                this.currentVoting.voteOptions[optionId].pluses = await data.pluses
             })
         },
         destroyed() {
