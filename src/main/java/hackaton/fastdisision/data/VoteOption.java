@@ -24,7 +24,7 @@ public class VoteOption {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name="votedIps1", joinColumns=@JoinColumn(name="vote_option_id"))
-    @JsonView(VotingView.FullData.class)
+    @JsonView(VotingView.CoreData.class)
     private List<String> votedIps = new ArrayList<>();
 
     @ManyToOne
