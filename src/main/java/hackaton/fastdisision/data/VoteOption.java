@@ -1,6 +1,8 @@
 package hackaton.fastdisision.data;
 
 
+import com.fasterxml.jackson.annotation.JsonView;
+import hackaton.fastdisision.views.VotingView;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -12,18 +14,23 @@ public class VoteOption {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonView(VotingView.Id.class)
     private long id;
 
-    @ManyToOne
-    @JoinColumn(name="vote_id")
-    private Vote vote;
-
+    @JsonView(VotingView.CoreData.class)
     private String voteDiscription;
+    @JsonView(VotingView.MinimalData.class)
     private long pluses;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name="votedIps1", joinColumns=@JoinColumn(name="vote_option_id"))
+    @JsonView(VotingView.FullData.class)
     private List<String> votedIps = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name="vote_id")
+    @JsonView(VotingView.FullData.class)
+    private Voting voting;
 
     @Override
     public boolean equals(Object o) {

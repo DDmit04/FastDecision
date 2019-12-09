@@ -19,7 +19,7 @@
     "webstomp-client": "^1.2.6"
   },
   "scripts": {
-    "start": "webpack-dev-server",
+    "start": "webpack-dev-server --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js"
   },
   "devDependencies": {

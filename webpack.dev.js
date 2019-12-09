@@ -8,7 +8,7 @@ module.exports = merge(common, {
         contentBase: './dist',
         compress: true,
         port: 8002,
-        allowedHots: [
+        allowedHosts: [
             'localhost:9002'
         ],
         stats: 'minimal',
