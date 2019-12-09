@@ -11,7 +11,7 @@ public class MainController {
     @Value("${spring.profiles.active:prod}")
     private String profile;
 
-    @GetMapping
+    @GetMapping("/")
     public String main(Model model) {
         boolean isDevMode = true;
         if(profile.equals("prod")) {
