@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-toolbar>
-            <v-toolbar-title @click="goToMain" class="font-italic">Fast Decision</v-toolbar-title>
+            <v-toolbar-title class="font-italic"><router-link :to="{ path: '/' }">Fast Decision</router-link></v-toolbar-title>
         </v-toolbar>
         <v-app>
             <router-view/>
@@ -14,13 +14,8 @@
         data() {
             return {}
         },
-        methods: {
-            goToMain() {
-                this.$router.push('/')
-            }
-        }
     }
 </script>
 <style>
-
+    a { text-decoration: none }
 </style>

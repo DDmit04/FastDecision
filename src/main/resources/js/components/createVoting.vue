@@ -1,17 +1,24 @@
 <template>
     <div>
         <v-container>
-            <v-card>
-                <v-card-title>
-                    <v-text-field v-model="newVote.voteTitle" placeholder="Vote title"/>
-                </v-card-title>
-                <v-card-text>
-                    <v-text-field v-for="(option, index) in newVote.voteOptions" :key="index" v-model="option.voteDiscription"
-                                  placeholder="Some option"/>
-                    <v-btn @click="addOption">add other option</v-btn>
-                    <v-btn @click="addVoting" :disabled="!voteReadyToAdd" :block=true :loading="buttonLoading">add voting</v-btn>
-                </v-card-text>
-            </v-card>
+            <v-col lg="8" sm="12">
+                <v-card>
+                    <v-card-title>
+                        <v-text-field v-model="newVote.voteTitle" placeholder="Vote title"/>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-text-field v-for="(option, index) in newVote.voteOptions" :key="index"
+                                      v-model="option.voteDiscription"
+                                      placeholder="Some option"
+                                      @click="checkOptionCount(index)"/>
+                    </v-card-text>
+                    <v-card-actions class="pa-3">
+                        <v-btn color="primary" @click="addVoting" :disabled="!voteReadyToAdd" :block=true :loading="buttonLoading">
+                            add voting
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
         </v-container>
     </div>
 </template>
@@ -24,6 +31,7 @@
         data() {
             return {
                 buttonLoading: false,
+                lastOptionIndex: 1,
                 newVote: {
                     id: null,
                     voted: false,
@@ -51,7 +59,7 @@
             voteReadyToAdd() {
                 let counter = 0
                 this.newVote.voteOptions.forEach(opt => {
-                    if(opt.voteDiscription.trim() != '') {
+                    if (opt.voteDiscription.trim() != '') {
                         counter++
                     }
                 })
@@ -59,6 +67,12 @@
             }
         },
         methods: {
+            checkOptionCount(index) {
+                if (index == this.lastOptionIndex) {
+                    this.addOption()
+                    this.lastOptionIndex++
+                }
+            },
             async addVoting() {
                 this.buttonLoading = true
                 this.newVote.voteOptions = this.newVote.voteOptions.filter(option => option.voteDiscription != '')
