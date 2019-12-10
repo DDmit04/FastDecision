@@ -35,7 +35,12 @@
                         </div>
                     </v-card-text>
                     <v-card-actions class="pa-3">
-                        <v-btn color="primary" :x-large="true" :disabled="selectedOptionIndex == -1" @click="doVote()">vote!</v-btn>
+                        <v-btn color="primary" :x-large="true" :disabled="selectedOptionIndex == -1" @click="doVote()">
+                            vote!
+                        </v-btn>
+                        <v-btn color="secondary" :x-large="true" @click="goToResults()">
+                            results
+                        </v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -74,10 +79,12 @@
                     await this.$router.push({name: 'page404'})
                 } else {
                     const data = await response.json()
-                    console.log(data)
                     this.currentVoting = data
                 }
             },
+            goToResults() {
+                this.$router.push({name: 'votingResults', params: {votingId: this.votingId}})
+            }
         }
     }
 </script>

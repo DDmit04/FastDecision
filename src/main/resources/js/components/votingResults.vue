@@ -72,8 +72,6 @@
                 if(this.currentVoting == null) {
                     await this.getCurrentVoting()
                 }
-                console.log(data)
-                console.log(this.currentVoting)
                 let optionId = await this.currentVoting.voteOptions.findIndex(option => option.id == data.id)
                 this.currentVoting.voteOptions[optionId].pluses = await data.pluses
             })

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-container>
+        <v-container @keyup.enter="tryAddVoting()">
             <v-col lg="8" sm="12">
                 <v-card>
                     <v-card-title>
@@ -10,7 +10,9 @@
                         <v-text-field v-for="(option, index) in newVote.voteOptions" :key="index"
                                       v-model="option.voteDiscription"
                                       placeholder="Some option"
-                                      @click="checkOptionCount(index)"/>
+                                      @click="checkOptionCount(index)"
+                                      @focus="checkOptionCount(index)"
+                        />
                     </v-card-text>
                     <v-card-actions class="pa-3">
                         <v-btn color="primary" @click="addVoting" :disabled="!voteReadyToAdd" :block=true :loading="buttonLoading">
@@ -57,13 +59,15 @@
         },
         computed: {
             voteReadyToAdd() {
+                let isReady = false
                 let counter = 0
                 this.newVote.voteOptions.forEach(opt => {
                     if (opt.voteDiscription.trim() != '') {
                         counter++
                     }
                 })
-                return (this.newVote.voteTitle.trim() != '' && counter >= 2)
+                isReady = this.newVote.voteTitle.trim() != '' && counter >= 2
+                return isReady
             }
         },
         methods: {
@@ -71,6 +75,11 @@
                 if (index == this.lastOptionIndex) {
                     this.addOption()
                     this.lastOptionIndex++
+                }
+            },
+            tryAddVoting() {
+                if(this.voteReadyToAdd) {
+                    this.addVoting()
                 }
             },
             async addVoting() {

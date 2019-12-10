@@ -23,8 +23,8 @@ public class VoteOption {
     private long pluses;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name="votedIps1", joinColumns=@JoinColumn(name="vote_option_id"))
-    @JsonView(VotingView.CoreData.class)
+    @CollectionTable(name="voted_users_ips", joinColumns=@JoinColumn(name="vote_option_id"))
+    @JsonView(VotingView.FullData.class)
     private List<String> votedIps = new ArrayList<>();
 
     @ManyToOne
