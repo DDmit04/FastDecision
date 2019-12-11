@@ -62,7 +62,7 @@
             }
         },
         async created() {
-            this.getCurrentVoting()
+            await this.getCurrentVoting()
             await connectWebsocket(this.votingId)
         },
         destroyed() {
@@ -76,7 +76,7 @@
             async getCurrentVoting() {
                 const response = await api.getOne(this.votingId)
                 if (response.body == '' || !response.ok) {
-                    await this.$router.push({name: 'page404'})
+                    await this.$router.push({name: 'pageNotFound'})
                 } else {
                     const data = await response.json()
                     this.currentVoting = data

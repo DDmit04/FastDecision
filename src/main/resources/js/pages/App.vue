@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-toolbar>
-            <v-toolbar-title class="font-italic"><router-link :to="{ path: '/' }">Fast Decision</router-link></v-toolbar-title>
+            <v-toolbar-title class="font-italic"><router-link :to="{ name: 'main' }">Fast Decision</router-link></v-toolbar-title>
         </v-toolbar>
         <v-app>
             <router-view/>

@@ -28,6 +28,7 @@
 <script>
     import api from '../api/server'
 
+
     export default {
         name: "createVoting",
         data() {
