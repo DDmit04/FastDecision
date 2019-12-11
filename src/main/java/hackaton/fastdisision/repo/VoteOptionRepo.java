@@ -1,14 +1,18 @@
 package hackaton.fastdisision.repo;
 
 import hackaton.fastdisision.data.VoteOption;
+import hackaton.fastdisision.data.Voting;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 
-public interface VoteOptionRepo extends JpaRepository<VoteOption, Long> {
+import java.util.List;
+import java.util.Optional;
+
+public interface VoteOptionRepo extends CrudRepository<VoteOption, Long> {
 
     @EntityGraph(attributePaths = { "voting" })
-    @Query("from VoteOption vo where vo.id = :id")
-    VoteOption findVoteOptionById(Long id);
+    Optional<VoteOption> findById(Long id);
 
 }

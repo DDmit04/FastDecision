@@ -25,8 +25,8 @@ public class VoteOptionController {
     @SendTo("/topic/voting/{votingId}")
     @JsonView(VotingView.CoreData.class)
     public VoteOption doVote(@DestinationVariable Long votingId, Long optionId, SimpMessageHeaderAccessor ipHandshakeInterceptor) {
-        String userIp = (String) ipHandshakeInterceptor.getSessionAttributes().get("ip");
-        VoteOption voteOption = voteOptionService.acceptVote(optionId, userIp);;
+        String votedIp = (String) ipHandshakeInterceptor.getSessionAttributes().get("ip");
+        VoteOption voteOption = voteOptionService.acceptVote(optionId, votedIp);;
         return voteOption;
     }
 }

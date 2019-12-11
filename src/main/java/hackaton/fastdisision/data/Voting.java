@@ -7,6 +7,8 @@ import hackaton.fastdisision.views.VotingView;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -26,9 +28,15 @@ public class Voting {
     private int totalVotes;
     @JsonView(VotingView.CoreData.class)
     private String voteTitle;
+    @JsonView(VotingView.FullData.class)
+    private LocalDateTime creationDate;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name="voted_users_ips", joinColumns=@JoinColumn(name="vote_option_id"))
+    @JsonView(VotingView.FullData.class)
+    private List<String> votedIps = new ArrayList<>();
 
-    @OneToMany(mappedBy="voting", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="voting", cascade=CascadeType.ALL)
     @JsonView(VotingView.CoreData.class)
     private List<VoteOption> voteOptions;
 

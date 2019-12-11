@@ -3,6 +3,7 @@ package hackaton.fastdisision.service;
 import hackaton.fastdisision.data.VoteOption;
 import hackaton.fastdisision.data.Voting;
 import hackaton.fastdisision.repo.VoteOptionRepo;
+import hackaton.fastdisision.repo.VotingRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,28 +11,28 @@ import org.springframework.stereotype.Service;
 public class VoteOptionService {
 
     private VoteOptionRepo voteOptionRepo;
+    private VotingRepo votingRepo;
 
     @Autowired
-    public VoteOptionService(VoteOptionRepo voteOptionRepo) {
+    public VoteOptionService(VoteOptionRepo voteOptionRepo, VotingRepo votingRepo) {
         this.voteOptionRepo = voteOptionRepo;
+        this.votingRepo = votingRepo;
     }
 
-    public VoteOption acceptVote(long optionId, String userIp) {
-        VoteOption voteOption = voteOptionRepo.findVoteOptionById(optionId);
+    public VoteOption acceptVote(long optionId, String votedIp) {
+        VoteOption voteOption = voteOptionRepo.findById(optionId).get();
         Voting voting = voteOption.getVoting();
-        int ipIndex = 0;
-        for(VoteOption voteOpt : voting.getVoteOptions()) {
-            ipIndex = voteOpt.getVotedIps().indexOf(userIp);
-            if(ipIndex != -1) {
-                break;
-            }
-        }
-        if(ipIndex == -1) {
-            voteOption.getVotedIps().add(userIp);
+        if(voting.getVotedIps().indexOf(votedIp) == -1) {
+            addVotedIp(voting, votedIp);
             voteOption.setPluses(voteOption.getPluses() + 1);
-            voting.setTotalVotes(voting.getTotalVotes() + 1);
         }
         return voteOptionRepo.save(voteOption);
+    }
+
+    private void addVotedIp(Voting voting, String votedIp) {
+        voting.setTotalVotes(voting.getTotalVotes() + 1);
+        voting.getVotedIps().add(votedIp);
+        votingRepo.save(voting);
     }
 
 }
