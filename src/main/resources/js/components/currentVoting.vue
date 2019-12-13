@@ -10,32 +10,32 @@
                 ></v-progress-circular>
             </v-layout>
             <v-col v-else lg="8" sm="12">
-                <v-card>
+                <v-card color="primary">
                     <v-card-title class="title">
                         {{currentVoting.voteTitle}}
                     </v-card-title>
-                    <v-divider></v-divider>
+                    <v-divider color="secondary"></v-divider>
                     <v-card-text class="mx-3 mt-3">
                         <div class="py-2" v-for="(option, index) in currentVoting.voteOptions" :key="index">
                             <v-row align="center">
-                                <v-col class="font-weight-medium">
+                                <v-col color="secondary" class="font-weight-medium">
                                     {{option.voteDiscription}}
                                 </v-col>
                                 <v-col>
                                     <v-checkbox
+                                            color="success"
                                             hide-details
-                                            color="orange"
                                             :value="index == selectedOptionIndex"
                                             @click="selectedOptionIndex = index"
-                                            class="mr-2 mt-0"
+                                            class="white--text mr-2 mt-0"
                                     ></v-checkbox>
                                 </v-col>
                             </v-row>
-                            <v-divider></v-divider>
+                            <v-divider color="secondary"></v-divider>
                         </div>
                     </v-card-text>
                     <v-card-actions class="pa-3">
-                        <v-btn color="primary" :x-large="true" :disabled="selectedOptionIndex == -1" @click="doVote()">
+                        <v-btn class="white--text" color="accent" :x-large="true" :disabled="selectedOptionIndex == -1" @click="doVote()">
                             vote!
                         </v-btn>
                         <v-btn color="secondary" :x-large="true" @click="goToResults()">

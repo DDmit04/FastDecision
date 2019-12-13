@@ -6,24 +6,24 @@
                     <v-progress-circular
                             :size="70"
                             :width="7"
-                            color="green"
+                            color="primary"
                             indeterminate
                     ></v-progress-circular>
                 </v-layout>
                 <v-col v-else lg="8" sm="12">
-                    <v-card>
+                    <v-card color="primary">
                         <v-card-title class="title">
                             {{currentVoting.voteTitle}}
                             <v-layout justify-end>
                                 total votes: {{getTotalVotes}}
                             </v-layout>
                         </v-card-title>
-                        <v-divider></v-divider>
+                        <v-divider color="secondary"></v-divider>
                         <v-card-text class="ma-3">
                             <div class="py-2" v-for="(option, index) in currentVoting.voteOptions" :key="index">
-                                <v-row align="center">
-                                    <v-col cols="10" class="subtitle-1 pa-0">
-                                        <v-layout justify-space-between class="font-weight-medium subtitle-1">
+                                <v-row>
+                                    <v-col cols="10" class="pa-0">
+                                        <v-layout justify-space-between class="font-weight-black subtitle-1">
                                             <div>
                                                 {{option.voteDiscription}}
                                             </div>
@@ -31,12 +31,13 @@
                                                 {{option.pluses}} votes
                                             </div>
                                         </v-layout>
-                                        <v-divider></v-divider>
+                                        <v-divider color="secondary"></v-divider>
                                     </v-col>
                                 </v-row>
                                 <v-row align="center">
                                     <v-col cols="10">
                                         <v-progress-linear height="30" buffer-value="100"
+                                                           color="warning"
                                                            :value="calcLine(option.pluses)">
                                         </v-progress-linear>
                                     </v-col>
@@ -48,13 +49,10 @@
                         </v-card-text>
                     </v-card>
                 </v-col>
-                <v-col>
-                    <vc-donut :hasLegend="true" :thickness="80" :sections="sections"/>
+                <v-col v-if="currentVoting != null">
+                    <vc-donut :hasLegend="true" :thickness="100" :sections="sections"/>
                 </v-col>
             </v-row>
-            <div v-for="(sec, index) in sections">
-                <v-btn @click="test1(1)"> test {{index}}}</v-btn>
-            </div>
         </v-container>
     </div>
 </template>
@@ -75,13 +73,13 @@
         },
         watch: {
             'currentVoting.totalVotes'(nevVal, oldVal) {
-                this.sections = this.calcDonut
                 this.sortVoteOptions()
+                this.sections = this.calcDonut
             }
         },
         async created() {
-            await this.getCurrentVoting()
             await connectWebsocket(this.votingId)
+            await this.getCurrentVoting()
         },
         mounted() {
             addHandler(async (data) => {
@@ -95,15 +93,24 @@
         computed: {
             calcDonut() {
                 let sections = []
-                let secValue = 0
-                let secSum = 0
-                this.currentVoting.voteOptions.forEach(opt => {
-                    secValue = Math.floor(this.calcLine(opt.pluses))
-                    secSum += secValue
-                    sections.push({label: opt.voteDiscription, value: secValue})
+                let sectionValue = 0
+                let sectionsSum = 0
+                let sortedVotingCopy = this.currentVoting.voteOptions.slice().sort((first, sec) => sec.id - first.id)
+                sortedVotingCopy.forEach(opt => {
+                    sectionValue = Math.floor(this.calcLine(opt.pluses))
+                    sectionsSum += sectionValue
+                    sections.push({label: opt.voteDiscription, value: sectionValue})
                 })
-                if(secSum < 100) {
-                    sections[0].value += 100 - secSum
+                if(sectionsSum < 100) {
+                    let maxInd = -1
+                    let max = -1
+                    sections.forEach((sec, i) => {
+                        if(sec.value > max) {
+                            maxInd = i
+                            max = sec.value
+                        }
+                    })
+                    sections[maxInd].value += (100 - sectionsSum)
                 }
                 return sections;
             },

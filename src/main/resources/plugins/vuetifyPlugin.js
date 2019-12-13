@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import colors from 'vuetify/lib/util/colors'
 import Vuetify, {
     VApp, VAppBar, VAppBarNavIcon,
     VAlert,
@@ -78,7 +79,6 @@ import Vuetify, {
 } from 'vuetify/lib'
 import 'vuetify/dist/vuetify.min.css'
 
-
 Vue.use(Vuetify, {
     components: {
         VApp, VAppBar, VAppBarNavIcon,
@@ -156,10 +156,34 @@ Vue.use(Vuetify, {
         VTreeview, VTreeviewNode,
         VWindow, VWindowItem,
         // transitions
-    }
+    },
 })
-
 
 const opts = {}
 
-export default new Vuetify(opts)
+export default new Vuetify({
+    theme: {
+        themes: {
+            light: {
+                primary: colors.deepPurple.lighten4, //card color
+                secondary: colors.black, //common color
+                accent: colors.deepPurple.accent4, //active button color
+                error: colors.black, //not used color
+                warning: colors.deepPurple.darken3, //process line color
+                info: colors.teal.lighten2, //overlay color
+                success: colors.purple.darken3, //not used color
+                background: colors.grey.lighten2,
+            },
+            dark: {
+                primary: colors.orange.darken2,
+                secondary: colors.white,
+                accent: colors.red.accent4,
+                error: colors.white,
+                warning: colors.yellow.accent4,
+                info: colors.grey.darken4,
+                success: colors.green.accent4,
+                background: colors.grey.darken3,
+            },
+        },
+    },
+})
