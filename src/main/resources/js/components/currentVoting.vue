@@ -5,7 +5,7 @@
                 <v-progress-circular
                         :size="70"
                         :width="7"
-                        color="green"
+                        color="success"
                         indeterminate
                 ></v-progress-circular>
             </v-layout>
@@ -38,7 +38,7 @@
                         <v-btn class="white--text" color="accent" :x-large="true" :disabled="selectedOptionIndex == -1" @click="doVote()">
                             vote!
                         </v-btn>
-                        <v-btn color="secondary" :x-large="true" @click="goToResults()">
+                        <v-btn class="white--text" color="secondary" :x-large="true" @click="goToResults()">
                             results
                         </v-btn>
                     </v-card-actions>
@@ -57,6 +57,7 @@
         name: "currentVoting",
         data() {
             return {
+                themeColor: 'black',
                 currentVoting: null,
                 selectedOptionIndex: -1,
             }
@@ -90,5 +91,4 @@
 </script>
 
 <style scoped>
-
 </style>

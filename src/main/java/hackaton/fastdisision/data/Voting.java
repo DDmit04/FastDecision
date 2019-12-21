@@ -26,10 +26,15 @@ public class Voting {
 
     @JsonView(VotingView.MinimalData.class)
     private int totalVotes;
-    @JsonView(VotingView.CoreData.class)
+
+    @JsonView(VotingView.MinimalData.class)
     private String voteTitle;
+
     @JsonView(VotingView.FullData.class)
     private LocalDateTime creationDate;
+
+    @JsonView(VotingView.FullData.class)
+    private boolean isPrivateVoting;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name="voted_users_ips", joinColumns=@JoinColumn(name="vote_option_id"))

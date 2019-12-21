@@ -15,7 +15,8 @@
                                       @focus="checkOptionCount(index)"
                         />
                         <v-row>
-                            <v-checkbox v-model="newVoting.isPrivateVoting" class="mx-2" label="private voting" color="success"/>
+                            <v-checkbox v-model="newVoting.isPrivateVoting" class="mx-2" label="private voting"
+                                        color="success"/>
                             <v-tooltip right>
                                 <template v-slot:activator="{ on }">
                                     <v-icon class="mt-5" v-on="on">{{alertIcon}}</v-icon>
