@@ -21,7 +21,7 @@
                                 <template v-slot:activator="{ on }">
                                     <v-icon class="mt-5" v-on="on">{{alertIcon}}</v-icon>
                                 </template>
-                                <span>hide from popular and newest</span>
+                                <span>hide from charts and other users</span>
                             </v-tooltip>
                         </v-row>
                     </v-card-text>
@@ -39,7 +39,7 @@
 </template>
 
 <script>
-    import api from '../api/server'
+    import api from '../../api/server'
     import {mdiAlertCircleOutline} from '@mdi/js'
 
     export default {

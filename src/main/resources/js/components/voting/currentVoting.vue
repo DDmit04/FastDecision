@@ -49,8 +49,8 @@
 </template>
 
 <script>
-    import api from '../api/server'
-    import {connectWebsocket, sendVote, disconnectWebsocket} from '../utils/websocket'
+    import api from '../../api/server'
+    import {connectWebsocket, sendVote, disconnectWebsocket} from '../../utils/websocket'
 
     export default {
         props: ['votingId'],

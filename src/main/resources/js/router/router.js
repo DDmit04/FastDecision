@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import createVoting from "../components/createVoting.vue"
-import currentVoting from "../components/currentVoting.vue"
-import votingResults from "../components/votingResults.vue"
+import createVoting from "../components/voting/createVoting.vue"
+import currentVoting from "../components/voting/currentVoting.vue"
+import votingResults from "../components/voting/votingResults.vue"
 import pageNotFound from "../components/pageNotFound.vue"
 import abstractChart from "../components/abstractChart.vue"
 

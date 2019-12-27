@@ -9,9 +9,9 @@
             ></v-progress-circular>
         </v-layout>
         <v-col v-else lg="8" sm="12">
-            <div v-if="chart.length == 0">
-                Empty here!
-            </div>
+            <v-layout v-if="chart.length == 0" justify-center class="mt-3 display-3 font-italic">
+                Nothing Here!
+            </v-layout>
             <v-card v-else v-for="voting in chart" color="primary" :key="voting.id" @click="goToVoting(voting.id)">
                 <v-card-title class="title">
                     {{voting.voteTitle}}
