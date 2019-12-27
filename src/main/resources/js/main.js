@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import '@babel/polyfill'
 import 'api/resource'
+import store from 'store/store'
 import App from 'pages/App.vue'
 import VueResource from 'vue-resource'
 import vuetify from '../plugins/vuetifyPlugin'
@@ -17,5 +18,6 @@ new Vue ({
     el: '#app',
     vuetify,
     router,
+    store,
     render: a => a(App)
 })

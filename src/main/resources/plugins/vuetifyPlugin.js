@@ -159,14 +159,12 @@ Vue.use(Vuetify, {
     },
 })
 
-const opts = {}
-
-export default new Vuetify({
+const opts = {
     theme: {
         themes: {
             light: {
-                primary: colors.deepPurple.lighten4, //card color
-                secondary: colors.black, //common color
+                primary: colors.lightBlue.lighten3, //card color
+                secondary: colors.grey.darken3, //common color
                 accent: colors.deepPurple.accent4, //active button color
                 error: colors.black, //not used color
                 warning: colors.deepPurple.darken3, //process line color
@@ -175,15 +173,17 @@ export default new Vuetify({
                 background: colors.grey.lighten2,
             },
             dark: {
-                primary: colors.orange.darken2,
-                secondary: colors.white,
-                accent: colors.red.accent4,
+                primary: colors.red.lighten1,
+                secondary: colors.black,
+                accent: colors.deepPurple.accent3,
                 error: colors.white,
-                warning: colors.yellow.accent4,
+                warning: colors.indigo.darken4,
                 info: colors.grey.darken4,
                 success: colors.green.accent4,
                 background: colors.grey.darken3,
             },
         },
     },
-})
+}
+
+export default new Vuetify(opts)

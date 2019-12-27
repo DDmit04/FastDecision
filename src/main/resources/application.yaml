@@ -1,0 +1,53 @@
+spring:
+  security:
+    oauth2:
+      resource:
+        filter-order: 3
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost/db6}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:sa}
+  jpa:
+    generate-ddl: false
+    show-sql: false
+    hibernate.ddl-auto: create
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
+  session:
+    jdbc:
+      initialize-schema: always
+      table-name: SPRING_SESSION
+      schema: classpath:session_tables.sql
+
+google:
+  client:
+    clientId: 760062546069-ug6do11j028u7qbgdbtfc0o5p92lqpc8.apps.googleusercontent.com
+    clientSecret: V1RVeA-_bYR2396WjxIlPmFd
+    accessTokenUri: https://www.googleapis.com/oauth2/v4/token
+    userAuthorizationUri: https://accounts.google.com/o/oauth2/v2/auth
+    tokenName: oauth_token
+    authenticationScheme: query
+    clientAuthenticationScheme: form
+    scope: openid,email,profile
+  resource:
+    userInfoUri: https://www.googleapis.com/oauth2/v3/userinfo
+
+github:
+  client:
+    clientId: 3aeebf35499f7790e864
+    clientSecret: 7def4f076a4449d7ca8a4e0354f51ec68a149894
+    accessTokenUri: https://github.com/login/oauth/access_token
+    userAuthorizationUri: https://github.com/login/oauth/authorize
+    tokenName: oauth_token
+    authenticationScheme: query
+    clientAuthenticationScheme: form
+  resource:
+    userInfoUri: https://api.github.com/user
+
+server:
+  port: 9002
+
