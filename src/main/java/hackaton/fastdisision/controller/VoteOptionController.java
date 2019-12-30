@@ -23,7 +23,7 @@ public class VoteOptionController {
 
     @MessageMapping("/voting-websocket/{votingId}")
     @SendTo("/topic/voting/{votingId}")
-    @JsonView(VotingView.CoreData.class)
+    @JsonView(VotingView.MinimalData.class)
     public VoteOption doVote(@DestinationVariable Long votingId, Long optionId, SimpMessageHeaderAccessor ipHandshakeInterceptor) {
         String votedIp = (String) ipHandshakeInterceptor.getSessionAttributes().get("ip");
         VoteOption voteOption = voteOptionService.acceptVote(optionId, votedIp);;

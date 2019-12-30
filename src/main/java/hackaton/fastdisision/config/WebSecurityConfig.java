@@ -1,9 +1,11 @@
 package hackaton.fastdisision.config;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import hackaton.fastdisision.data.ClientResources;
 import hackaton.fastdisision.data.User;
 import hackaton.fastdisision.repo.UserRepo;
 import hackaton.fastdisision.service.UserService;
+import hackaton.fastdisision.views.VotingView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
@@ -11,7 +13,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -21,13 +22,9 @@ import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticat
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CompositeFilter;
-import org.springframework.web.filter.CorsFilter;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Configuration
@@ -60,8 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PrincipalExtractor googlePrincipalExtractor(UserRepo userRepo) {
         return map -> {
-            System.out.println(map.toString());
-            String id = (String) map.get("sub");
+            String id = String.valueOf(map.get("sub"));
             User user = userRepo.findById(id).orElseGet(() -> {
                 User newUser = new User();
                 newUser.setId(id);
@@ -77,8 +73,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PrincipalExtractor githubPrincipalExtractor(UserRepo userRepo) {
         return map -> {
-            System.out.println(map.toString());
-            String id = (String) map.get("id");
+            String id = String.valueOf(map.get("id"));
             User user = userRepo.findById(id).orElseGet(() -> {
                 User newUser = new User();
                 newUser.setId(id);
@@ -130,19 +125,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public ClientResources google() {
         return new ClientResources();
     }
-
-//    @Bean
-//    public FilterRegistrationBean simpleCorsFilter() {
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        CorsConfiguration config = new CorsConfiguration();
-//        config.setAllowCredentials(true);
-//        config.setAllowedOrigins(Collections.singletonList("http://localhost:9002"));
-//        config.setAllowedMethods(Collections.singletonList("*"));
-//        config.setAllowedHeaders(Collections.singletonList("*"));
-//        source.registerCorsConfiguration("/**", config);
-//        FilterRegistrationBean bean = new FilterRegistrationBean<>(new CorsFilter(source));
-//        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
-//        return bean;
-//    }
 
 }

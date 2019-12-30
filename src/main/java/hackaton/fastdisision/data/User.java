@@ -1,53 +1,56 @@
 package hackaton.fastdisision.data;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import hackaton.fastdisision.views.VotingView;
 import lombok.Data;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import lombok.Getter;
+import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.util.Collection;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Table(name = "usr")
 @Entity
-public class User implements UserDetails {
+@JsonIdentityInfo(
+        property = "id",
+        generator = ObjectIdGenerators.PropertyGenerator.class
+)
+public class User {
 
     @Id
+    @JsonView(VotingView.Id.class)
     private String id;
 
+    @JsonView(VotingView.MinimalData.class)
     private String username;
+
+    @JsonView(VotingView.FullData.class)
     private String email;
+
+    @JsonView(VotingView.MinimalData.class)
     private String userPic;
 
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade= CascadeType.ALL)
+    @JsonView(VotingView.FullData.class)
+    private Set<Voting> userVotings = new HashSet<>();
+
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+
+        User user = (User) o;
+
+        return getId() != null ? getId().equals(user.getId()) : user.getId() == null;
     }
 
     @Override
-    public String getPassword() {
-        return null;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return false;
+    public int hashCode() {
+        return getId() != null ? getId().hashCode() : 0;
     }
 }

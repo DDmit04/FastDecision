@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="modalIsActive"
+    <v-dialog v-model="active"
               max-width="500"
               min-width="200">
         <v-card>
@@ -29,12 +29,29 @@
     import {mdiGithubCircle, mdiGoogle} from '@mdi/js'
 
     export default {
-        props: ['modalIsActive'],
+        props: {
+            modalIsActive: {
+                required: true,
+                type: Boolean
+            },
+        },
         name: "authModal",
         data() {
             return {
                 googleIcon: mdiGoogle,
                 githubIcon: mdiGithubCircle,
+            }
+        },
+        computed: {
+            active: {
+                get() {
+                    return this.modalIsActive
+                },
+                set(value) {
+                    if (!value) {
+                        this.$emit('close')
+                    }
+                }
             }
         }
     }

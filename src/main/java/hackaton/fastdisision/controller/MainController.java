@@ -1,38 +1,45 @@
 package hackaton.fastdisision.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import hackaton.fastdisision.data.User;
-import hackaton.fastdisision.repo.UserRepo;
+import hackaton.fastdisision.views.VotingView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.security.Principal;
 
 @Controller
 @RequestMapping("/")
 public class MainController {
 
-    @Autowired
-    private UserRepo userRepo;
+    private final ObjectWriter writer;
 
     @Value("${spring.profiles.active:prod}")
     private String profile;
 
+    @Autowired
+    public MainController(ObjectMapper mapper) {
+        this.writer = mapper
+                .setConfig(mapper.getSerializationConfig())
+                .writerWithView(VotingView.MinimalData.class);
+    }
+
     @GetMapping
-    public String main(Model model, @AuthenticationPrincipal User user) {
+    public String main(Model model, @AuthenticationPrincipal User user) throws JsonProcessingException {
         boolean isDevMode = true;
         if(profile.equals("prod")) {
             isDevMode = false;
         }
-        model.addAttribute("currentUser", user);
+        String userAsString = null;
+        if(user != null) {
+            userAsString = writer.writeValueAsString(user);
+        }
+        model.addAttribute("currentUser", userAsString);
         model.addAttribute("isDevMode", isDevMode);
         return "index";
     }
