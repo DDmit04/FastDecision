@@ -1,7 +1,7 @@
 <template>
     <div>
         <votindDeletionModal :modalIsActive="modalIsActive"
-                             :votingId="deletedVoting.id"
+                             :voting="deletedVoting"
                              :deletionFunction="deleteVoting"
                              @close="modalIsActive = false"/>
         <v-col lg="8" sm="12">

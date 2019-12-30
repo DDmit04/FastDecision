@@ -23,7 +23,7 @@
             },
             firstArg: {
                 required: false,
-                type: Number
+                type: [Number, String]
             },
         },
         name: "chartLoader",

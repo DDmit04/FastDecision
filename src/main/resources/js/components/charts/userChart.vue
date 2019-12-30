@@ -30,7 +30,7 @@
         props: {
             userId: {
                 required: true,
-                type: Number
+                type: [Number, String]
             },
         },
         name: "userChart",

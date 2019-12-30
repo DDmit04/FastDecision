@@ -56,7 +56,7 @@
         props: {
             votingId: {
                 required: true,
-                type: Number
+                type: [String, Number]
             },
         },
         name: "currentVoting",

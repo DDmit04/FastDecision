@@ -20,7 +20,7 @@
                         </v-card-title>
                         <v-divider color="secondary"></v-divider>
                         <v-card-text class="ma-3">
-                            <div class="py-2" v-for="(option, index) in currentVoting.voteOptions" :key="index">
+                            <div class="py-2" v-for="(option, index) in currentVoting.votingOptions" :key="index">
                                 <v-row>
                                     <v-col cols="10" class="pa-0">
                                         <v-layout justify-space-between class="font-weight-black subtitle-1">
@@ -65,7 +65,7 @@
         props: {
             votingId: {
                 required: true,
-                type: Number
+                type: [String, Number]
             },
         },
         name: "currentVoting",
@@ -85,11 +85,12 @@
         async created() {
             await connectWebsocket(this.votingId)
             await this.getCurrentVoting()
+            console.log(this.currentVoting)
         },
         mounted() {
             addHandler(async (data) => {
-                let optionId = await this.currentVoting.voteOptions.findIndex(option => option.id == data.id)
-                this.currentVoting.voteOptions[optionId].pluses = await data.pluses
+                let optionId = await this.currentVoting.votingOptions.findIndex(option => option.id == data.id)
+                this.currentVoting.votingOptions[optionId].pluses = await data.pluses
             })
         },
         destroyed() {
@@ -100,7 +101,7 @@
                 let sections = []
                 let sectionValue = 0
                 let sectionsSum = 0
-                let sortedVotingCopy = this.currentVoting.voteOptions.slice().sort((first, sec) => sec.id - first.id)
+                let sortedVotingCopy = this.currentVoting.votingOptions.slice().sort((first, sec) => sec.id - first.id)
                 sortedVotingCopy.forEach(opt => {
                     sectionValue = Math.floor(this.calcLine(opt.pluses))
                     sectionsSum += sectionValue
@@ -121,17 +122,13 @@
             },
             getTotalVotes() {
                 let votes = 0
-                this.currentVoting.voteOptions.forEach(opt => {
+                this.currentVoting.votingOptions.forEach(opt => {
                     votes += opt.pluses
                 })
                 return votes
             },
         },
         methods: {
-            test1(num) {
-                this.currentVoting.totalVotes++
-                this.currentVoting.voteOptions[num].pluses++
-            },
             async getCurrentVoting() {
                 const response = await api.getOne(this.votingId)
                 if (response.body == '' || !response.ok) {
@@ -149,7 +146,7 @@
                 return res
             },
             sortVoteOptions() {
-                this.currentVoting.voteOptions.sort((first, sec) => sec.pluses - first.pluses)
+                this.currentVoting.votingOptions.sort((first, sec) => sec.pluses - first.pluses)
             }
         }
     }

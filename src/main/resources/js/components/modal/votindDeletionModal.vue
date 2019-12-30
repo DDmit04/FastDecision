@@ -28,9 +28,9 @@
                 required: true,
                 type: Boolean
             },
-            votingId: {
-                required: true,
-                type: Number
+            voting: {
+                required: false,
+                type: Object
             },
             deletionFunction: {
                 required: true,
@@ -55,7 +55,7 @@
         },
         methods: {
             async deleteVoting() {
-                const result = await server.deleteOne(this.votingId)
+                const result = await server.deleteOne(this.voting.id)
                 this.active = false
                 if(result.ok) {
                     await this.deletionFunction()
