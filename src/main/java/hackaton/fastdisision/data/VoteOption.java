@@ -1,15 +1,24 @@
 package hackaton.fastdisision.data;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import hackaton.fastdisision.views.VotingView;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.*;
 
-@Data
+@Getter
+@Setter
 @Entity
+@JsonIdentityInfo(
+        property = "id",
+        generator = ObjectIdGenerators.PropertyGenerator.class
+)
 public class VoteOption {
 
     @Id
@@ -17,7 +26,7 @@ public class VoteOption {
     @JsonView(VotingView.Id.class)
     private long id;
 
-    @JsonView(VotingView.CoreData.class)
+    @JsonView(VotingView.MinimalData.class)
     private String voteDiscription;
     @JsonView(VotingView.MinimalData.class)
     private long pluses;

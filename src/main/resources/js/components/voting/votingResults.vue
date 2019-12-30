@@ -13,7 +13,7 @@
                 <v-col v-else lg="8" sm="12">
                     <v-card color="primary">
                         <v-card-title class="title">
-                            {{currentVoting.voteTitle}}
+                            {{currentVoting.votingTitle}}
                             <v-layout justify-end>
                                 total votes: {{getTotalVotes}}
                             </v-layout>
@@ -62,7 +62,12 @@
     import {connectWebsocket, addHandler, disconnectWebsocket} from '../../utils/websocket'
 
     export default {
-        props: ['votingId'],
+        props: {
+            votingId: {
+                required: true,
+                type: Number
+            },
+        },
         name: "currentVoting",
         data() {
             return {

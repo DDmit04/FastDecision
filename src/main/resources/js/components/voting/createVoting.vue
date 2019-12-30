@@ -4,10 +4,10 @@
             <v-col lg="8" sm="12">
                 <v-card color="primary">
                     <v-card-title >
-                        <v-text-field color="secondary" v-model="newVoting.voteTitle" placeholder="Vote title"/>
+                        <v-text-field color="secondary" v-model="newVoting.votingTitle" placeholder="Vote title"/>
                     </v-card-title>
                     <v-card-text>
-                        <v-text-field v-for="(option, index) in newVoting.voteOptions" :key="index"
+                        <v-text-field v-for="(option, index) in newVoting.votingOptions" :key="index"
                                       v-model="option.voteDiscription"
                                       color="secondary"
                                       placeholder="Some option"
@@ -52,8 +52,8 @@
                 lastOptionIndex: 1,
                 newVoting: {
                     id: null,
-                    voteTitle: '',
-                    voteOptions: [],
+                    votingTitle: '',
+                    votingOptions: [],
                     isPrivateVoting: false
                 },
                 voteOption1: {
@@ -69,19 +69,19 @@
             }
         },
         created() {
-            this.newVoting.voteOptions.push(this.voteOption1)
-            this.newVoting.voteOptions.push(this.voteOption2)
+            this.newVoting.votingOptions.push(this.voteOption1)
+            this.newVoting.votingOptions.push(this.voteOption2)
         },
         computed: {
             voteReadyToAdd() {
                 let isReady = false
                 let counter = 0
-                this.newVoting.voteOptions.forEach(opt => {
+                this.newVoting.votingOptions.forEach(opt => {
                     if (opt.voteDiscription.trim() != '') {
                         counter++
                     }
                 })
-                isReady = this.newVoting.voteTitle.trim() != '' && counter >= 2
+                isReady = this.newVoting.votingTitle.trim() != '' && counter >= 2
                 return isReady
             }
         },
@@ -99,19 +99,19 @@
             },
             async addVoting() {
                 this.buttonLoading = true
-                this.newVoting.voteOptions = this.newVoting.voteOptions.filter(option => option.voteDiscription != '')
+                this.newVoting.votingOptions = this.newVoting.votingOptions.filter(option => option.voteDiscription != '')
                 const response = await api.addVoting(this.newVoting)
                 const data = await response.json()
                 await this.$router.push({name: 'currentVoting', params: {votingId: data.id}})
             },
             addOption() {
-                if (this.newVoting.voteOptions.length < 10) {
+                if (this.newVoting.votingOptions.length < 10) {
                     let newOption = {
                         id: '',
                         voteDiscription: '',
                         pluses: 0,
                     }
-                    this.newVoting.voteOptions.push(newOption)
+                    this.newVoting.votingOptions.push(newOption)
                 }
             },
         }

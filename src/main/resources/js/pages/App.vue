@@ -3,7 +3,7 @@
         <navbar/>
         <v-content>
             <v-container fluid>
-                <router-view/>
+                <router-view :key="$route.path"/>
             </v-container>
         </v-content>
         <v-footer class="justify-center pl-0"

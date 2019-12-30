@@ -12,11 +12,11 @@
             <v-col v-else lg="8" sm="12">
                 <v-card color="primary">
                     <v-card-title class="title">
-                        {{currentVoting.voteTitle}}
+                        {{currentVoting.votingTitle}}
                     </v-card-title>
                     <v-divider color="secondary"></v-divider>
                     <v-card-text class="mx-3 mt-3">
-                        <div class="py-2" v-for="(option, index) in currentVoting.voteOptions" :key="index">
+                        <div class="py-2" v-for="(option, index) in currentVoting.votingOptions" :key="index">
                             <v-row align="center">
                                 <v-col color="secondary" class="font-weight-medium">
                                     {{option.voteDiscription}}
@@ -53,7 +53,12 @@
     import {connectWebsocket, sendVote, disconnectWebsocket} from '../../utils/websocket'
 
     export default {
-        props: ['votingId'],
+        props: {
+            votingId: {
+                required: true,
+                type: Number
+            },
+        },
         name: "currentVoting",
         data() {
             return {
@@ -71,7 +76,7 @@
         },
         methods: {
             async doVote() {
-                await sendVote(this.currentVoting.voteOptions[this.selectedOptionIndex].id, this.votingId)
+                await sendVote(this.currentVoting.votingOptions[this.selectedOptionIndex].id, this.votingId)
                 await this.$router.push({name: 'votingResults', params: {votingId: this.votingId}})
             },
             async getCurrentVoting() {
