@@ -8,11 +8,18 @@ import vuetify from '../plugins/vuetifyPlugin'
 import router from 'router/router'
 import Donut from 'vue-css-donut-chart'
 import 'vue-css-donut-chart/dist/vcdonut.css'
+import rotesNames from "./router/rotesNames"
 
 Vue.use(Donut);
 
 Vue.use(VueResource)
 Vue.config.productionTip = false
+
+Vue.config.errorHandler = (err, vm, info) => {
+    if(err.status != '' && err.status != null) {
+        vm.$router.push({name: rotesNames.ERROR_PAGE, params: {errorCode: err.status}})
+    }
+}
 
 new Vue ({
     el: '#app',

@@ -70,9 +70,6 @@
                 const data = await response.json()
                 return data
             },
-            goToOtherRote(roteName) {
-                this.$router.push({path: roteName})
-            },
         }
     }
 </script>

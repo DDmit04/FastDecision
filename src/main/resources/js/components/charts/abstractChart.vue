@@ -1,9 +1,8 @@
 <template>
     <div>
         <votindDeletionModal :modalIsActive="modalIsActive"
-                             :voting="deletedVoting"
-                             :deletionFunction="deleteVoting"
-                             @close="modalIsActive = false"/>
+                             @close="modalIsActive = false"
+                             @accept="deleteVoting()"/>
         <v-col lg="8" sm="12">
             <v-layout v-if="chartData.length == 0" justify-center class="mt-3 display-3 font-italic">
                 Nothing Here!
@@ -16,7 +15,8 @@
                     <v-layout justify-center>
                         author:
                         <router-link v-if="voting.owner != null" to="/">
-                            <v-btn :to = "{name: 'userChart', params: {userId: voting.owner.id} }" color="accent" class="ml-2">
+                            <v-btn :to="{name: 'userChart', params: {userId: voting.owner.id} }" color="accent"
+                                   class="ml-2">
                                 {{voting.owner.username | normalizeUsername}}
                             </v-btn>
                         </router-link>
@@ -26,7 +26,8 @@
                     </v-layout>
                     <v-layout justify-end>
                         total votes: {{voting.totalVotes}}
-                        <v-btn v-if="voting.owner != null && voting.owner.id == currentUser.id"  @click.stop="callDeleteVoting(voting)"
+                        <v-btn v-if="voting.owner != null && voting.owner.id == currentUser.id"
+                               @click.stop="callDeleteVoting(voting)"
                                class="ml-2" color="accent">
                             <v-icon>{{closeIcon}}</v-icon>
                         </v-btn>
@@ -41,7 +42,8 @@
 <script>
     import {mapState} from 'vuex'
     import {mdiClose} from '@mdi/js'
-    import votindDeletionModal from "../modal/votindDeletionModal.vue";
+    import votindDeletionModal from "../modal/votindDeletionModal.vue"
+    import server from "../../api/server";
 
     export default {
         props: {
@@ -81,10 +83,13 @@
                 this.deletedVoting = voting
                 this.modalIsActive = true
             },
-            deleteVoting() {
-                if(this.deletedVoting != null) {
-                    let deletedVotingIndex = this.chartData.indexOf(this.deletedVoting)
-                    this.chartData.splice(deletedVotingIndex, 1)
+            async deleteVoting() {
+                if (this.deletedVoting != null) {
+                    const result = await server.deleteOne(this.deletedVoting.id)
+                    if(result.ok) {
+                        let deletedVotingIndex = this.chartData.indexOf(this.deletedVoting)
+                        this.chartData.splice(deletedVotingIndex, 1)
+                    }
                 }
             },
         }

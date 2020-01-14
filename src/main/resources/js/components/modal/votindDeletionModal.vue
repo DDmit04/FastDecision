@@ -20,21 +20,11 @@
 </template>
 
 <script>
-    import server from "../../api/server"
-
     export default {
         props: {
             modalIsActive: {
                 required: true,
                 type: Boolean
-            },
-            voting: {
-                required: false,
-                type: Object
-            },
-            deletionFunction: {
-                required: true,
-                type: Function
             },
         },
         name: "votindDeletionModal",
@@ -54,12 +44,9 @@
             }
         },
         methods: {
-            async deleteVoting() {
-                const result = await server.deleteOne(this.voting.id)
+            deleteVoting() {
                 this.active = false
-                if(result.ok) {
-                    await this.deletionFunction()
-                }
+                this.$emit('accept')
             }
         }
     }

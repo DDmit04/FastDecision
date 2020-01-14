@@ -3,22 +3,23 @@ import VueRouter from 'vue-router'
 import createVoting from "../components/voting/createVoting.vue"
 import currentVoting from "../components/voting/currentVoting.vue"
 import votingResults from "../components/voting/votingResults.vue"
-import pageNotFound from "../components/pageNotFound.vue"
 import topChart from "../components/charts/topChart.vue"
-import userChart from "../components/charts/userChart.vue";
+import userChart from "../components/charts/userChart.vue"
+import errorPage from "../components/errorPage.vue"
+import rotesNames from "./rotesNames"
 
 Vue.use(VueRouter)
 
 const routes = [
 
-    { path: '/', name: 'main', component: createVoting },
-    { path: '/dashboard/:userId', name: 'userChart', component: userChart, props: true },
-    { path: '/:votingId/vote', name: 'currentVoting', component: currentVoting, props: true },
-    { path: '/:votingId/results', name: 'votingResults', component: votingResults, props: true },
-    { path: '/newest', name: 'newestVotings', component: topChart, props: {topChartType : 'newest'} },
-    { path: '/popular', name: 'popularVotings', component: topChart, props: {topChartType : 'popular'} },
-    { path: '/404', name:'pageNotFound', component: pageNotFound },
-    { path: '*', redirect:'/404' },
+    { path: '/', name: rotesNames.MAIN, component: createVoting },
+    { path: '/dashboard/:userId', name: rotesNames.USER_VOTINGS_CHART, component: userChart, props: true },
+    { path: '/:votingId/vote', name: rotesNames.CURRENT_VOTING, component: currentVoting, props: true },
+    { path: '/:votingId/results', name: rotesNames.VOTING_RESULTS, component: votingResults, props: true },
+    { path: '/newest', name: rotesNames.NEWEST_VOTINGS, component: topChart, props: {topChartType : 'newest'} },
+    { path: '/popular', name: rotesNames.POPULAR_VOTINGS, component: topChart, props: {topChartType : 'popular'} },
+    { path: '/err', name: rotesNames.ERROR_PAGE, component: errorPage, props: true},
+    { path: '*', component: errorPage, props: {errorCode: 404} },
 
 ]
 

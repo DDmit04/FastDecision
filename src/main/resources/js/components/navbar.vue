@@ -2,9 +2,9 @@
     <v-app-bar
             color="info"
             app>
-        <authModal :modalIsActive="modalIsActive" @close="modalIsActive =false"/>
+        <authModal :modalIsActive="modalIsActive" @close="modalIsActive = false"/>
         <v-toolbar-items>
-            <v-btn text @click="goToOtherRote(MAIN_ROTE_NAME)">Fast Decision</v-btn>
+            <v-btn text @click="goToOtherRote(rotesNames.MAIN)">Fast Decision</v-btn>
             <v-btn text @click="switchTheme()">
                 <div v-if="getIsDark">
                     <v-icon>{{sunIcon}}</v-icon>
@@ -16,8 +16,8 @@
         </v-toolbar-items>
         <v-spacer></v-spacer>
         <v-toolbar-items>
-            <v-btn @click="goToOtherRote(NEWEST_VOTINGS_ROTE_NAME)" text>Newest</v-btn>
-            <v-btn @click="goToOtherRote(POPULAR_VOTINGS_ROTE_NAME)" text>Popular</v-btn>
+            <v-btn @click="goToOtherRote(rotesNames.NEWEST_VOTINGS)" text>Newest</v-btn>
+            <v-btn @click="goToOtherRote(rotesNames.POPULAR_VOTINGS)" text>Popular</v-btn>
             <v-btn text @click="goToUserVotings()">
                 <v-avatar v-if="getCurrentUserPic == null" class="mr-2" color="success" size="35">
                     U
@@ -40,7 +40,8 @@
 <script>
     import {mdiLoginVariant, mdiWhiteBalanceSunny, mdiMoonWaningCrescent} from '@mdi/js'
     import {mapState, mapMutations} from 'vuex'
-    import authModal from "./modal/authModal.vue";
+    import authModal from "./modal/authModal.vue"
+    import rotesNames from "../router/rotesNames";
 
     export default {
         name: "navbar",
@@ -51,11 +52,7 @@
                 moonIcon: mdiMoonWaningCrescent,
 
                 modalIsActive: false,
-
-                MAIN_ROTE_NAME: 'main',
-                USER_CHART: 'userChart',
-                NEWEST_VOTINGS_ROTE_NAME: 'newestVotings',
-                POPULAR_VOTINGS_ROTE_NAME: 'popularVotings'
+                rotesNames: rotesNames,
             }
         },
         components: {
@@ -92,7 +89,7 @@
             },
             goToUserVotings() {
                 if(this.currentUser != null) {
-                    this.$router.push({name: this.USER_CHART, params: {userId: this.currentUser.id}})
+                    this.$router.push({name: this.rotesNames.USER_VOTINGS_CHART, params: {username: this.currentUser.username}})
                 } else {
                     this.modalIsActive = true
                 }

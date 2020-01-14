@@ -51,6 +51,7 @@
 <script>
     import api from '../../api/server'
     import {connectWebsocket, sendVote, disconnectWebsocket} from '../../utils/websocket'
+    import rotesNames from "../../router/rotesNames";
 
     export default {
         props: {
@@ -77,19 +78,17 @@
         methods: {
             async doVote() {
                 await sendVote(this.currentVoting.votingOptions[this.selectedOptionIndex].id, this.votingId)
-                await this.$router.push({name: 'votingResults', params: {votingId: this.votingId}})
+                await this.$router.push({name: rotesNames.VOTING_RESULTS, params: {votingId: this.votingId}})
             },
             async getCurrentVoting() {
                 const response = await api.getOne(this.votingId)
-                if (response.body == '' || !response.ok) {
-                    await this.$router.push({name: 'pageNotFound'})
-                } else {
+                if (response.ok) {
                     const data = await response.json()
                     this.currentVoting = data
                 }
             },
             goToResults() {
-                this.$router.push({name: 'votingResults', params: {votingId: this.votingId}})
+                this.$router.push({name: rotesNames.VOTING_RESULTS, params: {votingId: this.votingId}})
             }
         }
     }

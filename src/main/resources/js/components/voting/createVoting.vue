@@ -41,6 +41,7 @@
 <script>
     import api from '../../api/server'
     import {mdiAlertCircleOutline} from '@mdi/js'
+    import rotesNames from "../../router/rotesNames";
 
     export default {
         name: "createVoting",
@@ -102,7 +103,7 @@
                 this.newVoting.votingOptions = this.newVoting.votingOptions.filter(option => option.voteDiscription != '')
                 const response = await api.addVoting(this.newVoting)
                 const data = await response.json()
-                await this.$router.push({name: 'currentVoting', params: {votingId: data.id}})
+                await this.$router.push({name: rotesNames.CURRENT_VOTING, params: {votingId: data.id}})
             },
             addOption() {
                 if (this.newVoting.votingOptions.length < 10) {

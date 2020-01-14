@@ -60,6 +60,7 @@
 <script>
     import api from '../../api/server'
     import {connectWebsocket, addHandler, disconnectWebsocket} from '../../utils/websocket'
+    import rotesNames from "../../router/rotesNames";
 
     export default {
         props: {
@@ -132,7 +133,7 @@
             async getCurrentVoting() {
                 const response = await api.getOne(this.votingId)
                 if (response.body == '' || !response.ok) {
-                    await this.$router.push({name: 'pageNotFound'})
+                    await this.$router.push({name: rotesNames.ERROR_PAGE})
                 } else {
                     const data = await response.json()
                     this.currentVoting = await data
