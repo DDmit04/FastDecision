@@ -4,13 +4,13 @@ spring:
       resource:
         filter-order: 3
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost/db6}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost/votingsdb}
     username: ${SPRING_DATASOURCE_USERNAME:postgres}
     password: ${SPRING_DATASOURCE_PASSWORD:sa}
   jpa:
     generate-ddl: false
     show-sql: false
-    hibernate.ddl-auto: create
+    hibernate.ddl-auto: validate
     properties:
       hibernate:
         jdbc:

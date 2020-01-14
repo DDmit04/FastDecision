@@ -42,6 +42,10 @@ module.exports = {
                     'vue-style-loader',
                     'css-loader'
                 ]
+            },
+            {
+                test: /\.(png|jp(e*)g|svg)$/,
+                loader: 'url-loader',
             }
         ]
     },
