@@ -50,7 +50,7 @@ public class VotingService {
     public Iterable<Voting> getUserPublic(User user) {
         Iterable<Voting> votings = Collections.EMPTY_LIST;
         if (user != null) {
-            votings = votingRepo.findByOwner_IdAndIsPrivateVotingOrderByCreationDateDesc(user.getId(), false);
+            votings = votingRepo.findTop10ByOwner_IdAndIsPrivateVotingOrderByCreationDateDesc(user.getId(), false);
         }
         return votings;
     }
@@ -58,7 +58,7 @@ public class VotingService {
     public Iterable<Voting> getUserPrivate(User user) {
         Iterable<Voting> votings = Collections.EMPTY_LIST;
         if (user != null) {
-            votings = votingRepo.findByOwner_IdAndIsPrivateVotingOrderByCreationDateDesc(user.getId(), true);
+            votings = votingRepo.findTop10ByOwner_IdAndIsPrivateVotingOrderByCreationDateDesc(user.getId(), true);
         }
         return votings;
     }

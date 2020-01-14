@@ -32,15 +32,13 @@ import java.util.List;
 @EnableOAuth2Client
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Qualifier("oauth2ClientContext")
-    @Autowired
-    private OAuth2ClientContext oauth2ClientContext;
+    private final OAuth2ClientContext oauth2ClientContext;
+    private final UserRepo userRepo;
 
-    @Autowired
-    private UserRepo userRepo;
-
-    @Autowired
-    private UserService userService;
+    public WebSecurityConfig(@Qualifier("oauth2ClientContext") OAuth2ClientContext oauth2ClientContext, UserRepo userRepo) {
+        this.oauth2ClientContext = oauth2ClientContext;
+        this.userRepo = userRepo;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

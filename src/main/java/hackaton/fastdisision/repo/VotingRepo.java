@@ -15,6 +15,6 @@ public interface VotingRepo extends CrudRepository<Voting, Long> {
 
     List<Voting> findTop10ByIsPrivateVotingOrderByCreationDateDesc(boolean isPrivate);
 
-    List<Voting> findByOwner_IdAndIsPrivateVotingOrderByCreationDateDesc(String id, boolean isPrivate);
+    List<Voting> findTop10ByOwner_IdAndIsPrivateVotingOrderByCreationDateDesc(String id, boolean isPrivate);
 
 }
