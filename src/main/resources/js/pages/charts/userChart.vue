@@ -23,8 +23,8 @@
 <script>
     import votingChart from "../../api/votingChart";
     import {mapState} from 'vuex'
-    import authModal from "../modal/authModal.vue";
-    import chartLoader from "./chartLoader.vue"
+    import authModal from "../../components/modal/authModal.vue";
+    import chartLoader from "../../components/charts/chartLoader.vue"
 
     export default {
         props: {

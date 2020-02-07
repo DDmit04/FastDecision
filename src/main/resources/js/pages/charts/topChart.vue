@@ -2,14 +2,14 @@
     <div>
         <chart-loader v-if="topChartType == 'popular'" :loadFunction="loadPopularVotings"/>
         <chart-loader v-else-if="topChartType == 'newest'" :loadFunction="loadNewestVotings"/>
-        <div v-else @load="$router.push({ name: rotesNames.ERROR_PAGE })"></div>
+        <div v-else @load="$router.push({ name: routesNames.ERROR_PAGE })"></div>
     </div>
 </template>
 
 <script>
-    import chartLoader from "./chartLoader.vue"
+    import chartLoader from "../../components/charts/chartLoader.vue"
     import votingChart from "../../api/votingChart"
-    import rotesNames from "../../router/rotesNames";
+    import routesNames from "../../router/routesNames";
 
     export default {
         props: {
@@ -21,7 +21,7 @@
         name: "publicChart",
         data() {
             return {
-                rotesNames: rotesNames
+                routesNames: routesNames
             }
         },
         components: {

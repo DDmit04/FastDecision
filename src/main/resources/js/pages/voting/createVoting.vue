@@ -24,6 +24,16 @@
                                 <span>hide from charts and other users</span>
                             </v-tooltip>
                         </v-row>
+                        <v-row>
+                            <v-checkbox v-model="newVoting.isProtectedVoting" class="mx-2" label="protected voting"
+                                        color="success"/>
+                            <v-tooltip right>
+                                <template v-slot:activator="{ on }">
+                                    <v-icon class="mt-5" v-on="on">{{alertIcon}}</v-icon>
+                                </template>
+                                <span>hide from charts and other users</span>
+                            </v-tooltip>
+                        </v-row>
                     </v-card-text>
                     <v-divider color="secondary"></v-divider>
                     <v-card-actions class="pa-3">
@@ -39,9 +49,8 @@
 </template>
 
 <script>
-    import api from '../../api/server'
     import {mdiAlertCircleOutline} from '@mdi/js'
-    import rotesNames from "../../router/rotesNames";
+    import {mapActions} from 'vuex'
 
     export default {
         name: "createVoting",
@@ -55,7 +64,8 @@
                     id: null,
                     votingTitle: '',
                     votingOptions: [],
-                    isPrivateVoting: false
+                    isPrivateVoting: false,
+                    isProtectedVoting: false
                 },
                 voteOption1: {
                     id: null,
@@ -87,6 +97,7 @@
             }
         },
         methods: {
+            ...mapActions(["addNewVotingAction"]),
             checkOptionCount(index) {
                 if (index == this.lastOptionIndex) {
                     this.addOption()
@@ -101,9 +112,7 @@
             async addVoting() {
                 this.buttonLoading = true
                 this.newVoting.votingOptions = this.newVoting.votingOptions.filter(option => option.voteDiscription != '')
-                const response = await api.addVoting(this.newVoting)
-                const data = await response.json()
-                await this.$router.push({name: rotesNames.CURRENT_VOTING, params: {votingId: data.id}})
+                this.addNewVotingAction(this.newVoting)
             },
             addOption() {
                 if (this.newVoting.votingOptions.length < 10) {

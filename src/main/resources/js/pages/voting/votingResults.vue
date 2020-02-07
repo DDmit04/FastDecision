@@ -58,9 +58,8 @@
 </template>
 
 <script>
-    import api from '../../api/server'
-    import {connectWebsocket, addHandler, disconnectWebsocket} from '../../utils/websocket'
-    import rotesNames from "../../router/rotesNames";
+    import {addHandler} from '../../utils/websocket'
+    import votingMixin from "../../mixins/votingConnectMixin"
 
     export default {
         props: {
@@ -68,12 +67,22 @@
                 required: true,
                 type: [String, Number]
             },
+            votingKey: {
+                required: false,
+                type: String,
+                default: 'public'
+            },
+            votingProp: {
+                required: false,
+                type: Object,
+            }
         },
-        name: "currentVoting",
+        name: "votingResults",
+        mixins: [votingMixin],
         data() {
             return {
                 sections: [],
-                currentVoting: null,
+                currentVoting: this.votingProp,
                 totalVotes: 0,
             }
         },
@@ -84,18 +93,14 @@
             }
         },
         async created() {
-            await connectWebsocket(this.votingId)
-            await this.getCurrentVoting()
-            console.log(this.currentVoting)
+            await this.mixinConnectToVoting(this.votingId, this.votingKey)
+            this.currentVoting = this.mixinVoting
         },
         mounted() {
             addHandler(async (data) => {
                 let optionId = await this.currentVoting.votingOptions.findIndex(option => option.id == data.id)
-                this.currentVoting.votingOptions[optionId].pluses = await data.pluses
+                this.currentVoting.votingOptions[optionId].pluses = data.pluses
             })
-        },
-        destroyed() {
-            disconnectWebsocket()
         },
         computed: {
             calcDonut() {
@@ -130,21 +135,12 @@
             },
         },
         methods: {
-            async getCurrentVoting() {
-                const response = await api.getOne(this.votingId)
-                if (response.body == '' || !response.ok) {
-                    await this.$router.push({name: rotesNames.ERROR_PAGE})
-                } else {
-                    const data = await response.json()
-                    this.currentVoting = await data
-                }
-            },
             calcLine(optionPluses) {
-                let res = optionPluses / this.getTotalVotes * 100
-                if (isNaN(res)) {
-                    res = 0
+                let lineValue = optionPluses / this.getTotalVotes * 100
+                if (isNaN(lineValue)) {
+                    lineValue = 0
                 }
-                return res
+                return lineValue
             },
             sortVoteOptions() {
                 this.currentVoting.votingOptions.sort((first, sec) => sec.pluses - first.pluses)
