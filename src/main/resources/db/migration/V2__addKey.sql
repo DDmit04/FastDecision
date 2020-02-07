@@ -1,0 +1,1 @@
+alter table voting add column voting_key varchar(255);

@@ -1,0 +1,1 @@
+alter table voting add column is_protected_voting boolean not null;
