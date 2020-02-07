@@ -3,17 +3,13 @@ package hackaton.fastdisision.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import hackaton.fastdisision.data.User;
 import hackaton.fastdisision.data.Voting;
-import hackaton.fastdisision.repo.VotingRepo;
 import hackaton.fastdisision.service.VotingService;
 import hackaton.fastdisision.views.VotingView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Collections;
 
 @RestController
 @RequestMapping("/voteApi/charts")

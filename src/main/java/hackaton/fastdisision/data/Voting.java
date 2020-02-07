@@ -1,10 +1,7 @@
 package hackaton.fastdisision.data;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import hackaton.fastdisision.views.VotingView;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,6 +28,12 @@ public class Voting {
 
     @JsonView(VotingView.FullData.class)
     private LocalDateTime creationDate;
+
+    @JsonView(VotingView.MinimalData.class)
+    private String votingKey;
+
+    @JsonView(VotingView.FullData.class)
+    private boolean isProtectedVoting;
 
     @JsonView(VotingView.FullData.class)
     private boolean isPrivateVoting;

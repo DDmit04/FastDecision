@@ -2,6 +2,7 @@ package hackaton.fastdisision.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import hackaton.fastdisision.data.VoteOption;
+import hackaton.fastdisision.excaptions.WrongVotingKeyException;
 import hackaton.fastdisision.service.VoteOptionService;
 import hackaton.fastdisision.views.VotingView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +22,12 @@ public class VoteOptionController {
         this.voteOptionService = voteOptionService;
     }
 
-    @MessageMapping("/voting-websocket/{votingId}")
-    @SendTo("/topic/voting/{votingId}")
+    @MessageMapping("/voting-websocket/{votingId}/{votingKey}")
+    @SendTo("/topic/voting/{votingId}/{votingKey}")
     @JsonView(VotingView.MinimalData.class)
-    public VoteOption doVote(@DestinationVariable Long votingId, Long optionId, SimpMessageHeaderAccessor ipHandshakeInterceptor) {
+    public VoteOption doVote(@DestinationVariable Long votingId, @DestinationVariable String votingKey, Long optionId, SimpMessageHeaderAccessor ipHandshakeInterceptor) throws WrongVotingKeyException {
         String votedIp = (String) ipHandshakeInterceptor.getSessionAttributes().get("ip");
-        VoteOption voteOption = voteOptionService.acceptVote(optionId, votedIp);;
+        VoteOption voteOption = voteOptionService.acceptVote(optionId, votedIp, votingKey);
         return voteOption;
     }
 }

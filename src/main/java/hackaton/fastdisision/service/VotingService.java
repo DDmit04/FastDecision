@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.UUID;
 
 @Service
 public class VotingService {
@@ -33,6 +34,11 @@ public class VotingService {
             voting.setCreationDate(LocalDateTime.now(Clock.systemUTC()));
             if (user != null) {
                 voting.setOwner(user);
+            }
+            if(voting.isProtectedVoting()) {
+                voting.setVotingKey(UUID.randomUUID().toString());
+            } else {
+                voting.setVotingKey("public");
             }
             savedVoting = votingRepo.save(voting);
         }

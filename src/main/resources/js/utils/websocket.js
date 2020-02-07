@@ -8,17 +8,17 @@ export function addHandler(handler) {
     handlers.push(handler)
 }
 
-export function sendVote(optionId, votingId) {
+export function sendVote(optionId, votingId, votingKey) {
     if (stompClient && stompClient.connected) {
-        stompClient.send('/app/voting-websocket/' + votingId, optionId, {})
+        stompClient.send('/app/voting-websocket/' + votingId + '/' + votingKey, optionId, {})
     }
 }
 
-export function connectWebsocket(votingId) {
+export function connectWebsocket(votingId, votingKey) {
     const socket = new SockJS('/voting-websocket')
     stompClient = Stomp.over(socket)
     stompClient.connect({}, (frame) => {
-        stompClient.subscribe('/topic/voting/' + votingId, data => {
+        stompClient.subscribe('/topic/voting/' + votingId + '/' + votingKey, data => {
             handlers.forEach(handler => handler(JSON.parse(data.body)))
         })
     }, error => {

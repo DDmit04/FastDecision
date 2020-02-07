@@ -2,6 +2,7 @@ package hackaton.fastdisision.service;
 
 import hackaton.fastdisision.data.VoteOption;
 import hackaton.fastdisision.data.Voting;
+import hackaton.fastdisision.excaptions.WrongVotingKeyException;
 import hackaton.fastdisision.repo.VoteOptionRepo;
 import hackaton.fastdisision.repo.VotingRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,12 @@ public class VoteOptionService {
         this.votingRepo = votingRepo;
     }
 
-    public VoteOption acceptVote(long optionId, String votedIp) {
+    public VoteOption acceptVote(long optionId, String votedIp, String votingKey) throws WrongVotingKeyException {
         VoteOption voteOption = voteOptionRepo.findById(optionId).get();
         Voting voting = voteOption.getVoting();
+        if(!votingKey.equals(voting.getVotingKey())) {
+            throw new WrongVotingKeyException();
+        }
         if(voting.getVotedIps().indexOf(votedIp) == -1) {
             addVotedIp(voting, votedIp);
             voteOption.setPluses(voteOption.getPluses() + 1);

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import hackaton.fastdisision.views.VotingView;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,6 +31,9 @@ public class User {
     @JsonView(VotingView.FullData.class)
     private String email;
 
+    @JsonView(VotingView.FullData.class)
+    private String password;
+
     @JsonView(VotingView.MinimalData.class)
     private String userPic;
 
@@ -53,4 +55,5 @@ public class User {
     public int hashCode() {
         return getId() != null ? getId().hashCode() : 0;
     }
+
 }
