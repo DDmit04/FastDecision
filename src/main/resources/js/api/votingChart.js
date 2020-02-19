@@ -1,16 +1,10 @@
 import Vue from 'vue'
 
-const newestResource = Vue.resource('/voteApi/charts/newest')
-const popularResource = Vue.resource('/voteApi/charts/popular')
-const userPublicResource = Vue.resource('/voteApi/charts/userPublic{/id}')
-const userPrivateResource = Vue.resource('/voteApi/charts/userPrivate{/id}')
-
-
 export default {
 
-    getNewest: () => newestResource.get({}),
-    getPopular: () => popularResource.get({}),
-    getUserPublic : (id) => userPublicResource.get({id: id}),
-    getUserPrivate : (id) => userPrivateResource.get({id: id}),
+    getNewest: (page) => Vue.http.get('/voteApi/charts/newest', {params:  {page: page}} ),
+    getPopular: (page) => Vue.http.get('/voteApi/charts/popular', {params:  {page: page}} ),
+    getUserPublic : (page, id) => Vue.http.get('/voteApi/charts/userPublic/' + id, {params:  {page: page}} ),
+    getUserPrivate : (page, id) => Vue.http.get('/voteApi/charts/userPrivate/' + id, {params:  {page: page}} ),
 
 }

@@ -29,7 +29,7 @@ public class Voting {
     @JsonView(VotingView.FullData.class)
     private LocalDateTime creationDate;
 
-    @JsonView(VotingView.MinimalData.class)
+    @JsonView(VotingView.CoreData.class)
     private String votingKey;
 
     @JsonView(VotingView.FullData.class)
@@ -43,13 +43,13 @@ public class Voting {
     @JsonView(VotingView.MinimalData.class)
     private User owner;
 
+    @JsonView(VotingView.FullData.class)
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name="voted_users_ips", joinColumns=@JoinColumn(name="vote_option_id"))
-    @JsonView(VotingView.FullData.class)
     private List<String> votedIps = new ArrayList<>();
 
-    @OneToMany(mappedBy="voting", cascade=CascadeType.ALL, orphanRemoval = true)
     @JsonView(VotingView.CoreData.class)
+    @OneToMany(mappedBy="voting", cascade=CascadeType.ALL, orphanRemoval = true)
     private List<VoteOption> votingOptions;
 
     @Override

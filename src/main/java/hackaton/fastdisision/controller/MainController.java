@@ -31,6 +31,7 @@ public class MainController {
 
     @GetMapping
     public String main(Model model, @AuthenticationPrincipal User user) throws JsonProcessingException {
+
         boolean isDevMode = true;
         if(profile.equals("prod")) {
             isDevMode = false;

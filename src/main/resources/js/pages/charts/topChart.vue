@@ -28,13 +28,13 @@
             chartLoader
         },
         methods: {
-            async loadPopularVotings() {
-                const response = await votingChart.getPopular()
+            async loadPopularVotings(page) {
+                const response = await votingChart.getPopular(page)
                 const data = await response.json()
                 return data
             },
-            async loadNewestVotings() {
-                const response = await votingChart.getNewest()
+            async loadNewestVotings(page) {
+                const response = await votingChart.getNewest(page)
                 const data = await response.json()
                 return data
             }

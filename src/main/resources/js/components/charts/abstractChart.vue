@@ -1,34 +1,32 @@
 <template>
     <div>
-        <votindDeletionModal :modalIsActive="modalIsActive"
+        <votingDeletionModal :modalIsActive="modalIsActive"
                              @close="modalIsActive = false"
                              @accept="deleteVoting()"/>
         <v-col lg="8" sm="12">
-            <v-layout v-if="chartData.length == 0" justify-center class="mt-3 display-3 font-italic">
+            <v-layout v-if="votings.length == 0" justify-center class="mt-3 display-3 font-italic">
                 Nothing Here!
             </v-layout>
-            <v-card v-else v-for="voting in chartData" color="primary" :key="voting.id" @click="goToVoting(voting.id)">
+            <v-card v-else v-for="voting in votings" color="primary" :key="voting.id" @click="goToVoting(voting.id)">
                 <v-card-title class="title">
                     <v-layout justify-start>
-                        {{voting.votingTitle}}
+                        {{voting.votingTitle | normalizeString}}
                     </v-layout>
                     <v-layout justify-center>
                         author:
-                        <router-link v-if="voting.owner != null" to="/">
-                            <v-btn :to="{name: 'userChart', params: {userId: voting.owner.id} }" color="accent"
+                            <v-btn v-if="voting.owner != null" @click.stop="goToUser(voting.owner.id)" color="accent"
                                    class="ml-2">
-                                {{voting.owner.username | normalizeUsername}}
+                                {{voting.owner.username | normalizeString}}
                             </v-btn>
-                        </router-link>
-                        <v-btn v-else color="accent" class="ml-2">
+                        <v-btn v-else color="accent" disabled class="ml-2">
                             Unknown
                         </v-btn>
                     </v-layout>
                     <v-layout justify-end>
                         total votes: {{voting.totalVotes}}
-                        <v-btn v-if="voting.owner != null && voting.owner.id == currentUser.id"
+                        <v-btn v-if="canDelete(voting)"
                                @click.stop="callDeleteVoting(voting)"
-                               class="ml-2" color="accent">
+                               class="ml-4" color="accent">
                             <v-icon>{{closeIcon}}</v-icon>
                         </v-btn>
                     </v-layout>
@@ -42,14 +40,15 @@
 <script>
     import {mapState} from 'vuex'
     import {mdiClose} from '@mdi/js'
-    import votindDeletionModal from "../modal/votindDeletionModal.vue"
-    import server from "../../api/server";
+    import votingDeletionModal from "../modal/votingDeletionModal.vue"
+    import server from "../../api/server"
+    import routesNames from "../../router/routesNames";
 
     export default {
         props: {
             chartData: {
                 required: true,
-                type: Array
+                type: Object
             },
         },
         name: "abstractChart",
@@ -57,38 +56,51 @@
             return {
                 modalIsActive: false,
                 deletedVoting: null,
+                votings: this.chartData.content,
                 closeIcon: mdiClose,
+                currentPage: 1,
             }
         },
         components: {
-            votindDeletionModal
+            votingDeletionModal
         },
         filters: {
-            normalizeUsername(value) {
+            normalizeString(value) {
                 let filteredValue = value
-                if (value.length > 15) {
-                    filteredValue = value.slice(0, 13) + '...'
+                if (value.length >= 13) {
+                    filteredValue = value.slice(0, 12) + '...'
+                } else {
+                    let placeholder = '_'
+                    filteredValue += placeholder.repeat(15 - value.length)
                 }
                 return filteredValue
-            }
+            },
         },
         computed: {
-            ...mapState(['currentUser'])
+            ...mapState(['currentUser']),
         },
         methods: {
             goToVoting(votingId) {
-                this.$router.push({name: 'currentVoting', params: {votingId: votingId}})
+                this.$router.push({name: routesNames.CURRENT_VOTING, params: {votingId: votingId}})
+            },
+            goToUser(votingOwnerId) {
+                this.$router.push({name: routesNames.USER_VOTINGS_CHART, params: {userId: votingOwnerId} })
             },
             callDeleteVoting(voting) {
                 this.deletedVoting = voting
                 this.modalIsActive = true
             },
+            canDelete(voting) {
+                let userIsOwner = (voting.owner != null && this.currentUser != null) && voting.owner.id == this.currentUser.id
+                let currentUserIsAdmin = this.currentUser != null && this.currentUser.roles.includes('ADMIN')
+                return userIsOwner || currentUserIsAdmin
+            },
             async deleteVoting() {
                 if (this.deletedVoting != null) {
                     const result = await server.deleteOne(this.deletedVoting.id)
                     if(result.ok) {
-                        let deletedVotingIndex = this.chartData.indexOf(this.deletedVoting)
-                        this.chartData.splice(deletedVotingIndex, 1)
+                        let deletedVotingIndex = this.votings.indexOf(this.deletedVoting)
+                        this.votings.splice(deletedVotingIndex, 1)
                     }
                 }
             },

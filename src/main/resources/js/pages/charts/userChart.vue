@@ -8,12 +8,12 @@
         <v-tabs-items v-model="tabs" :style="{ background: getBackgroundColor}">
             <v-tab-item>
                 <chart-loader :load-function="loadUserPublic"
-                              :first-arg="userId"
+                              :userId="userId"
                 />
             </v-tab-item>
             <v-tab-item v-if="currentUser.id == userId">
                 <chart-loader :load-function="loadUserPrivate"
-                              :first-arg="userId"
+                              :userId="userId"
                 />
             </v-tab-item>
         </v-tabs-items>
@@ -60,13 +60,13 @@
             }
         },
         methods: {
-            async loadUserPublic(id) {
-                const response = await votingChart.getUserPublic(id)
+            async loadUserPublic(id, page) {
+                const response = await votingChart.getUserPublic(id, page)
                 const data = await response.json()
                 return data
             },
-            async loadUserPrivate(id) {
-                const response = await votingChart.getUserPrivate(id)
+            async loadUserPrivate(id, page) {
+                const response = await votingChart.getUserPrivate(id, page)
                 const data = await response.json()
                 return data
             },

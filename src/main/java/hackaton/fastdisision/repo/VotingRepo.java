@@ -1,16 +1,18 @@
 package hackaton.fastdisision.repo;
 
 import hackaton.fastdisision.data.Voting;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
-
-import java.util.List;
 
 public interface VotingRepo extends CrudRepository<Voting, Long> {
 
-    List<Voting> findTop10ByIsPrivateVotingOrderByTotalVotesDesc(boolean isPrivate);
+    Page<Voting> findByIsPrivateVotingOrderByTotalVotes(boolean isPrivate, Pageable pageable);
 
-    List<Voting> findTop10ByIsPrivateVotingOrderByCreationDateDesc(boolean isPrivate);
+    Page<Voting> findByIsPrivateVotingOrderByCreationDate(boolean isPrivate, Pageable pageable);
 
-    List<Voting> findTop10ByOwner_IdAndIsPrivateVotingOrderByCreationDateDesc(String id, boolean isPrivate);
+    Page<Voting> findByOwner_IdAndIsPrivateVotingOrderByCreationDate(String id, boolean isPrivate, Pageable pageable);
+
+    Page<Voting> findByIsPrivateVotingAndVotingTitleLike(boolean isPrivate, String title, Pageable pageable);
 
 }

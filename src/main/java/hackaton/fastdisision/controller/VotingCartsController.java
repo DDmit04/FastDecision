@@ -6,10 +6,11 @@ import hackaton.fastdisision.data.Voting;
 import hackaton.fastdisision.service.VotingService;
 import hackaton.fastdisision.views.VotingView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/voteApi/charts")
@@ -22,31 +23,37 @@ public class VotingCartsController {
         this.votingService = votingService;
     }
 
+    @GetMapping("search")
+    @JsonView(VotingView.MinimalData.class)
+    public Page<Voting> searchVotings(@RequestParam String search, @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable) {
+        return votingService.searchVotings(search, pageable);
+    }
+
     @GetMapping("/newest")
     @JsonView(VotingView.MinimalData.class)
-    public Iterable<Voting> get10Newest() {
-        Iterable<Voting> votings = votingService.get10Newest();
+    public Page<Voting> get10Newest(@PageableDefault(sort = {"creationDate"}, direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<Voting> votings = votingService.get10Newest(pageable);
         return votings;
     }
 
     @GetMapping("/popular")
     @JsonView(VotingView.MinimalData.class)
-    public Iterable<Voting> get10Popular() {
-        Iterable<Voting> votings = votingService.get10Popular();
+    public Page<Voting> get10Popular(@PageableDefault(sort = {"totalVotes"}, direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<Voting> votings = votingService.get10Popular(pageable);
         return votings;
     }
 
     @GetMapping("/userPublic/{id}")
     @JsonView(VotingView.MinimalData.class)
-    public Iterable<Voting> getUserPublic(@PathVariable("id") User user) {
-        Iterable<Voting> votings = votingService.getUserPublic(user);
+    public Page<Voting> getUserPublic(@PathVariable("id") User user, @PageableDefault(sort = {"creationDate"}, direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<Voting> votings = votingService.getUserPublic(user, pageable);
         return votings;
     }
 
     @GetMapping("/userPrivate/{id}")
     @JsonView(VotingView.MinimalData.class)
-    public Iterable<Voting> getUserPrivate(@PathVariable("id") User user) {
-        Iterable<Voting> votings = votingService.getUserPrivate(user);
+    public Page<Voting> getUserPrivate(@PathVariable("id") User user, @PageableDefault(sort = {"creationDate"}, direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<Voting> votings = votingService.getUserPrivate(user, pageable);
         return votings;
     }
 

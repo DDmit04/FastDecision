@@ -8,7 +8,13 @@
                     indeterminate
             />
         </v-layout>
-        <abstract-chart v-else :chartData="loadedChartData"/>
+        <div v-else>
+            <abstract-chart :chartData="loadedChartData"/>
+            <v-layout v-if="loadedChartData.content.length > 0" justify-center>
+                <v-pagination v-model="currentPage" :length="loadedChartData.totalPages" :total-visible="visiblePages">
+                </v-pagination>
+            </v-layout>
+        </div>
     </div>
 </template>
 
@@ -21,7 +27,7 @@
                 required: true,
                 type: Function
             },
-            firstArg: {
+            userId: {
                 required: false,
                 type: [Number, String]
             },
@@ -29,17 +35,31 @@
         name: "chartLoader",
         data() {
             return {
-                loadedChartData: [],
-                dataIsLoading: true
+                loadedChartData: null,
+                dataIsLoading: true,
+                currentPage: 1,
+                visiblePages: 5
             }
         },
         components: {
             abstractChart
         },
+        watch: {
+            currentPage(newVal, oldVal) {
+                this.loadPage()
+            }
+        },
         async created() {
-            const data = await this.loadFunction(this.firstArg)
-            this.loadedChartData = data
-            this.dataIsLoading = false
+            this.loadPage()
+        },
+        methods: {
+            async loadPage() {
+                this.dataIsLoading = true
+                const data = await this.loadFunction(this.currentPage - 1, this.userId)
+                this.currentPage = data.number + 1
+                this.loadedChartData = data
+                this.dataIsLoading = false
+            },
         }
     }
 </script>

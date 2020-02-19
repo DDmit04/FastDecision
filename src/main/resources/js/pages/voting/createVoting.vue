@@ -79,7 +79,7 @@
                 },
             }
         },
-        created() {
+        async created() {
             this.newVoting.votingOptions.push(this.voteOption1)
             this.newVoting.votingOptions.push(this.voteOption2)
         },
