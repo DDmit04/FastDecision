@@ -1,5 +1,7 @@
 package hackaton.fastdisision.config;
 
+import hackaton.fastdisision.data.UserRoles;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +20,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CompositeFilter oAuthSsoFilter;
 
+    @Autowired
     public WebSecurityConfig(CompositeFilter oAuthSsoFilter) {
         this.oAuthSsoFilter = oAuthSsoFilter;
     }
@@ -26,14 +29,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .antMatcher("/**").authorizeRequests()
+                .antMatchers("/admin**").hasAnyAuthority(UserRoles.ADMIN.name())
                 .antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin()
-                .loginPage("/login").permitAll()
-                .and()
-                .logout().logoutUrl("/logout").logoutSuccessUrl("/").permitAll()
-                .and()
+                .logout().logoutUrl("/logout").logoutSuccessUrl("/").permitAll();
+        http
                 .addFilterBefore(oAuthSsoFilter, BasicAuthenticationFilter.class)
                 .csrf().disable();
     }

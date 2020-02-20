@@ -4,6 +4,7 @@ import hackaton.fastdisision.data.User;
 import hackaton.fastdisision.data.UserRoles;
 import hackaton.fastdisision.data.VoteOption;
 import hackaton.fastdisision.data.Voting;
+import hackaton.fastdisision.excaptions.AccessDeniedException;
 import hackaton.fastdisision.repo.UserRepo;
 import hackaton.fastdisision.repo.VotingRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,17 +75,19 @@ public class VotingService {
     }
 
 
-    public void deleteVoting(Voting voting, User user) {
+    public void deleteVoting(Voting voting, User user) throws AccessDeniedException {
         if ((voting.getOwner() != null && voting.getOwner().equals(user)) || user.getRoles().contains(UserRoles.ADMIN)) {
             if(voting.getOwner() != null) {
                 voting.getOwner().getUserVotings().remove(voting);
                 userRepo.save(voting.getOwner());
             }
             votingRepo.delete(voting);
+        } else {
+            throw new AccessDeniedException();
         }
     }
 
     public Page<Voting> searchVotings(String search, Pageable pageable) {
-        return votingRepo.findByIsPrivateVotingAndVotingTitleLike(false, search, pageable);
+        return votingRepo.findAllByIsPrivateVotingAndVotingTitleContains(false, search, pageable);
     }
 }

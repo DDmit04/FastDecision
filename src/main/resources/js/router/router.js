@@ -6,6 +6,8 @@ import votingResults from "../pages/voting/votingResults.vue"
 import topChart from "../pages/charts/topChart.vue"
 import userChart from "../pages/charts/userChart.vue"
 import errorPage from "../pages/errorPage.vue"
+import adminPage from "../pages/adminPage.vue"
+import searchChart from "../pages/charts/searchChart.vue"
 import rotesNames from "./routesNames"
 
 Vue.use(VueRouter)
@@ -16,6 +18,11 @@ const routes = [
         path: '/',
         name: rotesNames.MAIN,
         component: createVoting
+    },
+    {
+        path: '/dashboard/askAdmin',
+        name: rotesNames.ASK_ADMIN_PAGE,
+        component: adminPage
     },
     {
         path: '/dashboard/:userId',
@@ -52,6 +59,12 @@ const routes = [
         name: rotesNames.POPULAR_VOTINGS,
         component: topChart,
         props: {topChartType: 'popular'}
+    },
+    {
+        path: '/search/:stringToSearch',
+        name: rotesNames.SEARCH_RESULTS,
+        component: searchChart,
+        props: true
     },
     {
         path: '/err',

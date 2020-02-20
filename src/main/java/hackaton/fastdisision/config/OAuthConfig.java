@@ -2,6 +2,7 @@ package hackaton.fastdisision.config;
 
 import hackaton.fastdisision.data.ClientResources;
 import hackaton.fastdisision.data.User;
+import hackaton.fastdisision.data.UserRoles;
 import hackaton.fastdisision.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -9,6 +10,7 @@ import org.springframework.boot.autoconfigure.security.oauth2.resource.Principal
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
@@ -16,17 +18,20 @@ import org.springframework.web.filter.CompositeFilter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Configuration
 public class OAuthConfig {
 
     private UserRepo userRepo;
     private final OAuth2ClientContext oauth2ClientContext;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public OAuthConfig(UserRepo userRepo, @Qualifier("oauth2ClientContext")OAuth2ClientContext oauth2ClientContext) {
+    public OAuthConfig(UserRepo userRepo, @Qualifier("oauth2ClientContext") OAuth2ClientContext oauth2ClientContext, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.oauth2ClientContext = oauth2ClientContext;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Bean
@@ -48,6 +53,8 @@ public class OAuthConfig {
             User user = userRepo.findById(id).orElseGet(() -> {
                 User newUser = new User();
                 newUser.setId(id);
+                newUser.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
+                newUser.getRoles().add(UserRoles.USER);
                 newUser.setUsername((String) map.get("name"));
                 newUser.setEmail((String) map.get("email"));
                 newUser.setUserPic((String) map.get("picture"));
@@ -64,6 +71,8 @@ public class OAuthConfig {
             User user = userRepo.findById(id).orElseGet(() -> {
                 User newUser = new User();
                 newUser.setId(id);
+                newUser.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
+                newUser.getRoles().add(UserRoles.USER);
                 newUser.setUsername((String) map.get("login"));
                 newUser.setEmail(null);
                 newUser.setUserPic((String) map.get("avatar_url"));
