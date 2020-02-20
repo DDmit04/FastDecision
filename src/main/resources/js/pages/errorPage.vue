@@ -36,7 +36,7 @@
         },
         created() {
             if(this.errorCode == 404) {
-                this.errorDisplayCode = 'Voting not found!'
+                this.errorDisplayText = 'Not found!'
             }
         }
     }

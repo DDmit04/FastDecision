@@ -13,6 +13,6 @@ public interface VotingRepo extends CrudRepository<Voting, Long> {
 
     Page<Voting> findByOwner_IdAndIsPrivateVotingOrderByCreationDate(String id, boolean isPrivate, Pageable pageable);
 
-    Page<Voting> findByIsPrivateVotingAndVotingTitleLike(boolean isPrivate, String title, Pageable pageable);
+    Page<Voting> findAllByIsPrivateVotingAndVotingTitleContains(boolean isPrivate, String title, Pageable pageable);
 
 }

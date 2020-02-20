@@ -3,6 +3,7 @@ package hackaton.fastdisision.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import hackaton.fastdisision.data.User;
 import hackaton.fastdisision.data.Voting;
+import hackaton.fastdisision.excaptions.AccessDeniedException;
 import hackaton.fastdisision.excaptions.VotingNotFoundException;
 import hackaton.fastdisision.excaptions.WrongVotingKeyException;
 import hackaton.fastdisision.service.VotingService;
@@ -51,7 +52,7 @@ public class VotingController {
     }
 
     @DeleteMapping("{id}")
-    public void deleteVoting(@PathVariable("id") Voting voting, @AuthenticationPrincipal User user) {
+    public void deleteVoting(@PathVariable("id") Voting voting, @AuthenticationPrincipal User user) throws AccessDeniedException {
         votingService.deleteVoting(voting, user);
     }
 

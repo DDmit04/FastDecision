@@ -25,7 +25,7 @@ public class VotingCartsController {
 
     @GetMapping("search")
     @JsonView(VotingView.MinimalData.class)
-    public Page<Voting> searchVotings(@RequestParam String search, @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable) {
+    public Page<Voting> searchVotings(@RequestParam("search") String search, @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable) {
         return votingService.searchVotings(search, pageable);
     }
 

@@ -15,6 +15,10 @@
             </v-btn>
         </v-toolbar-items>
         <v-spacer></v-spacer>
+        <v-text-field clearable class="mt-4 mr-4" color="secondary" v-model="search" placeholder="Search by title..."/>
+        <v-btn :disabled="search.length == 0" outlined @click="goToSearch()" class="mr-2">
+            <v-icon>{{searchIcon}}</v-icon>
+        </v-btn>
         <v-toolbar-items>
             <v-btn @click="goToOtherRote(routesNames.NEWEST_VOTINGS)" text>Newest</v-btn>
             <v-btn @click="goToOtherRote(routesNames.POPULAR_VOTINGS)" text>Popular</v-btn>
@@ -38,7 +42,7 @@
 </template>
 
 <script>
-    import {mdiLoginVariant, mdiMoonWaningCrescent, mdiWhiteBalanceSunny} from '@mdi/js'
+    import {mdiLoginVariant, mdiMagnify, mdiMoonWaningCrescent, mdiWhiteBalanceSunny} from '@mdi/js'
     import {mapMutations, mapState} from 'vuex'
     import authModal from "./modal/authModal.vue"
     import routesNames from "../router/routesNames";
@@ -50,9 +54,11 @@
                 signInIcon: mdiLoginVariant,
                 sunIcon: mdiWhiteBalanceSunny,
                 moonIcon: mdiMoonWaningCrescent,
+                searchIcon: mdiMagnify,
 
                 modalIsActive: false,
                 routesNames: routesNames,
+                search: ''
             }
         },
         components: {
@@ -93,6 +99,9 @@
                 } else {
                     this.modalIsActive = true
                 }
+            },
+            goToSearch() {
+                this.$router.push({name: routesNames.SEARCH_RESULTS, params: {stringToSearch: this.search} })
             }
         }
     }
