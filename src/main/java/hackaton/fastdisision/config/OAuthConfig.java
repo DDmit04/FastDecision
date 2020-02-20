@@ -96,11 +96,11 @@ public class OAuthConfig {
     public CompositeFilter ssoFilter() {
         CompositeFilter filter = new CompositeFilter();
         List<OAuth2ClientAuthenticationProcessingFilter> filters = new ArrayList<>();
+        ClientResources githubResource = githubDev();
         if(profile.equals("prod")) {
-            filters.add(constructFilter(githubDev(), "/login/github", githubPrincipalExtractor(userRepo)));
-        } else {
-            filters.add(constructFilter(github(), "/login/github", githubPrincipalExtractor(userRepo)));
+            githubResource = github();
         }
+        filters.add(constructFilter(githubResource, "/login/github", githubPrincipalExtractor(userRepo)));
         filters.add(constructFilter(google(), "/login/google", googlePrincipalExtractor(userRepo)));
         filter.setFilters(filters);
         return filter;
