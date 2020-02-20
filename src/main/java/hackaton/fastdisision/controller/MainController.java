@@ -19,6 +19,7 @@ public class MainController {
 
     private final ObjectWriter writer;
 
+
     @Value("${spring.profiles.active:prod}")
     private String profile;
 
