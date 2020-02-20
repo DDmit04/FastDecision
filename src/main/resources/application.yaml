@@ -9,8 +9,8 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD:sa}
   jpa:
     generate-ddl: false
-    show-sql: true
-    hibernate.ddl-auto: create-drop
+    show-sql: false
+    hibernate.ddl-auto: validate
     properties:
       hibernate:
         jdbc:
