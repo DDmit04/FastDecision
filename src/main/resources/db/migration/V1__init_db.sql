@@ -32,14 +32,7 @@ create table voting
     primary key (id)
 );
 
-create table user_role
-(
-    user_id varchar(255) not null,
-    roles   varchar(255)
-);
 
-alter table if exists user_role
-    add constraint FKfpm8swft53ulq2hl11yplpr5 foreign key (user_id) references usr;
 alter table if exists voted_users_ips
     add constraint FKpq6nawaf6tbshxqcvtxlo2hov foreign key (vote_option_id) references voting;
 alter table if exists vote_option
