@@ -6,6 +6,7 @@ import hackaton.fastdisision.data.UserRoles;
 import hackaton.fastdisision.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +24,10 @@ import java.util.UUID;
 @Configuration
 public class OAuthConfig {
 
-    private UserRepo userRepo;
+    @Value("${spring.profiles.active:prod}")
+    private String profile;
+
+    private final UserRepo userRepo;
     private final OAuth2ClientContext oauth2ClientContext;
     private final PasswordEncoder passwordEncoder;
 
@@ -37,6 +41,12 @@ public class OAuthConfig {
     @Bean
     @ConfigurationProperties("github")
     public ClientResources github() {
+        return new ClientResources();
+    }
+
+    @Bean
+    @ConfigurationProperties("github-dev")
+    public ClientResources githubDev() {
         return new ClientResources();
     }
 
@@ -86,8 +96,12 @@ public class OAuthConfig {
     public CompositeFilter ssoFilter() {
         CompositeFilter filter = new CompositeFilter();
         List<OAuth2ClientAuthenticationProcessingFilter> filters = new ArrayList<>();
+        if(profile.equals("prod")) {
+            filters.add(constructFilter(githubDev(), "/login/github", githubPrincipalExtractor(userRepo)));
+        } else {
+            filters.add(constructFilter(github(), "/login/github", githubPrincipalExtractor(userRepo)));
+        }
         filters.add(constructFilter(google(), "/login/google", googlePrincipalExtractor(userRepo)));
-        filters.add(constructFilter(github(), "/login/github", githubPrincipalExtractor(userRepo)));
         filter.setFilters(filters);
         return filter;
     }
