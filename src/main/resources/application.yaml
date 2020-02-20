@@ -10,7 +10,7 @@ spring:
   jpa:
     generate-ddl: false
     show-sql: false
-    hibernate.ddl-auto: validate
+    hibernate.ddl-auto: update
     properties:
       hibernate:
         jdbc:
