@@ -10,24 +10,31 @@
                 ></v-progress-circular>
             </v-layout>
             <v-col v-else lg="8" sm="12">
-                <v-card color="primary">
-                    <v-card-title class="title">
+                <v-card color="primary" id="currentVoting">
+                    <v-card-title class="title"
+                                  id="currentVotingTitle">
                         {{currentVoting.votingTitle}}
                     </v-card-title>
                     <v-divider color="secondary"></v-divider>
                     <v-card-text class="mx-3 mt-3">
-                        <div class="py-2" v-for="(option, index) in currentVoting.votingOptions" :key="index">
+                        <div v-for="(option, index) in currentVoting.votingOptions"
+                             :key="index"
+                             :id="'currentVotingOption' + index"
+                             class="py-2"
+                        >
                             <v-row align="center">
-                                <v-col color="secondary" class="font-weight-medium">
+                                <v-col color="secondary"
+                                       :id="'currentVotingOptionDiscription' + index"
+                                       class="font-weight-medium">
                                     {{option.voteDiscription}}
                                 </v-col>
                                 <v-col>
                                     <v-checkbox
                                             color="success"
+                                            class="white--text mr-2 mt-0"
                                             hide-details
                                             :value="index == selectedOptionIndex"
                                             @click="selectedOptionIndex = index"
-                                            class="white--text mr-2 mt-0"
                                     ></v-checkbox>
                                 </v-col>
                             </v-row>
@@ -35,11 +42,17 @@
                         </div>
                     </v-card-text>
                     <v-card-actions class="pa-3">
-                        <v-btn class="white--text" color="accent" :x-large="true" :disabled="selectedOptionIndex == -1"
-                               @click="doVote()">
+                        <v-btn class="white--text"
+                               color="accent"
+                               :x-large="true" :disabled="selectedOptionIndex == -1"
+                               @click="doVote()"
+                        >
                             vote!
                         </v-btn>
-                        <v-btn class="white--text" color="secondary" :x-large="true" @click="goToResults()">
+                        <v-btn class="white--text"
+                               color="secondary"
+                               :x-large="true" @click="goToResults()"
+                        >
                             results
                         </v-btn>
                     </v-card-actions>

@@ -11,8 +11,8 @@
                     ></v-progress-circular>
                 </v-layout>
                 <v-col v-else lg="8" sm="12">
-                    <v-card color="primary">
-                        <v-card-title class="title">
+                    <v-card color="primary" id="votingResults">
+                        <v-card-title class="title" id="votingResultsTitle">
                             {{currentVoting.votingTitle}}
                             <v-layout justify-end>
                                 total votes: {{getTotalVotes}}
@@ -20,14 +20,19 @@
                         </v-card-title>
                         <v-divider color="secondary"></v-divider>
                         <v-card-text class="ma-3">
-                            <div class="py-2" v-for="(option, index) in currentVoting.votingOptions" :key="index">
+                            <div v-for="(option, index) in currentVoting.votingOptions"
+                                 :key="index"
+                                 :id="'votingResultsOptions' + index"
+                                 class="py-2"
+                            >
                                 <v-row>
                                     <v-col cols="10" class="pa-0">
-                                        <v-layout justify-space-between class="font-weight-black subtitle-1">
-                                            <div>
+                                        <v-layout justify-space-between
+                                                  class="font-weight-black subtitle-1">
+                                            <div :id="'votingResultsDiscription' + index">
                                                 {{option.voteDiscription}}
                                             </div>
-                                            <div>
+                                            <div :id="'votingResultsPluses' + index">
                                                 {{option.pluses}} votes
                                             </div>
                                         </v-layout>

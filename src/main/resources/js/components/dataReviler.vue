@@ -3,7 +3,7 @@
         <div v-if="!dataRiviled">
             <v-btn block class="white--text" color="accent" @click="revilData()">show voting link</v-btn>
         </div>
-        <div v-else>
+        <div v-else id="votingLink">
             <v-card-text>
                 <v-col color="secondary">
                     <v-row align="center">

@@ -2,8 +2,8 @@
     <div>
         <v-container @keyup.enter="tryAddVoting()">
             <v-col lg="8" sm="12">
-                <v-card color="primary">
-                    <v-card-title >
+                <v-card color="primary" id="createVoting">
+                    <v-card-title id="createVotingTitle">
                         <v-text-field color="secondary" v-model="newVoting.votingTitle" placeholder="Vote title"/>
                     </v-card-title>
                     <v-card-text>
@@ -11,12 +11,17 @@
                                       v-model="option.voteDiscription"
                                       color="secondary"
                                       placeholder="Some option"
+                                      :id="'newVotingOption' + index"
                                       @click="checkOptionCount(index)"
                                       @focus="checkOptionCount(index)"
                         />
                         <v-row>
-                            <v-checkbox v-model="newVoting.isPrivateVoting" class="mx-2" label="private voting"
-                                        color="success"/>
+                            <v-checkbox v-model="newVoting.isPrivateVoting"
+                                        label="private voting"
+                                        class="mx-2"
+                                        :id="'newIsPrivateVoting' + index"
+                                        color="success"
+                            />
                             <v-tooltip right>
                                 <template v-slot:activator="{ on }">
                                     <v-icon class="mt-5" v-on="on">{{alertIcon}}</v-icon>
@@ -25,8 +30,12 @@
                             </v-tooltip>
                         </v-row>
                         <v-row>
-                            <v-checkbox v-model="newVoting.isProtectedVoting" class="mx-2" label="protected voting"
-                                        color="success"/>
+                            <v-checkbox v-model="newVoting.isProtectedVoting"
+                                        label="protected voting"
+                                        class="mx-2"
+                                        :id="'newIsProtectedVoting' + index"
+                                        color="success"
+                            />
                             <v-tooltip right>
                                 <template v-slot:activator="{ on }">
                                     <v-icon class="mt-5" v-on="on">{{alertIcon}}</v-icon>
@@ -37,8 +46,12 @@
                     </v-card-text>
                     <v-divider color="secondary"></v-divider>
                     <v-card-actions class="pa-3">
-                        <v-btn class="white--text" color="accent" @click="tryAddVoting()" :disabled="!voteReadyToAdd"
-                               :block=true :loading="buttonLoading">
+                        <v-btn class="white--text"
+                               color="accent"
+                               @click="tryAddVoting()"
+                               :disabled="!voteReadyToAdd"
+                               :block=true :loading="buttonLoading"
+                        >
                             add voting
                         </v-btn>
                     </v-card-actions>

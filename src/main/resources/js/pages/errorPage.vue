@@ -1,12 +1,17 @@
 <template>
     <div>
-        <v-layout justify-center class="mt-3 display-3 font-italic">
+        <v-layout justify-center
+                  class="mt-3 display-3 font-italic"
+                  id="errorCode">
             Code: {{errorDisplayCode}}
         </v-layout>
-        <v-layout justify-center class="mt-3 display-3 font-italic">
+        <v-layout justify-center
+                  class="mt-3 display-3 font-italic"
+                  id="errorText">
             {{errorDisplayText}}
         </v-layout>
-        <v-layout justify-center class="mt-3 display-1 font-italic">
+        <v-layout justify-center
+                  class="mt-3 display-1 font-italic">
             <router-link :to="{ name: routesNames.MAIN }">Go to main</router-link>
         </v-layout>
     </div>

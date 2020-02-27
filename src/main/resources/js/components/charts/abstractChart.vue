@@ -7,14 +7,23 @@
             <v-layout v-if="votings.length == 0" justify-center class="mt-3 display-3 font-italic">
                 Nothing Here!
             </v-layout>
-            <v-card v-else v-for="voting in votings" color="primary" :key="voting.id" @click="goToVoting(voting.id)">
-                <v-card-title class="title">
+            <v-card v-else
+                    v-for="voting in votings"
+                    :key="voting.id"
+                    :id="voting.id"
+                    color="primary"
+                    @click="goToVoting(voting.id)">
+                <v-card-title :id="'votingTitle' + voting.id"
+                        class="title">
                     <v-layout justify-start>
                         {{voting.votingTitle | normalizeString}}
                     </v-layout>
-                    <v-layout justify-center>
+                    <v-layout justify-center
+                              :id="'authorButton' + voting.id">
                         author:
-                            <v-btn v-if="voting.owner != null" @click.stop="goToUser(voting.owner.id)" color="accent"
+                            <v-btn v-if="voting.owner != null"
+                                   @click.stop="goToUser(voting.owner.id)"
+                                   color="accent"
                                    class="ml-2">
                                 {{voting.owner.username | normalizeString}}
                             </v-btn>
@@ -22,7 +31,8 @@
                             Unknown
                         </v-btn>
                     </v-layout>
-                    <v-layout justify-end>
+                    <v-layout justify-end
+                              :id="'totalVotes' + voting.id">
                         total votes: {{voting.totalVotes}}
                         <v-btn v-if="canDelete(voting)"
                                @click.stop="callDeleteVoting(voting)"
