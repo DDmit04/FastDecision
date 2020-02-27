@@ -30,7 +30,7 @@
         data() {
             return {
                 routesNames: routesNames,
-                errorDisplayText: this.errorReason || 'Something go wrong :(',
+                errorDisplayText: this.errorReason || 'this is error page',
                 errorDisplayCode: this.errorCode || 'unknown'
             }
         },

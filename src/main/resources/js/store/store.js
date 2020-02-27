@@ -14,7 +14,8 @@ export const store = new Vuex.Store({
     state: {
         currentUser: currentUser,
         isDarkTheme: false,
-        currentSessionVotings: []
+        currentSessionVotings: [],
+        version: ''
         // inside each currentSessionVotings:
         //{
         //     votingId: voting.id,
@@ -38,12 +39,20 @@ export const store = new Vuex.Store({
         },
     },
     mutations: {
-        initialiseStore(state) {
+        initialiseStore(state, version) {
             if (localStorage.getItem('store')) {
-                this.replaceState(
-                    Object.assign(state, JSON.parse(localStorage.getItem('store')))
-                );
+                let store = JSON.parse(localStorage.getItem('store'));
+                if (store.version == version) {
+                    this.replaceState(
+                        Object.assign(state, store)
+                    );
+                } else {
+                    state.version = version;
+                }
             }
+        },
+        refreshCurrentUserRolesMutations(state, newRoles) {
+            state.currentUser.roles = newRoles
         },
         changeThemeMutation(state) {
             state.isDarkTheme = !state.isDarkTheme
@@ -76,16 +85,38 @@ export const store = new Vuex.Store({
             }
         },
         async addNewVotingAction({commit}, newVoting) {
-            const response = await api.addVoting(newVoting)
-            const data = await response.json()
-            await commit("addCurrentSessionVotingMutation", data)
-            await router.push({
-                name: rotesNames.CURRENT_VOTING,
-                params: {
-                    votingId: data.id,
-                    votingKey: data.votingKey
-                },
-            })
+            try {
+                const response = await api.addVoting(newVoting)
+                const data = await response.json()
+                await commit("addCurrentSessionVotingMutation", data)
+                await router.push({
+                    name: rotesNames.CURRENT_VOTING,
+                    params: {
+                        votingId: data.id,
+                        votingKey: data.votingKey
+                    },
+                })
+            } catch (err) {
+                let allReasons = ''
+                let separator = ', '
+                if(err.data.errors.length != 0) {
+                    await err.data.errors.forEach((error, index) => {
+                        if (index == err.data.errors.length - 1) {
+                            separator = ''
+                        }
+                        allReasons += error.defaultMessage + separator
+                    })
+                } else {
+                    allReasons = err.data.message
+                }
+                await router.push({
+                    name: rotesNames.ERROR_PAGE,
+                    params: {
+                        errorCode: err.status,
+                        errorReason: allReasons
+                    }
+                })
+            }
         }
     }
 })

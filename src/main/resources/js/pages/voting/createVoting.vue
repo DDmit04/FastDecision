@@ -37,7 +37,7 @@
                     </v-card-text>
                     <v-divider color="secondary"></v-divider>
                     <v-card-actions class="pa-3">
-                        <v-btn class="white--text" color="accent" @click="addVoting" :disabled="!voteReadyToAdd"
+                        <v-btn class="white--text" color="accent" @click="tryAddVoting()" :disabled="!voteReadyToAdd"
                                :block=true :loading="buttonLoading">
                             add voting
                         </v-btn>

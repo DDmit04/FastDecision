@@ -36,6 +36,7 @@ google:
   resource:
     userInfoUri: https://www.googleapis.com/oauth2/v3/userinfo
 
+
 github:
   client:
     clientId: ${githubClient}
@@ -47,6 +48,20 @@ github:
     clientAuthenticationScheme: form
   resource:
     userInfoUri: https://api.github.com/user
+
+github-dev:
+  client:
+    clientId: ${githubDevClient}
+    clientSecret: ${githubDevSecret}
+    accessTokenUri: https://github.com/login/oauth/access_token
+    userAuthorizationUri: https://github.com/login/oauth/authorize
+    tokenName: oauth_token
+    authenticationScheme: query
+    clientAuthenticationScheme: form
+  resource:
+    userInfoUri: https://api.github.com/user
+
+
 
 server:
   port: 9002

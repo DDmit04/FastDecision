@@ -25,7 +25,7 @@ Vue.config.errorHandler = (err, vm, info) => {
             }
         })
     } else {
-        console.log(err)
+        console.error(err)
     }
 }
 
@@ -35,7 +35,8 @@ new Vue ({
     router,
     store,
     beforeCreate() {
-        this.$store.commit('initialiseStore');
+        //APPLICATION_VERSION from webpack.common
+        this.$store.commit('initialiseStore', APPLICATION_VERSION);
     },
     render: a => a(App)
 })

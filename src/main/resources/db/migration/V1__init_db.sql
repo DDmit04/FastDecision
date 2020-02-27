@@ -31,6 +31,8 @@ create table voting
     owner_id          varchar(255),
     primary key (id)
 );
+
+
 alter table if exists voted_users_ips
     add constraint FKpq6nawaf6tbshxqcvtxlo2hov foreign key (vote_option_id) references voting;
 alter table if exists vote_option
