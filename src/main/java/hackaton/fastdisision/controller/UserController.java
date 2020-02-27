@@ -23,11 +23,9 @@ public class UserController {
     }
 
     @PostMapping("/getAdmin")
-    public User requestAdminRole(@RequestBody(required = false) String clientAdminPassword, @AuthenticationPrincipal User currentUser) throws VotingNotFoundException, WrongAdminPasswordException {
-        if(clientAdminPassword == null) {
-            clientAdminPassword = "";
-        }
-        return adminService.checkAdminRequest(currentUser, clientAdminPassword);
+    public User requestAdminRole(@RequestBody(required = true) String clientAdminPassword, @AuthenticationPrincipal User currentUser) throws VotingNotFoundException, WrongAdminPasswordException {
+        User user = adminService.checkAdminRequest(currentUser, clientAdminPassword);
+        return user;
     }
 
 }

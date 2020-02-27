@@ -25,7 +25,7 @@ public class AdminService {
 
     public User checkAdminRequest(User currentUser, String clientAdminPassword) throws WrongAdminPasswordException {
         boolean adminPasswordIsAccepted = serverAdminPassword.equals(clientAdminPassword);
-        boolean currentUserIsAdmin = currentUser != null && currentUser.getRoles().contains(UserRoles.ADMIN);
+        boolean currentUserIsAdmin = currentUser.getRoles().contains(UserRoles.ADMIN);
         if(adminPasswordIsAccepted && !currentUserIsAdmin) {
             currentUser.getRoles().add(UserRoles.ADMIN);
             currentUser = userRepo.save(currentUser);
@@ -35,27 +35,28 @@ public class AdminService {
         return currentUser;
     }
 
-    public User giveAdmin(User user, User currentUser) throws AccessDeniedException {
-        boolean userIsAdmin = user.getRoles().contains(UserRoles.ADMIN);
-        if(!user.equals(currentUser) && !userIsAdmin) {
-            user.getRoles().add(UserRoles.ADMIN);
-            user = userRepo.save(currentUser);
+    public User giveAdmin(User userToGiveAdmin) throws AccessDeniedException {
+        boolean userIsAdmin = userToGiveAdmin.getRoles().contains(UserRoles.ADMIN);
+        if(!userIsAdmin) {
+            userToGiveAdmin.getRoles().add(UserRoles.ADMIN);
+            userToGiveAdmin = userRepo.save(userToGiveAdmin);
         } else {
             throw new AccessDeniedException();
         }
-        return user;
+        return userToGiveAdmin;
     }
 
-    public User removeAdmin(User user, User currentUser, String clientAdminPassword) throws AccessDeniedException, WrongAdminPasswordException {
+    public User removeAdmin(User userToRemoveAdmin, User currentUser, String clientAdminPassword) throws AccessDeniedException, WrongAdminPasswordException {
         boolean adminPasswordIsAccepted = serverAdminPassword.equals(clientAdminPassword);
-        if(!user.equals(currentUser) && adminPasswordIsAccepted) {
-            user.getRoles().remove(UserRoles.ADMIN);
-            userRepo.save(user);
+        boolean currentUserIsAdmin = currentUser.getRoles().contains(UserRoles.ADMIN);
+        if(!userToRemoveAdmin.equals(currentUser) && adminPasswordIsAccepted && currentUserIsAdmin) {
+            userToRemoveAdmin.getRoles().remove(UserRoles.ADMIN);
+            userRepo.save(userToRemoveAdmin);
         } else if(!adminPasswordIsAccepted) {
             throw new WrongAdminPasswordException();
         } else {
             throw new AccessDeniedException();
         }
-        return user;
+        return userToRemoveAdmin;
     }
 }

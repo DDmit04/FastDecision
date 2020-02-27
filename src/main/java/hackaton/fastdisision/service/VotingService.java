@@ -50,11 +50,25 @@ public class VotingService {
         return savedVoting;
     }
 
-    public Page<Voting> get10Popular(Pageable pageable) {
+    public void deleteVoting(Voting voting, User user) throws AccessDeniedException {
+        boolean userIsAdmin = user.getRoles().contains(UserRoles.ADMIN);
+        boolean userIsOwner = voting.getOwner() != null && voting.getOwner().equals(user);
+        if (userIsOwner || userIsAdmin) {
+            if(voting.getOwner() != null) {
+                voting.getOwner().getUserVotings().remove(voting);
+                userRepo.save(voting.getOwner());
+            }
+            votingRepo.delete(voting);
+        } else {
+            throw new AccessDeniedException();
+        }
+    }
+
+    public Page<Voting> getPopular(Pageable pageable) {
         return votingRepo.findByIsPrivateVotingOrderByTotalVotes(false, pageable);
     }
 
-    public Page<Voting> get10Newest(Pageable pageable) {
+    public Page<Voting> getNewest(Pageable pageable) {
         return votingRepo.findByIsPrivateVotingOrderByCreationDate(false, pageable);
     }
 
@@ -72,19 +86,6 @@ public class VotingService {
             votings = votingRepo.findByOwner_IdAndIsPrivateVotingOrderByCreationDate(user.getId(), true, pageable);
         }
         return votings;
-    }
-
-
-    public void deleteVoting(Voting voting, User user) throws AccessDeniedException {
-        if ((voting.getOwner() != null && voting.getOwner().equals(user)) || user.getRoles().contains(UserRoles.ADMIN)) {
-            if(voting.getOwner() != null) {
-                voting.getOwner().getUserVotings().remove(voting);
-                userRepo.save(voting.getOwner());
-            }
-            votingRepo.delete(voting);
-        } else {
-            throw new AccessDeniedException();
-        }
     }
 
     public Page<Voting> searchVotings(String search, Pageable pageable) {

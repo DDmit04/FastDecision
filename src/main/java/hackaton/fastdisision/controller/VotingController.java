@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/voteApi/votings")
 public class VotingController {
@@ -46,7 +48,7 @@ public class VotingController {
 
     @PostMapping
     @JsonView(VotingView.MinimalData.class)
-    public Voting addVoting(@RequestBody Voting voting, @AuthenticationPrincipal User user) {
+    public Voting addVoting(@Valid @RequestBody Voting voting, @AuthenticationPrincipal User user) {
         Voting newVoting = votingService.addVoting(voting, user);
         return newVoting;
     }

@@ -26,20 +26,21 @@ public class VotingCartsController {
     @GetMapping("search")
     @JsonView(VotingView.MinimalData.class)
     public Page<Voting> searchVotings(@RequestParam("search") String search, @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable) {
-        return votingService.searchVotings(search, pageable);
+        Page<Voting> votings = votingService.searchVotings(search, pageable);
+        return votings;
     }
 
     @GetMapping("/newest")
     @JsonView(VotingView.MinimalData.class)
     public Page<Voting> get10Newest(@PageableDefault(sort = {"creationDate"}, direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<Voting> votings = votingService.get10Newest(pageable);
+        Page<Voting> votings = votingService.getNewest(pageable);
         return votings;
     }
 
     @GetMapping("/popular")
     @JsonView(VotingView.MinimalData.class)
     public Page<Voting> get10Popular(@PageableDefault(sort = {"totalVotes"}, direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<Voting> votings = votingService.get10Popular(pageable);
+        Page<Voting> votings = votingService.getPopular(pageable);
         return votings;
     }
 
