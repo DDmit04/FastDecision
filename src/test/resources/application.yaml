@@ -1,0 +1,59 @@
+spring:
+  security:
+    oauth2:
+      resource:
+        filter-order: 3
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost/votingsdb}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:sa}
+  jpa:
+    generate-ddl: false
+    show-sql: false
+    hibernate.ddl-auto: create-drop
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
+  session:
+    jdbc:
+      initialize-schema: always
+      table-name: SPRING_SESSION
+      schema: classpath:session_tables.sql
+
+google:
+  client:
+    clientId: ${googleClient}
+    clientSecret: ${googleSecret}
+    accessTokenUri: https://www.googleapis.com/oauth2/v4/token
+    userAuthorizationUri: https://accounts.google.com/o/oauth2/v2/auth
+    tokenName: oauth_token
+    authenticationScheme: query
+    clientAuthenticationScheme: form
+    scope: openid,email,profile
+  resource:
+    userInfoUri: https://www.googleapis.com/oauth2/v3/userinfo
+
+
+github-dev:
+  client:
+    clientId: ${githubDevClient}
+    clientSecret: ${githubDevSecret}
+    accessTokenUri: https://github.com/login/oauth/access_token
+    userAuthorizationUri: https://github.com/login/oauth/authorize
+    tokenName: oauth_token
+    authenticationScheme: query
+    clientAuthenticationScheme: form
+  resource:
+    userInfoUri: https://api.github.com/user
+
+
+
+server:
+  port: 9002
+
+admin:
+  password: 123456789
+
