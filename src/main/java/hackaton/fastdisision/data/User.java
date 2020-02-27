@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -24,15 +25,18 @@ public class User implements UserDetails {
 
     @Id
     @JsonView(VotingView.Id.class)
+    @NotBlank(message = "id can not be null")
     private String id;
 
     @JsonView(VotingView.MinimalData.class)
+    @NotBlank(message = "username can not be empty")
     private String username;
 
     @JsonView(VotingView.FullData.class)
     private String email;
 
     @JsonView(VotingView.FullData.class)
+    @NotBlank(message = "password can not be empty")
     private String password;
 
     @JsonView(VotingView.MinimalData.class)
@@ -48,6 +52,8 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade= CascadeType.ALL)
     @JsonIdentityInfo(property = "id", generator = ObjectIdGenerators.PropertyGenerator.class)
     private Set<Voting> userVotings = new HashSet<>();
+
+
 
     @Override
     public boolean equals(Object o) {

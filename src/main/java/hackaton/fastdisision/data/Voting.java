@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +26,7 @@ public class Voting {
     private int totalVotes;
 
     @JsonView(VotingView.MinimalData.class)
+    @NotBlank(message = "voting title can not be empty")
     private String votingTitle;
 
     @JsonView(VotingView.FullData.class)
@@ -50,6 +53,7 @@ public class Voting {
 
     @JsonView(VotingView.CoreData.class)
     @OneToMany(mappedBy="voting", cascade=CascadeType.ALL, orphanRemoval = true)
+    @Size(min = 2, max = 32, message = "voting options count must be between 2 and 32")
     private List<VoteOption> votingOptions;
 
     @Override

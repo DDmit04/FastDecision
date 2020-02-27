@@ -5,12 +5,12 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import hackaton.fastdisision.views.VotingView;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.*;
+import javax.validation.constraints.NotBlank;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -27,7 +27,9 @@ public class VoteOption {
     private long id;
 
     @JsonView(VotingView.MinimalData.class)
+    @NotBlank(message = "vote discription can not be empty")
     private String voteDiscription;
+
     @JsonView(VotingView.MinimalData.class)
     private long pluses;
 
