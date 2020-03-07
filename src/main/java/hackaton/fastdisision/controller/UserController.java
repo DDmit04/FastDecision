@@ -1,7 +1,6 @@
 package hackaton.fastdisision.controller;
 
 import hackaton.fastdisision.data.User;
-import hackaton.fastdisision.excaptions.VotingNotFoundException;
 import hackaton.fastdisision.excaptions.WrongAdminPasswordException;
 import hackaton.fastdisision.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ public class UserController {
     }
 
     @PostMapping("/getAdmin")
-    public User requestAdminRole(@RequestBody(required = true) String clientAdminPassword, @AuthenticationPrincipal User currentUser) throws VotingNotFoundException, WrongAdminPasswordException {
+    public User requestAdminRole(@RequestBody String clientAdminPassword, @AuthenticationPrincipal User currentUser) throws WrongAdminPasswordException {
         User user = adminService.checkAdminRequest(currentUser, clientAdminPassword);
         return user;
     }

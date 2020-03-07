@@ -8,6 +8,7 @@ import hackaton.fastdisision.excaptions.AccessDeniedException;
 import hackaton.fastdisision.repo.UserRepo;
 import hackaton.fastdisision.repo.VotingRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,9 @@ public class VotingService {
 
     private VotingRepo votingRepo;
     private UserRepo userRepo;
+
+    @Value("${voting.public.key}")
+    private String publicVotingKey;
 
     @Autowired
     public VotingService(VotingRepo votingRepo, UserRepo userRepo) {
@@ -43,7 +47,7 @@ public class VotingService {
             if(voting.isProtectedVoting()) {
                 voting.setVotingKey(UUID.randomUUID().toString());
             } else {
-                voting.setVotingKey("public");
+                voting.setVotingKey(publicVotingKey);
             }
             savedVoting = votingRepo.save(voting);
         }
@@ -80,10 +84,14 @@ public class VotingService {
         return votings;
     }
 
-    public Page<Voting> getUserPrivate(User user, Pageable pageable) {
+    public Page<Voting> getUserPrivate(User user, User currentUser, Pageable pageable) throws AccessDeniedException {
         Page<Voting> votings = new PageImpl<Voting>(Collections.EMPTY_LIST, pageable, 0);
-        if (user != null) {
-            votings = votingRepo.findByOwner_IdAndIsPrivateVotingOrderByCreationDate(user.getId(), true, pageable);
+        if(user.equals(currentUser) || currentUser.getRoles().contains(UserRoles.ADMIN)) {
+            if (user != null) {
+                votings = votingRepo.findByOwner_IdAndIsPrivateVotingOrderByCreationDate(user.getId(), true, pageable);
+            }
+        } else {
+            throw new AccessDeniedException();
         }
         return votings;
     }

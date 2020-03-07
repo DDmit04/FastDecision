@@ -20,8 +20,8 @@ public class AdminController {
     }
 
     @PostMapping("/giveAdmin/{id}")
-    public User giveAdminRole(@PathVariable("id") User user) throws AccessDeniedException {
-        return adminService.giveAdmin(user);
+    public User giveAdminRole(@PathVariable("id") User user, @AuthenticationPrincipal User currentUser) throws AccessDeniedException {
+        return adminService.giveAdmin(user, currentUser);
     }
 
     @PostMapping("/removeAdmin/{id}")

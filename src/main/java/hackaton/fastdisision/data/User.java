@@ -12,10 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -25,7 +22,6 @@ public class User implements UserDetails {
 
     @Id
     @JsonView(VotingView.Id.class)
-    @NotBlank(message = "id can not be null")
     private String id;
 
     @JsonView(VotingView.MinimalData.class)
@@ -54,7 +50,6 @@ public class User implements UserDetails {
     private Set<Voting> userVotings = new HashSet<>();
 
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -72,9 +67,9 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        List<GrantedAuthority> authorities = new ArrayList<>();
         roles.forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority(role.name()));
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.name()));
         });
         return authorities;
     }

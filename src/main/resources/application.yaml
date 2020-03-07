@@ -10,7 +10,7 @@ spring:
   jpa:
     generate-ddl: false
     show-sql: false
-    hibernate.ddl-auto: create-drop
+    hibernate.ddl-auto: validate
     properties:
       hibernate:
         jdbc:
@@ -68,4 +68,8 @@ server:
 
 admin:
   password: ${adminPassword}
+
+voting:
+  public:
+    key: "public"
 

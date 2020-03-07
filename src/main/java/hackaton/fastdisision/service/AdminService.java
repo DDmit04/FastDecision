@@ -35,9 +35,11 @@ public class AdminService {
         return currentUser;
     }
 
-    public User giveAdmin(User userToGiveAdmin) throws AccessDeniedException {
+    public User giveAdmin(User userToGiveAdmin, User currentUser) throws AccessDeniedException {
+        boolean currentUserIsAdmin = currentUser.getRoles().contains(UserRoles.ADMIN);
         boolean userIsAdmin = userToGiveAdmin.getRoles().contains(UserRoles.ADMIN);
-        if(!userIsAdmin) {
+        boolean usersIsEquals = userToGiveAdmin.equals(currentUser);
+        if(currentUserIsAdmin && !userIsAdmin && !usersIsEquals) {
             userToGiveAdmin.getRoles().add(UserRoles.ADMIN);
             userToGiveAdmin = userRepo.save(userToGiveAdmin);
         } else {

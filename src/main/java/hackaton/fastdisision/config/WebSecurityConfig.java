@@ -29,7 +29,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/admin/**").hasAuthority(UserRoles.ADMIN.name())
+                .antMatchers("/admin/**").hasRole(UserRoles.ADMIN.name())
                 .antMatchers("/user/**").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/voteApi/votings").authenticated()
                 .antMatchers("/**").permitAll()

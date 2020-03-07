@@ -27,12 +27,14 @@ public class VotingController {
 
     @GetMapping("{id}")
     @JsonView(VotingView.CoreData.class)
-    public Voting getVotingById(@PathVariable("id") Voting voting, @RequestParam(required = false, defaultValue = "public") String votingKey) throws VotingNotFoundException, WrongVotingKeyException {
+    public Voting getVotingById(@PathVariable("id") Voting voting, @RequestParam(required = false, defaultValue = "public") String votingKey, @AuthenticationPrincipal User currentUser) throws VotingNotFoundException, WrongVotingKeyException {
         if (voting == null) {
             throw new VotingNotFoundException();
         }
-        if (!voting.getVotingKey().equals(votingKey)) {
-            throw new WrongVotingKeyException();
+        if(currentUser == null || !currentUser.equals(voting.getOwner())) {
+            if (!voting.getVotingKey().equals(votingKey)) {
+                throw new WrongVotingKeyException();
+            }
         }
         return voting;
     }

@@ -19,7 +19,7 @@
                             <v-checkbox v-model="newVoting.isPrivateVoting"
                                         label="private voting"
                                         class="mx-2"
-                                        :id="'newIsPrivateVoting' + index"
+                                        :id="'newIsPrivateVoting'"
                                         color="success"
                             />
                             <v-tooltip right>
@@ -33,7 +33,7 @@
                             <v-checkbox v-model="newVoting.isProtectedVoting"
                                         label="protected voting"
                                         class="mx-2"
-                                        :id="'newIsProtectedVoting' + index"
+                                        :id="'newIsProtectedVoting'"
                                         color="success"
                             />
                             <v-tooltip right>

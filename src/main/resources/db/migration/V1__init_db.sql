@@ -5,7 +5,7 @@ create table usr
     id       varchar(255) not null,
     email    varchar(255),
     user_pic varchar(255),
-    username varchar(255),
+    username varchar(255) not null,
     primary key (id)
 );
 create table voted_users_ips
@@ -34,8 +34,8 @@ create table voting
 
 
 alter table if exists voted_users_ips
-    add constraint FKpq6nawaf6tbshxqcvtxlo2hov foreign key (vote_option_id) references voting;
+    add constraint FKpq6nawaf6tbshxqcvtxlo2hov foreign key (vote_option_id) references voting on delete cascade ;
 alter table if exists vote_option
-    add constraint FKf61kqjnymadv0kkqfh1u3xlsq foreign key (vote_id) references voting;
+    add constraint FKf61kqjnymadv0kkqfh1u3xlsq foreign key (vote_id) references voting on delete cascade ;
 alter table if exists voting
-    add constraint FKhh8hxbj8vc1xchs5f3864vrdk foreign key (owner_id) references usr;
+    add constraint FKhh8hxbj8vc1xchs5f3864vrdk foreign key (owner_id) references usr on delete cascade ;

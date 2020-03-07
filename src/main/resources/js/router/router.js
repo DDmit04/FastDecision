@@ -64,7 +64,9 @@ const routes = [
         path: '/search/:stringToSearch',
         name: rotesNames.SEARCH_RESULTS,
         component: searchChart,
-        props: true
+        props: (route) => ({
+            stringToSearch: route.query.search
+        })
     },
     {
         path: '/err',
