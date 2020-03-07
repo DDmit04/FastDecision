@@ -4,12 +4,12 @@ spring:
       resource:
         filter-order: 3
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost/votingsdb}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost/votingsdbtest}
     username: ${SPRING_DATASOURCE_USERNAME:postgres}
     password: ${SPRING_DATASOURCE_PASSWORD:sa}
   jpa:
     generate-ddl: false
-    show-sql: false
+    show-sql: true
     hibernate.ddl-auto: create-drop
     properties:
       hibernate:
@@ -36,6 +36,17 @@ google:
   resource:
     userInfoUri: https://www.googleapis.com/oauth2/v3/userinfo
 
+github:
+  client:
+    clientId: ${githubClient}
+    clientSecret: ${githubSecret}
+    accessTokenUri: https://github.com/login/oauth/access_token
+    userAuthorizationUri: https://github.com/login/oauth/authorize
+    tokenName: oauth_token
+    authenticationScheme: query
+    clientAuthenticationScheme: form
+  resource:
+    userInfoUri: https://api.github.com/user
 
 github-dev:
   client:
@@ -56,4 +67,8 @@ server:
 
 admin:
   password: 123456789
+
+voting:
+  public:
+    key: "public"
 

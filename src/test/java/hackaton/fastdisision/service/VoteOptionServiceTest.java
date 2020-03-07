@@ -66,31 +66,22 @@ class VoteOptionServiceTest {
     @Test
     void acceptVote() throws WrongVotingKeyException {
         Mockito.when(voteOptionRepo.findById(firstVoteOption.getId())).thenReturn(Optional.of(firstVoteOption));
-        voteOptionService.acceptVote(firstVoteOption.getId(), votedIp, rightVotingKey);
-        voteOptionService.acceptVote(firstVoteOption.getId(), votedIp, rightVotingKey);
-        assertTrue(inspectedVoting.getTotalVotes() == 1);
-        assertTrue(inspectedVoting.getVotedIps().contains(votedIp));
-        assertTrue(firstVoteOption.getPluses() == 1);
-    }
-
-    @Test
-    void acceptVoteTryTwice() throws WrongVotingKeyException {
         //twice
-        Mockito.when(voteOptionRepo.findById(secVoteOption.getId())).thenReturn(Optional.of(secVoteOption));
-        voteOptionService.acceptVote(secVoteOption.getId(), votedIp, rightVotingKey);
-        voteOptionService.acceptVote(secVoteOption.getId(), votedIp, rightVotingKey);
-        assertTrue(inspectedVoting.getTotalVotes() == 1);
-        assertTrue(inspectedVoting.getVotedIps().contains(votedIp));
-        assertTrue(secVoteOption.getPluses() == 1);
+        voteOptionService.acceptVote(firstVoteOption.getId(), votedIp, rightVotingKey);
+        voteOptionService.acceptVote(firstVoteOption.getId(), votedIp, rightVotingKey);
+        assertTrue(inspectedVoting.getTotalVotes() == 1, "total votes is not incremented correctly!");
+        assertTrue(inspectedVoting.getVotedIps().contains(votedIp), "voted user's IP was not added to base!");
+        assertTrue(firstVoteOption.getPluses() == 1, "total pluses is not incremented correctly!");
     }
 
     @Test
     void acceptVoteWrongKey() {
-        Mockito.when(voteOptionRepo.findById(firstVoteOption.getId())).thenReturn(Optional.of(firstVoteOption));
+        Mockito.when(voteOptionRepo.findById(firstVoteOption.getId()))
+                .thenReturn(Optional.of(firstVoteOption));
         assertThrows(WrongVotingKeyException.class, () -> {
             voteOptionService.acceptVote(
                     firstVoteOption.getId(), votedIp, wrongVotingKey
             );
-        });
+        }, "voting request with wrong key was not denied!");
     }
 }

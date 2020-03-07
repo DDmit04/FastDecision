@@ -79,9 +79,9 @@ class VotingServiceTest {
         for(VoteOption voteOption: voting.getVotingOptions()) {
             assertTrue(voteOption.getVoting().equals(voting));
         }
-        assertNotNull(voting.getOwner());
-        assertNotNull(voting.getVotingKey());
-        assertNotNull(voting.getCreationDate());
+        assertNotNull(voting.getOwner(), "voting owner is empty!");
+        assertNotNull(voting.getVotingKey(), "voting key is empty!");
+        assertNotNull(voting.getCreationDate(), "voting creation date is empty!");
     }
 
     @Test
@@ -89,7 +89,7 @@ class VotingServiceTest {
         commonUser.getUserVotings().add(voting);
         voting.setOwner(commonUser);
         votingService.deleteVoting(voting, commonUser);
-        assertFalse(commonUser.getUserVotings().contains(voting));
+        assertFalse(commonUser.getUserVotings().contains(voting), "deleted voting still present in user's votings!");
     }
 
     @Test
@@ -98,7 +98,7 @@ class VotingServiceTest {
         adminUser.getUserVotings().add(voting);
         assertThrows(AccessDeniedException.class, () -> {
             votingService.deleteVoting(voting, commonUser);
-        });
+        }, "voting must not be deleted and throw exception!");
     }
 
     @Test
@@ -106,7 +106,7 @@ class VotingServiceTest {
         commonUser.getUserVotings().add(voting);
         voting.setOwner(commonUser);
         votingService.deleteVoting(voting, adminUser);
-        assertFalse(commonUser.getUserVotings().contains(voting));
+        assertFalse(commonUser.getUserVotings().contains(voting), "deleted by admin voting still present in user's votings!");
     }
 
 }

@@ -26,6 +26,7 @@ class AdminServiceTest {
 
     @Value("${admin.password}")
     private String rightAdminPassword;
+
     private String wrongAdminPassword = " wrongAdminPassword";
 
     @Autowired
@@ -64,7 +65,7 @@ class AdminServiceTest {
     @Test
     void checkAdminRequest() throws WrongAdminPasswordException {
         adminService.checkAdminRequest(commonUser, rightAdminPassword);
-        assertTrue(commonUser.getRoles().contains(UserRoles.ADMIN));
+        assertTrue(commonUser.getRoles().contains(UserRoles.ADMIN), "common user isn't get admin role!");
     }
 
     @Test
@@ -74,14 +75,14 @@ class AdminServiceTest {
                 () -> adminService.checkAdminRequest(
                         commonUser,
                         wrongAdminPassword
-                )
+                ), "wrong password admin request was not denied!"
         );
     }
 
     @Test
     void giveAdmin() throws AccessDeniedException {
-        adminService.giveAdmin(commonUser);
-        assertTrue(commonUser.getRoles().contains(UserRoles.ADMIN));
+        adminService.giveAdmin(commonUser, adminUser);
+        assertTrue(commonUser.getRoles().contains(UserRoles.ADMIN), "admin isn't give common user an admin role!");
     }
 
     @Test
@@ -89,15 +90,15 @@ class AdminServiceTest {
         assertThrows(
                 AccessDeniedException.class,
                 () -> adminService.giveAdmin(
-                        adminUser
-                )
+                        adminUser, commonUser
+                ), "give admin request was not denied!"
         );
     }
 
     @Test
     void removeAdmin() throws AccessDeniedException, WrongAdminPasswordException {
         adminService.removeAdmin(otherAdminUser, adminUser, rightAdminPassword);
-        assertFalse(otherAdminUser.getRoles().contains(UserRoles.ADMIN));
+        assertFalse(otherAdminUser.getRoles().contains(UserRoles.ADMIN), "admin role was not removed!");
     }
 
     @Test
@@ -106,7 +107,7 @@ class AdminServiceTest {
         assertThrows(WrongAdminPasswordException.class,
                 () -> adminService.removeAdmin(
                         otherAdminUser, adminUser, wrongAdminPassword
-                )
+                ), "remove admin request with wrong password was not denied!"
         );
     }
 
@@ -115,7 +116,7 @@ class AdminServiceTest {
         assertThrows(AccessDeniedException.class,
                 () -> adminService.removeAdmin(
                         otherAdminUser, commonUser, rightAdminPassword
-                )
+                ), "remove admin request with wrong role was not denied!"
         );
     }
 }
