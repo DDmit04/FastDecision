@@ -7,6 +7,7 @@ export default {
     POPULAR_VOTINGS: 'popularVotings',
     ERROR_PAGE: 'pageNotFound',
     ASK_ADMIN_PAGE: 'askAdminPage',
-    SEARCH_RESULTS: 'searchResults'
+    SEARCH_RESULTS: 'searchResults',
+    PROTECTED_VOTING_ACCESS: "protectedVotingAccess"
 
 }

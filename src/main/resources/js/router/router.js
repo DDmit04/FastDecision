@@ -8,6 +8,7 @@ import userChart from "../pages/charts/userChart.vue"
 import errorPage from "../pages/errorPage.vue"
 import adminPage from "../pages/adminPage.vue"
 import searchChart from "../pages/charts/searchChart.vue"
+import protectedVotintgAccess from "../pages/voting/protectedVotintgAccess.vue";
 import rotesNames from "./routesNames"
 
 Vue.use(VueRouter)
@@ -38,6 +39,12 @@ const routes = [
             votingKey: route.query.votingKey || route.params.votingKey,
             votingId: route.params.votingId
         })
+    },
+    {
+        path: '/:votingId/access',
+        name: rotesNames.PROTECTED_VOTING_ACCESS,
+        component: protectedVotintgAccess,
+        props: true
     },
     {
         path: '/:votingId/results',

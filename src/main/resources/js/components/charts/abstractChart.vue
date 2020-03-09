@@ -14,26 +14,35 @@
                     color="primary"
                     @click="goToVoting(voting.id)">
                 <v-card-title :id="'votingTitle' + voting.id"
-                        class="title">
+                              class="title">
                     <v-layout justify-start>
                         {{voting.votingTitle | normalizeString}}
                     </v-layout>
                     <v-layout justify-center
                               :id="'authorButton' + voting.id">
                         author:
-                            <v-btn v-if="voting.owner != null"
-                                   @click.stop="goToUser(voting.owner.id)"
-                                   color="accent"
-                                   class="ml-2">
-                                {{voting.owner.username | normalizeString}}
-                            </v-btn>
+                        <v-btn v-if="voting.owner != null"
+                               @click.stop="goToUser(voting.owner.id)"
+                               color="accent"
+                               class="ml-2">
+                            {{voting.owner.username | normalizeString}}
+                        </v-btn>
                         <v-btn v-else color="accent" disabled class="ml-2">
                             Unknown
                         </v-btn>
                     </v-layout>
-                    <v-layout justify-end
-                              :id="'totalVotes' + voting.id">
-                        total votes: {{voting.totalVotes}}
+                    <v-layout justify-end>
+                        <v-tooltip right v-if="voting.isProtectedVoting">
+                            <template v-slot:activator="{ on }">
+                                <v-icon v-on="on" class="mr-2 mt-1">
+                                    {{protectedIcon}}
+                                </v-icon>
+                            </template>
+                            <span>Voting is protected by key</span>
+                        </v-tooltip>
+                        <div :id="'totalVotes' + voting.id">
+                            total votes: {{voting.totalVotes}}
+                        </div>
                         <v-btn v-if="canDelete(voting)"
                                @click.stop="callDeleteVoting(voting)"
                                class="ml-4" color="accent">
@@ -49,7 +58,7 @@
 
 <script>
     import {mapState} from 'vuex'
-    import {mdiClose} from '@mdi/js'
+    import {mdiClose, mdiLock} from '@mdi/js'
     import votingDeletionModal from "../modal/votingDeletionModal.vue"
     import server from "../../api/server"
     import routesNames from "../../router/routesNames";
@@ -64,10 +73,12 @@
         name: "abstractChart",
         data() {
             return {
+                on: false,
                 modalIsActive: false,
                 deletedVoting: null,
                 votings: this.chartData.content,
                 closeIcon: mdiClose,
+                protectedIcon: mdiLock,
                 currentPage: 1,
             }
         },
@@ -94,7 +105,7 @@
                 this.$router.push({name: routesNames.CURRENT_VOTING, params: {votingId: votingId}})
             },
             goToUser(votingOwnerId) {
-                this.$router.push({name: routesNames.USER_VOTINGS_CHART, params: {userId: votingOwnerId} })
+                this.$router.push({name: routesNames.USER_VOTINGS_CHART, params: {userId: votingOwnerId}})
             },
             callDeleteVoting(voting) {
                 this.deletedVoting = voting
@@ -108,7 +119,7 @@
             async deleteVoting() {
                 if (this.deletedVoting != null) {
                     const result = await server.deleteOne(this.deletedVoting.id)
-                    if(result.ok) {
+                    if (result.ok) {
                         let deletedVotingIndex = this.votings.indexOf(this.deletedVoting)
                         this.votings.splice(deletedVotingIndex, 1)
                     }
