@@ -31,7 +31,7 @@ public class VoteOption {
     private String voteDiscription;
 
     @JsonView(VotingView.MinimalData.class)
-    private long pluses;
+    private long pluses = 0;
 
     @ManyToOne
     @JoinColumn(name="vote_id")

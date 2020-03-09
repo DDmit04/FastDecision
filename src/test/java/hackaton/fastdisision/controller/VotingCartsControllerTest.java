@@ -135,8 +135,8 @@ class VotingCartsControllerTest {
                 .andReturn();
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
         List<Voting> content = Arrays.asList(mapper.readValue(responseObj.get("content").toString(), Voting[].class));
-        assertTrue((int)responseObj.get("totalElements") == 5, "total elements count is wrong!");
-        assertTrue((int)responseObj.get("numberOfElements") == 5, "number of elements is wrong!");
+        assertTrue((int)responseObj.get("totalElements") == 2, "total elements count is wrong!");
+        assertTrue((int)responseObj.get("numberOfElements") == 2, "number of elements is wrong!");
         for(int i = 0; i < content.size() - 1; i++) {
             // change SQL file carefully!!!
             assertTrue(content.get(i).getOwner().equals(commonUser), "user is not owner of it's public voitngs! (pay extra attantion to SQL and this test)");

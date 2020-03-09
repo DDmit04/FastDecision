@@ -66,7 +66,7 @@
 <script>
     import {sendVote} from '../../utils/websocket'
     import routesNames from "../../router/routesNames"
-    import votingMixin from "../../mixins/votingConnectMixin"
+    import votingConnectMixin from "../../mixins/votingConnectMixin"
     import dataReviler from "../../components/dataReviler.vue"
 
     export default {
@@ -86,13 +86,12 @@
             }
         },
         name: "currentVoting",
-        mixins: [votingMixin],
+        mixins: [votingConnectMixin],
         components: {
             dataReviler
         },
         data() {
             return {
-                themeColor: 'black',
                 currentVoting: this.votingProp,
                 selectedOptionIndex: -1,
                 modifiedVotingKey: this.votingKey,

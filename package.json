@@ -33,6 +33,7 @@
     "deepmerge": "^4.2.2",
     "fibers": "^4.0.2",
     "file-loader": "^5.0.2",
+    "gulp-babel": "^8.0.0",
     "resolve-url-loader": "^3.1.0",
     "sass": "^1.23.7",
     "sass-loader": "^8.0.0",

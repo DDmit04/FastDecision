@@ -48,8 +48,9 @@ public class VotingController {
         }
     }
 
+    //not covered by tests!!!
     @PostMapping
-    @JsonView(VotingView.MinimalData.class)
+    @JsonView(VotingView.CoreData.class)
     public Voting addVoting(@Valid @RequestBody Voting voting, @AuthenticationPrincipal User user) {
         Voting newVoting = votingService.addVoting(voting, user);
         return newVoting;

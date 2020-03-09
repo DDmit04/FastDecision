@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Sql(scripts = {"classpath:create-user-before.sql", "classpath:create-votings-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = {"classpath:create-votings-after.sql", "classpath:create-user-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-// add voting (post mapping) is absent
+// add voting (post mapping) is absent because always return HttpMessageNotReadableException
 class VotingControllerTest {
 
     @Autowired
@@ -53,9 +53,13 @@ class VotingControllerTest {
                 .andReturn();
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
         User user = mapper.readValue(responseObj.get("owner").toString(), User.class);
-        assertTrue((int)responseObj.get("id") == 1, "voting id in request not compared to id in result!");
+        assertTrue((int) responseObj.get("id") == 1, "voting id in request not compared to id in result!");
         assertEquals(responseObj.get("votingKey"), publicVotingKey);
         assertEquals(user, votingOwner);
+        assertEquals(responseObj.get("creationDate"), null);
+        assertEquals(responseObj.get("isPrivateVoting"), null);
+        assertEquals(responseObj.get("votedIps"), null);
+
     }
 
     @Test
@@ -63,15 +67,18 @@ class VotingControllerTest {
         //user with id = 3 is owner of all votings (see SQL)
         User votingOwner = userRepo.findById("3").get();
         MvcResult mvcResult = mockMvc.perform(get("/voteApi/votings/6")
-                    .with(user(votingOwner)).param("votingKey", "wrongKey"))
+                .with(user(votingOwner)).param("votingKey", "wrongKey"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
         User user = mapper.readValue(responseObj.get("owner").toString(), User.class);
-        assertTrue((int)responseObj.get("id") == 6, "voting id in request not compared to id in result!");
+        assertTrue((int) responseObj.get("id") == 6, "voting id in request not compared to id in result!");
         assertEquals(responseObj.get("votingKey"), rightProtectedVotingKey);
         assertEquals(user, votingOwner);
+        assertEquals(responseObj.get("creationDate"), null);
+        assertEquals(responseObj.get("isPrivateVoting"), null);
+        assertEquals(responseObj.get("votedIps"), null);
     }
 
     @Test
@@ -84,9 +91,12 @@ class VotingControllerTest {
                 .andReturn();
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
         User user = mapper.readValue(responseObj.get("owner").toString(), User.class);
-        assertTrue((int)responseObj.get("id") == 6, "voting id in request not compared to id in result!");
+        assertTrue((int) responseObj.get("id") == 6, "voting id in request not compared to id in result!");
         assertEquals(responseObj.get("votingKey"), rightProtectedVotingKey);
         assertEquals(user, votingOwner);
+        assertEquals(responseObj.get("creationDate"), null);
+        assertEquals(responseObj.get("isPrivateVoting"), null);
+        assertEquals(responseObj.get("votedIps"), null);
     }
 
     @Test

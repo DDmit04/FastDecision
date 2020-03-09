@@ -3,7 +3,7 @@
         <navbar/>
         <v-content>
             <v-container fluid>
-                <router-view :key="$route.path"/>
+                <router-view :key="$route.path + $route.params.votingKey"/>
             </v-container>
         </v-content>
         <v-footer class="justify-center pl-0"

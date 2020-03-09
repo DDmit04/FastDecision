@@ -78,7 +78,7 @@ export const store = new Vuex.Store({
                 await commit("addCurrentSessionVotingMutation", newVotingSessionData)
             } else {
                 let localVotingKeyIsValid = await serverValidation.validateKey(oldVotingSessionData.votingId, oldVotingSessionData.votingKey)
-                if (!localVotingKeyIsValid) {
+                if (!localVotingKeyIsValid.body) {
                     await commit("deleteInvalidVotingSessionMutation", oldVotingSessionData)
                     await commit("addCurrentSessionVotingMutation", newVotingSessionData)
                 }
@@ -124,6 +124,7 @@ export const store = new Vuex.Store({
 store.subscribe((mutation, state) => {
     let store = {
         currentSessionVotings: state.currentSessionVotings,
+        version: state.version
     }
     localStorage.setItem('store', JSON.stringify(store));
 })

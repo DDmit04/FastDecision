@@ -3,7 +3,7 @@
         <auth-modal :modalIsActive="modalIsActive"/>
         <v-tabs background-color="info" color="success" v-model="tabs">
             <v-tab>Public votings</v-tab>
-            <v-tab v-if="currentUser.id == userId">Private votings</v-tab>
+            <v-tab v-if="userIsCurrentUser">Private votings</v-tab>
         </v-tabs>
         <v-tabs-items v-model="tabs" :style="{ background: getBackgroundColor}">
             <v-tab-item>
@@ -11,7 +11,7 @@
                               :userId="userId"
                 />
             </v-tab-item>
-            <v-tab-item v-if="currentUser.id == userId">
+            <v-tab-item v-if="userIsCurrentUser">
                 <chart-loader :load-function="loadUserPrivate"
                               :userId="userId"
                 />
@@ -57,6 +57,9 @@
                 } else {
                     return this.$vuetify.theme.themes.light.background
                 }
+            },
+            userIsCurrentUser() {
+                return this.currentUser != null && this.currentUser.id == this.userId
             }
         },
         methods: {

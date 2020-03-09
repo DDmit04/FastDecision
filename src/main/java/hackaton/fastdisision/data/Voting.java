@@ -23,7 +23,7 @@ public class Voting {
     private long id;
 
     @JsonView(VotingView.MinimalData.class)
-    private int totalVotes;
+    private int totalVotes = 0;
 
     @JsonView(VotingView.MinimalData.class)
     @NotBlank(message = "voting title can not be empty")
@@ -35,11 +35,11 @@ public class Voting {
     @JsonView(VotingView.CoreData.class)
     private String votingKey;
 
-    @JsonView(VotingView.FullData.class)
-    private boolean isProtectedVoting;
+    @JsonView(VotingView.MinimalData.class)
+    private boolean isProtectedVoting = false;
 
     @JsonView(VotingView.FullData.class)
-    private boolean isPrivateVoting;
+    private boolean isPrivateVoting = false;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="owner_id")
