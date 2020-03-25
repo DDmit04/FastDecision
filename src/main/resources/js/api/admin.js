@@ -1,13 +1,24 @@
 import Vue from 'vue'
+import VueResource from 'vue-resource'
 
-const askAdmin = Vue.resource('/user/getAdmin')
-const giveAdmin = Vue.resource('/admin/giveAdmin{/id}')
-const removeAdmin = Vue.resource('/admin/removeAdmin{/id}')
+Vue.use(VueResource)
 
 export default {
 
-    getAdmin: (clientAdminPassword) => askAdmin.save({}, clientAdminPassword),
-    giveAdmin: (id) => giveAdmin.save({id: id}),
-    removeAdmin: (id, clientAdminPassword) => removeAdmin.save({id: id}, clientAdminPassword)
+    getAdmin: async (clientAdminPassword) => {
+        const response = await Vue.http.post('/user/getAdmin', clientAdminPassword)
+        const data = await response.json()
+        return data
+    },
+    giveAdmin: async (id) => {
+        const response = await Vue.http.post('/admin/giveAdmin/' + id)
+        const data = await response.json()
+        return data
+    },
+    removeAdmin: async (id, clientAdminPassword) => {
+        const response = await Vue.http.post('/admin/removeAdmin/' + id, clientAdminPassword)
+        const data = await response.json()
+        return data
+    },
 
 }
