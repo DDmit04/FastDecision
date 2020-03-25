@@ -3,15 +3,38 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "babel": {
+    "env": {
+      "test": {
+        "presets": [
+          [
+            "env",
+            {
+              "targets": {
+                "node": "current"
+              }
+            }
+          ]
+        ]
+      }
+    }
+  },
+  "scripts": {
+    "start": "webpack-dev-server --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js",
+    "test": "jest"
+  },
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
     "@mdi/js": "^4.7.95",
+    "axios": "^0.19.2",
     "css-loader": "^3.0.0",
+    "fibers": "^4.0.2",
     "jquery": "^3.4.1",
     "js-cookie": "^2.2.0",
     "sockjs-client": "^1.4.0",
+    "typescript": "^3.8.3",
     "vue": "^2.6.10",
-    "vue-apexcharts": "^1.5.1",
     "vue-awesome": "^3.5.4",
     "vue-css-donut-chart": "^1.1.6",
     "vue-resource": "^1.5.1",
@@ -21,28 +44,48 @@
     "vuex-persistedstate": "^2.5.4",
     "webstomp-client": "^1.2.6"
   },
-  "scripts": {
-    "start": "webpack-dev-server --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js"
-  },
   "devDependencies": {
     "@babel/core": "^7.8.7",
     "@babel/preset-env": "^7.8.7",
+    "@types/jest": "^25.1.4",
+    "@vue/test-utils": "^1.0.0-beta.32",
+    "babel-jest": "^25.1.0",
     "babel-loader": "^8.0.6",
+    "babel-preset-env": "^1.7.0",
     "clean-webpack-plugin": "^3.0.0",
     "deepmerge": "^4.2.2",
-    "fibers": "^4.0.2",
     "file-loader": "^5.0.2",
-    "gulp-babel": "^8.0.0",
+    "flush-promises": "^1.0.2",
+    "jest": "^25.1.0",
+    "jest-vue-preprocessor": "^1.7.1",
     "resolve-url-loader": "^3.1.0",
     "sass": "^1.23.7",
     "sass-loader": "^8.0.0",
     "url-loader": "^3.0.0",
     "vue-loader": "^15.7.0",
+    "vue-resource-mock-api": "^0.1.0",
     "vue-template-compiler": "^2.6.10",
     "webpack": "^4.35.2",
     "webpack-cli": "^3.3.5",
     "webpack-dev-server": "^3.7.2",
     "webpack-merge": "^4.2.1"
+  },
+  "jest": {
+    "verbose": true,
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "vue"
+    ],
+    "roots": [
+      "<rootDir>/src/main/resources/js/tests/"
+    ],
+    "transform": {
+      ".*\\.(vue)$": "<rootDir>/node_modules/jest-vue-preprocessor",
+      "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
+    },
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1"
+    }
   }
 }

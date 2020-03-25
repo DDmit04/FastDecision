@@ -9,6 +9,7 @@ import router from 'router/router'
 import Donut from 'vue-css-donut-chart'
 import 'vue-css-donut-chart/dist/vcdonut.css'
 import rotesNames from "./router/routesNames"
+import filters from "./filters/filters";
 
 Vue.use(Donut);
 
@@ -27,6 +28,10 @@ Vue.config.errorHandler = (err, vm, info) => {
     } else {
         console.error(err)
     }
+}
+
+for(let name in filters) {
+    Vue.filter(name, filters[name]);
 }
 
 new Vue ({
