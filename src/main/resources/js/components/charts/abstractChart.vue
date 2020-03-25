@@ -3,47 +3,44 @@
         <votingDeletionModal :modalIsActive="modalIsActive"
                              @close="modalIsActive = false"
                              @accept="deleteVoting()"/>
-        <v-col lg="8" sm="12">
+        <v-col id="votingsBlock" lg="8" sm="12">
             <v-layout v-if="votings.length == 0" justify-center class="mt-3 display-3 font-italic">
                 Nothing Here!
             </v-layout>
             <v-card v-else
                     v-for="voting in votings"
                     :key="voting.id"
-                    :id="voting.id"
+                    :id="'voting' + voting.id"
                     color="primary"
                     @click="goToVoting(voting.id)">
-                <v-card-title :id="'votingTitle' + voting.id"
-                              class="title">
-                    <v-layout justify-start>
+                <v-card-title class="title">
+                    <v-layout :id="'votingTitle' + voting.id" justify-start>
                         {{voting.votingTitle | normalizeString}}
                     </v-layout>
                     <v-layout justify-center
                               :id="'authorButton' + voting.id">
                         author:
                         <v-btn v-if="voting.owner != null"
+                               :id="'authorBtn' + voting.id"
                                @click.stop="goToUser(voting.owner.id)"
                                color="accent"
                                class="ml-2">
                             {{voting.owner.username | normalizeString}}
                         </v-btn>
-                        <v-btn v-else color="accent" disabled class="ml-2">
-                            Unknown
+                        <v-btn :id="'unknownAuthorBtn' + voting.id" v-else color="accent" disabled class="ml-2">
+                            {{'Unknown' | normalizeString}}
                         </v-btn>
                     </v-layout>
                     <v-layout justify-end>
-                        <v-tooltip right v-if="voting.isProtectedVoting">
-                            <template v-slot:activator="{ on }">
-                                <v-icon v-on="on" class="mr-2 mt-1">
-                                    {{protectedIcon}}
-                                </v-icon>
-                            </template>
-                            <span>Voting is protected by key</span>
-                        </v-tooltip>
+                        <tooltip v-if="voting.isProtectedVoting"
+                                 :id="'isProtecedVoting' + voting.id"
+                                 class="mr-2"
+                                 tooltipMessage="Voting is protected by key"
+                                 :icon="protectedIcon"/>
                         <div :id="'totalVotes' + voting.id">
                             total votes: {{voting.totalVotes}}
                         </div>
-                        <v-btn v-if="canDelete(voting)"
+                        <v-btn :id="'deleteBtn' + voting.id" v-if="canDelete(voting)"
                                @click.stop="callDeleteVoting(voting)"
                                class="ml-4" color="accent">
                             <v-icon>{{closeIcon}}</v-icon>
@@ -61,7 +58,8 @@
     import {mdiClose, mdiLock} from '@mdi/js'
     import votingDeletionModal from "../modal/votingDeletionModal.vue"
     import server from "../../api/server"
-    import routesNames from "../../router/routesNames";
+    import routesNames from "../../router/routesNames"
+    import tooltip from "../tooltip.vue";
 
     export default {
         props: {
@@ -73,7 +71,6 @@
         name: "abstractChart",
         data() {
             return {
-                on: false,
                 modalIsActive: false,
                 deletedVoting: null,
                 votings: this.chartData.content,
@@ -83,7 +80,8 @@
             }
         },
         components: {
-            votingDeletionModal
+            votingDeletionModal,
+            tooltip
         },
         filters: {
             normalizeString(value) {

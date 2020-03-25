@@ -16,6 +16,7 @@
         </v-footer>
     </v-app>
 </template>
+
 <script>
     import {mdiGithubCircle} from '@mdi/js'
     import {mapState} from 'vuex'

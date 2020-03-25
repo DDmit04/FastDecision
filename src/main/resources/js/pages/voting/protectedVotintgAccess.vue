@@ -1,16 +1,27 @@
 <template>
     <div>
-        <v-layout justify-center class="mt-5">
-            <v-card color="primary">
-                <v-card-title class="title">
+        <v-layout justify-center
+                  class="mt-5">
+            <v-card id="votingAccessForm"
+                    color="primary">
+                <v-card-title id="votingAccessTitle"
+                              class="title"
+                >
                     This voting is protected! input voting-key to access it!
                 </v-card-title>
                 <v-divider color="secondary"></v-divider>
                 <v-card-text class="ma-3">
-                    <v-text-field v-model="votingKey" color="secondary" placeholder="voting key"/>
+                    <v-text-field id="votingAccessKey"
+                                  v-model="votingKey"
+                                  color="secondary"
+                                  placeholder="voting key"/>
                 </v-card-text>
                 <v-card-actions class="pa-3">
-                    <v-btn @click="accessVoting()" class="white--text" color="accent">
+                    <v-btn id="accessVotingBtn"
+                           class="white--text"
+                           color="accent"
+                           @click="accessVoting()"
+                    >
                         Access
                     </v-btn>
                 </v-card-actions>

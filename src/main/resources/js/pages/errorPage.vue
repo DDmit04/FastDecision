@@ -41,7 +41,7 @@
         },
         created() {
             if(this.errorCode == 404) {
-                this.errorDisplayText = 'Not found!'
+                this.errorDisplayText = 'not found!'
             }
         }
     }

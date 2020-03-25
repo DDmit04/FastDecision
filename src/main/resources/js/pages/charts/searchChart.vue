@@ -21,8 +21,7 @@
         },
         methods: {
             async loadSearchedVotings(page) {
-                const response = await votingChart.search(page, this.stringToSearch)
-                const data = await response.json()
+                const data = await votingChart.search(page, this.stringToSearch)
                 return data
             },
         }

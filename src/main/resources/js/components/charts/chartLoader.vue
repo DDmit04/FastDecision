@@ -2,6 +2,7 @@
     <div class="ma-2">
         <v-layout v-if="dataIsLoading" justify-center>
             <v-progress-circular
+                    id="loadCircle"
                     :size="70"
                     :width="7"
                     color="success"
@@ -9,7 +10,7 @@
             />
         </v-layout>
         <div v-else>
-            <abstract-chart :chartData="loadedChartData"/>
+            <abstract-chart id="loadedChartData" :chartData="loadedChartData"/>
             <v-layout v-if="loadedChartData.content.length > 0" justify-center>
                 <v-pagination v-model="currentPage" :length="loadedChartData.totalPages" :total-visible="visiblePages">
                 </v-pagination>

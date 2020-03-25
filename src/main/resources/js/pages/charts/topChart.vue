@@ -1,7 +1,7 @@
 <template>
     <div>
-        <chart-loader v-if="topChartType == 'popular'" :loadFunction="loadPopularVotings"/>
-        <chart-loader v-else-if="topChartType == 'newest'" :loadFunction="loadNewestVotings"/>
+        <chart-loader id="popularVotings" v-if="topChartType == 'popular'" :loadFunction="loadPopularVotings"/>
+        <chart-loader id="newestVotings" v-else-if="topChartType == 'newest'" :loadFunction="loadNewestVotings"/>
         <div v-else @load="$router.push({ name: routesNames.ERROR_PAGE })"></div>
     </div>
 </template>
@@ -14,6 +14,7 @@
     export default {
         props: {
             topChartType: {
+                //['newest', 'popular']
                 required: true,
                 type: String
             },
@@ -29,13 +30,11 @@
         },
         methods: {
             async loadPopularVotings(page) {
-                const response = await votingChart.getPopular(page)
-                const data = await response.json()
+                const data = await votingChart.getPopular(page)
                 return data
             },
             async loadNewestVotings(page) {
-                const response = await votingChart.getNewest(page)
-                const data = await response.json()
+                const data = await votingChart.getNewest(page)
                 return data
             }
         }

@@ -4,6 +4,7 @@
             <v-row>
                 <v-layout v-if="currentVoting == null" justify-center>
                     <v-progress-circular
+                            id="loadCircle"
                             :size="70"
                             :width="7"
                             color="primary"
@@ -11,10 +12,13 @@
                     ></v-progress-circular>
                 </v-layout>
                 <v-col v-else lg="8" sm="12">
-                    <v-card color="primary" id="votingResults">
-                        <v-card-title class="title" id="votingResultsTitle">
-                            {{currentVoting.votingTitle}}
-                            <v-layout justify-end>
+                    <v-card id="votingResults"
+                            color="primary">
+                        <v-card-title class="title">
+                            <v-layout id="votingResultsTitle" justify-start>
+                                {{currentVoting.votingTitle}}
+                            </v-layout>
+                            <v-layout id="votingResultsTotalVotes" justify-end>
                                 total votes: {{getTotalVotes}}
                             </v-layout>
                         </v-card-title>
@@ -41,12 +45,13 @@
                                 </v-row>
                                 <v-row align="center">
                                     <v-col cols="10">
-                                        <v-progress-linear height="30" buffer-value="100"
+                                        <v-progress-linear :id="'optionPlusesLine' + index"
+                                                           height="30" buffer-value="100"
                                                            color="warning"
                                                            :value="calcLine(option.pluses)">
                                         </v-progress-linear>
                                     </v-col>
-                                    <v-col class="subtitle-1">
+                                    <v-col :id="'optionPlusesCount' + index" class="subtitle-1">
                                         {{calcLine(option.pluses).toFixed(1)}} %
                                     </v-col>
                                 </v-row>
@@ -54,7 +59,7 @@
                         </v-card-text>
                     </v-card>
                 </v-col>
-                <v-col v-if="currentVoting != null">
+                <v-col id="votingDonut" v-if="currentVoting != null">
                     <vc-donut :hasLegend="true" :thickness="100" :sections="sections"/>
                 </v-col>
             </v-row>

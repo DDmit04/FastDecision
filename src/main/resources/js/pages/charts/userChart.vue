@@ -1,9 +1,9 @@
 <template>
     <div>
         <auth-modal :modalIsActive="modalIsActive"/>
-        <v-tabs background-color="info" color="success" v-model="tabs">
-            <v-tab>Public votings</v-tab>
-            <v-tab v-if="userIsCurrentUser">Private votings</v-tab>
+        <v-tabs id="userChartsTabs" background-color="info" color="success" v-model="tabs">
+            <v-tab id="publicVotingsTab">Public votings</v-tab>
+            <v-tab id="privateVotingsTab" v-if="userIsCurrentUser">Private votings</v-tab>
         </v-tabs>
         <v-tabs-items v-model="tabs" :style="{ background: getBackgroundColor}">
             <v-tab-item>
@@ -64,14 +64,14 @@
         },
         methods: {
             async loadUserPublic(id, page) {
-                const response = await votingChart.getUserPublic(id, page)
-                const data = await response.json()
+                const data = await votingChart.getUserPublic(id, page)
                 return data
             },
             async loadUserPrivate(id, page) {
-                const response = await votingChart.getUserPrivate(id, page)
-                const data = await response.json()
-                return data
+                if(this.userIsCurrentUser) {
+                    const data = await votingChart.getUserPrivate(id, page)
+                    return data
+                }
             },
         }
     }

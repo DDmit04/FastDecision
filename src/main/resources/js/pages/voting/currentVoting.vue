@@ -3,16 +3,18 @@
         <v-container>
             <v-layout v-if="currentVoting == null" justify-center>
                 <v-progress-circular
+                        id="circularProgress"
                         :size="70"
                         :width="7"
                         color="success"
                         indeterminate
-                ></v-progress-circular>
+                />
             </v-layout>
             <v-col v-else lg="8" sm="12">
-                <v-card color="primary" id="currentVoting">
-                    <v-card-title class="title"
-                                  id="currentVotingTitle">
+                <v-card id="currentVoting" color="primary">
+                    <v-card-title id="currentVotingTitle"
+                                  class="title"
+                    >
                         {{currentVoting.votingTitle}}
                     </v-card-title>
                     <v-divider color="secondary"></v-divider>
@@ -25,11 +27,13 @@
                             <v-row align="center">
                                 <v-col color="secondary"
                                        :id="'currentVotingOptionDiscription' + index"
-                                       class="font-weight-medium">
+                                       class="font-weight-medium"
+                                >
                                     {{option.voteDiscription}}
                                 </v-col>
                                 <v-col>
                                     <v-checkbox
+                                            id="selectedOption"
                                             color="success"
                                             class="white--text mr-2 mt-0"
                                             hide-details
@@ -42,22 +46,25 @@
                         </div>
                     </v-card-text>
                     <v-card-actions class="pa-3">
-                        <v-btn class="white--text"
+                        <v-btn id="doVoteBtn"
+                               class="white--text"
                                color="accent"
-                               :x-large="true" :disabled="selectedOptionIndex == -1"
+                               :x-large="true"
+                               :disabled="selectedOptionIndex == -1"
                                @click="doVote()"
                         >
                             vote!
                         </v-btn>
-                        <v-btn class="white--text"
+                        <v-btn id="goToResultsBtn"
+                               class="white--text"
                                color="secondary"
-                               :x-large="true" @click="goToResults()"
-                        >
+                               :x-large="true"
+                               @click="goToResults()">
                             results
                         </v-btn>
                     </v-card-actions>
                 </v-card>
-                <data-reviler class="my-2" :dataToRevil="votingLink"/>
+                <data-revealer class="my-2" :dataToRevil="votingLink"/>
             </v-col>
         </v-container>
     </div>
@@ -67,7 +74,7 @@
     import {sendVote} from '../../utils/websocket'
     import routesNames from "../../router/routesNames"
     import votingConnectMixin from "../../mixins/votingConnectMixin"
-    import dataReviler from "../../components/dataReviler.vue"
+    import dataRevealer from "../../components/dataRevealer.vue"
 
     export default {
         props: {
@@ -88,7 +95,7 @@
         name: "currentVoting",
         mixins: [votingConnectMixin],
         components: {
-            dataReviler
+            dataRevealer
         },
         data() {
             return {
@@ -100,7 +107,7 @@
         async created() {
             await this.mixinConnectToVoting(this.votingId, this.votingKey)
             this.currentVoting = this.mixinVoting
-            this.modifiedVotingKey = this.currentVoting.votingKey
+            this.modifiedVotingKey = this.mixinVotingKey
         },
         computed: {
             votingLink() {
@@ -131,7 +138,7 @@
                         votingId: this.votingId,
                         votingKey: this.modifiedVotingKey
                     },
-                })
+                }).catch(err => {})
             }
         }
     }

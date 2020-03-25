@@ -4,8 +4,8 @@
             app>
         <authModal :modalIsActive="modalIsActive" @close="modalIsActive = false"/>
         <v-toolbar-items>
-            <v-btn text @click="goToOtherRote(routesNames.MAIN)">Fast Decision</v-btn>
-            <v-btn text @click="switchTheme()">
+            <v-btn id="mainPageBtn" text @click="goToOtherRote(routesNames.MAIN)">Fast Decision</v-btn>
+            <v-btn id="switchThemeBtn" text @click="switchTheme()">
                 <div v-if="getIsDark">
                     <v-icon>{{sunIcon}}</v-icon>
                 </div>
@@ -15,20 +15,33 @@
             </v-btn>
         </v-toolbar-items>
         <v-spacer></v-spacer>
-        <v-text-field clearable class="mt-4 mr-4" color="secondary" v-model="search" placeholder="Search by title..."/>
-        <v-btn :disabled="search.length == 0" outlined @click="goToSearch()" class="mr-2">
+        <v-text-field id="votingSearch"
+                      class="mt-4 mr-4"
+                      color="secondary"
+                      v-model="search"
+                      clearable
+                      placeholder="Search by title..."
+        />
+        <v-btn id="searchBtn"
+               class="mr-2"
+               outlined
+               :disabled="search.length == 0"
+               @click="goToSearch()"
+        >
             <v-icon>{{searchIcon}}</v-icon>
         </v-btn>
         <v-toolbar-items>
-            <v-btn @click="goToOtherRote(routesNames.NEWEST_VOTINGS)" text>Newest</v-btn>
-            <v-btn @click="goToOtherRote(routesNames.POPULAR_VOTINGS)" text>Popular</v-btn>
-            <v-btn text @click="goToUserVotings()">
-                <v-avatar v-if="getCurrentUserPic == null" class="mr-2" color="success" size="35">
-                    U
-                </v-avatar>
-                <v-avatar v-else class="mr-2" size="35">
-                    <img :src="getCurrentUserPic">
-                </v-avatar>
+            <v-btn id="newestVotingsBtn" @click="goToOtherRote(routesNames.NEWEST_VOTINGS)" text>Newest</v-btn>
+            <v-btn id="popularVotingsBtn" @click="goToOtherRote(routesNames.POPULAR_VOTINGS)" text>Popular</v-btn>
+            <v-btn id="userVotingsBtn" text @click="goToUserVotings()">
+                <div id="userAvatar">
+                    <v-avatar v-if="getCurrentUserPic == null" class="mr-2" color="success" size="35">
+                        U
+                    </v-avatar>
+                    <v-avatar v-else class="mr-2" size="35">
+                        <img :src="getCurrentUserPic">
+                    </v-avatar>
+                </div>
                 {{getCurrentUsername}}
             </v-btn>
             <v-btn v-if="currentUser == null" @click.stop="modalIsActive = true" text>
@@ -94,14 +107,17 @@
                 this.$router.push({name: roteName})
             },
             goToUserVotings() {
-                if(this.currentUser != null) {
-                    this.$router.push({name: this.routesNames.USER_VOTINGS_CHART, params: {userId: this.currentUser.id}})
+                if (this.currentUser != null) {
+                    this.$router.push({
+                        name: this.routesNames.USER_VOTINGS_CHART,
+                        params: {userId: this.currentUser.id}
+                    })
                 } else {
                     this.modalIsActive = true
                 }
             },
             goToSearch() {
-                this.$router.push({name: routesNames.SEARCH_RESULTS, params: {stringToSearch: this.search} })
+                this.$router.push({name: routesNames.SEARCH_RESULTS, params: {stringToSearch: this.search}})
             }
         }
     }

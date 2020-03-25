@@ -1,23 +1,23 @@
 <template>
     <v-card color="primary">
-        <div v-if="!dataRiviled">
-            <v-btn block class="white--text" color="accent" @click="revilData()">show voting link</v-btn>
+        <div id="hidenData" v-if="!dataIsReviled">
+            <v-btn id="revealDataBtn" block class="white--text" color="accent" @click="revealData()">show voting link</v-btn>
         </div>
-        <div v-else id="votingLink">
+        <div v-else id="reveledData">
             <v-card-text>
                 <v-col color="secondary">
                     <v-row align="center">
                         <v-col cols="10">
-                            <v-text-field v-model="dataToRevil" ref="textToCopy"></v-text-field>
+                            <v-text-field id="data" v-model="dataToReveal" ref="textToCopy"></v-text-field>
                         </v-col>
                         <v-col cols="2">
-                            <v-btn color="secondary" @click="copyData()">copy</v-btn>
+                            <v-btn id="copyDataBtn" color="secondary" @click="copyData()">copy</v-btn>
                         </v-col>
                     </v-row>
                 </v-col>
             </v-card-text>
             <v-card-actions>
-                <v-btn block class="white--text" color="accent" @click="hideData()">hide voting link</v-btn>
+                <v-btn id="hideDataBtn" block class="white--text" color="accent" @click="hideData()">hide voting link</v-btn>
             </v-card-actions>
         </div>
     </v-card>
@@ -25,24 +25,24 @@
 
 <script>
     export default {
-        name: "linkReviler",
+        name: "dataRevealer",
         props: {
-            dataToRevil: {
+            dataToReveal: {
                 required: true,
                 type: [String, Number]
             }
         },
         data() {
             return {
-                dataRiviled: false
+                dataIsReviled: false
             }
         },
         methods: {
-            revilData() {
-                this.dataRiviled = true
+            revealData() {
+                this.dataIsReviled = true
             },
             hideData() {
-                this.dataRiviled = false
+                this.dataIsReviled = false
             },
             copyData() {
                 let textToCopy = this.$refs.textToCopy.$el.querySelector('input')
