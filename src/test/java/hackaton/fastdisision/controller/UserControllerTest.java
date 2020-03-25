@@ -1,32 +1,31 @@
 package hackaton.fastdisision.controller;
 
+import hackaton.fastdisision.BasicTest;
 import hackaton.fastdisision.data.User;
 import hackaton.fastdisision.data.UserRoles;
 import hackaton.fastdisision.repo.UserRepo;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
 @AutoConfigureMockMvc
 @Sql(scripts = "classpath:create-user-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "classpath:create-user-after.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-class UserControllerTest {
+class UserControllerTest extends BasicTest {
 
     @Autowired
     private UserRepo userRepo;
@@ -50,6 +49,18 @@ class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(rightAdminPassword))
                 .andDo(print())
+                .andDo(document("{ClassName}/{methodName}",
+                        responseFields(
+                                fieldWithPath("id")
+                                        .description("ID of admined user."),
+                                fieldWithPath("username")
+                                        .description("Username of admined user."),
+                                fieldWithPath("roles")
+                                        .description("admined user roles."),
+                                fieldWithPath("userPic")
+                                        .description("admined user avatar.")
+                        )
+                ))
                 .andExpect(status().isOk());
         User adminedCommonUser = userRepo.findById(commonUserId).get();
         assertTrue(adminedCommonUser.getRoles().contains(UserRoles.ADMIN), "user did not get admin role!");

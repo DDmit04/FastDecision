@@ -1,17 +1,15 @@
 package hackaton.fastdisision.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hackaton.fastdisision.BasicTest;
 import hackaton.fastdisision.data.User;
 import hackaton.fastdisision.data.Voting;
 import hackaton.fastdisision.repo.UserRepo;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -19,17 +17,20 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
 @AutoConfigureMockMvc
 @Sql(scripts = {"classpath:create-user-before.sql", "classpath:create-votings-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = {"classpath:create-votings-after.sql", "classpath:create-user-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-class VotingCartsControllerTest {
+class VotingCartsControllerTest extends BasicTest {
 
     @Autowired
     private UserRepo userRepo;
@@ -45,6 +46,47 @@ class VotingCartsControllerTest {
         String searchString = "search";
         MvcResult mvcResult = mockMvc.perform(get("/voteApi/charts/search").param("search", searchString))
                 .andDo(print())
+                .andDo(document("{ClassName}/{methodName}",
+                        requestParameters(
+                                parameterWithName("search")
+                                        .description("string to search voting title")),
+                        responseFields(
+                                fieldWithPath("size")
+                                        .description("Page size."),
+                                fieldWithPath("number")
+                                        .description("Current page number."),
+                                fieldWithPath("totalElements")
+                                        .description("Total count of elements."),
+                                fieldWithPath("last")
+                                        .description("Is last page."),
+                                fieldWithPath("totalPages")
+                                        .description("Total page number."),
+                                fieldWithPath("sort.sorted")
+                                        .description("Is votings sorted."),
+                                fieldWithPath("sort.unsorted")
+                                        .description("Is votings unsorted."),
+                                fieldWithPath("sort.empty")
+                                        .description("Is votings empty."),
+                                fieldWithPath("first")
+                                        .description("Is last page."),
+                                fieldWithPath("numberOfElements")
+                                        .description("Total number of elements."),
+                                fieldWithPath("content[].id")
+                                        .description("Voting ID"),
+                                fieldWithPath("content[].totalVotes")
+                                        .description("Total voting votes"),
+                                fieldWithPath("content[].votingTitle")
+                                        .description("Voting title"),
+                                fieldWithPath("content[].isProtectedVoting")
+                                        .description("Is voting protected"),
+                                fieldWithPath("content[].owner.id")
+                                        .description("Voting owner ID"),
+                                fieldWithPath("content[].owner.username")
+                                        .description("Voting owner username"),
+                                fieldWithPath("content[].owner.roles")
+                                        .description("Voting owner roles")
+                        )
+                ))
                 .andExpect(status().isOk())
                 .andReturn();
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
@@ -61,6 +103,7 @@ class VotingCartsControllerTest {
     void getNewest() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/voteApi/charts/newest"))
                 .andDo(print())
+                .andDo(document("{ClassName}/{methodName}"))
                 .andExpect(status().isOk())
                 .andReturn();
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
@@ -80,6 +123,7 @@ class VotingCartsControllerTest {
     void getPopular() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/voteApi/charts/popular"))
                 .andDo(print())
+                .andDo(document("{ClassName}/{methodName}"))
                 .andExpect(status().isOk())
                 .andReturn();
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
@@ -98,6 +142,7 @@ class VotingCartsControllerTest {
     void getUserPublic() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/voteApi/charts/userPublic/3"))
                 .andDo(print())
+                .andDo(document("{ClassName}/{methodName}"))
                 .andExpect(status().isOk())
                 .andReturn();
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
@@ -112,6 +157,7 @@ class VotingCartsControllerTest {
         User commonUser = userRepo.findById("3").get();
         MvcResult mvcResult = mockMvc.perform(get("/voteApi/charts/userPrivate/3").with(user(commonUser)))
                 .andDo(print())
+                .andDo(document("{ClassName}/{methodName}"))
                 .andExpect(status().isOk())
                 .andReturn();
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
