@@ -1,8 +1,10 @@
 package hackaton.fastdisision.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import hackaton.fastdisision.data.User;
 import hackaton.fastdisision.excaptions.WrongAdminPasswordException;
 import hackaton.fastdisision.service.AdminService;
+import hackaton.fastdisision.views.VotingView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +24,7 @@ public class UserController {
     }
 
     @PostMapping("/getAdmin")
+    @JsonView(VotingView.CoreData.class)
     public User requestAdminRole(@RequestBody String clientAdminPassword, @AuthenticationPrincipal User currentUser) throws WrongAdminPasswordException {
         User user = adminService.checkAdminRequest(currentUser, clientAdminPassword);
         return user;

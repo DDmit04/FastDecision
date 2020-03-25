@@ -26,7 +26,7 @@ public class MainController {
     public MainController(ObjectMapper mapper) {
         this.writer = mapper
                 .setConfig(mapper.getSerializationConfig())
-                .writerWithView(VotingView.MinimalData.class);
+                .writerWithView(VotingView.CoreData.class);
     }
 
     @GetMapping

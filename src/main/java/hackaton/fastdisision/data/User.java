@@ -41,7 +41,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Set<UserRoles> roles = new HashSet<>();
 
-    @JsonView(VotingView.MinimalData.class)
+    @JsonView(VotingView.CoreData.class)
     private String userPic;
 
     @JsonView(VotingView.FullData.class)

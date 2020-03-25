@@ -53,6 +53,9 @@ public class AdminService {
         boolean currentUserIsAdmin = currentUser.getRoles().contains(UserRoles.ADMIN);
         if(!userToRemoveAdmin.equals(currentUser) && adminPasswordIsAccepted && currentUserIsAdmin) {
             userToRemoveAdmin.getRoles().remove(UserRoles.ADMIN);
+            if(!userToRemoveAdmin.getRoles().contains(UserRoles.USER)) {
+                userToRemoveAdmin.getRoles().add(UserRoles.USER);
+            }
             userRepo.save(userToRemoveAdmin);
         } else if(!adminPasswordIsAccepted) {
             throw new WrongAdminPasswordException();

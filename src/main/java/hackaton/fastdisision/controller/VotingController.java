@@ -26,7 +26,7 @@ public class VotingController {
     }
 
     @GetMapping("{id}")
-    @JsonView(VotingView.CoreData.class)
+    @JsonView(VotingView.MinimalData.class)
     public Voting getVotingById(@PathVariable("id") Voting voting, @RequestParam(required = false, defaultValue = "public") String votingKey, @AuthenticationPrincipal User currentUser) throws VotingNotFoundException, WrongVotingKeyException {
         if (voting == null) {
             throw new VotingNotFoundException();

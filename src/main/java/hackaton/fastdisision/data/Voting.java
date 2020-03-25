@@ -51,7 +51,7 @@ public class Voting {
     @CollectionTable(name="voted_users_ips", joinColumns=@JoinColumn(name="vote_option_id"))
     private List<String> votedIps = new ArrayList<>();
 
-    @JsonView(VotingView.CoreData.class)
+    @JsonView(VotingView.MinimalData.class)
     @OneToMany(mappedBy="voting", cascade=CascadeType.ALL, orphanRemoval = true)
     @Size(min = 2, max = 32, message = "voting options count must be between 2 and 32")
     private List<VoteOption> votingOptions;
