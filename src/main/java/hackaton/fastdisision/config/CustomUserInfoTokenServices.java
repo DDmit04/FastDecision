@@ -1,5 +1,6 @@
 package hackaton.fastdisision.config;
 
+import hackaton.fastdisision.data.User;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.AuthoritiesExtractor;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.FixedAuthoritiesExtractor;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.FixedPrincipalExtractor;
@@ -66,7 +67,8 @@ public class CustomUserInfoTokenServices implements ResourceServerTokenServices 
 
     private OAuth2Authentication extractAuthentication(Map<String, Object> map) {
         Object principal = getPrincipal(map);
-        List<GrantedAuthority> authorities = this.authoritiesExtractor.extractAuthorities(map);
+        User user = (User) principal;
+        List<GrantedAuthority> authorities = (List<GrantedAuthority>) user.getAuthorities();
         OAuth2Request request = new OAuth2Request(null, this.clientId, null, true, null,
                 null, null, null, null);
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(principal, "N/A", authorities);
