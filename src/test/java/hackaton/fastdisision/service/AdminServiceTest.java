@@ -1,5 +1,6 @@
 package hackaton.fastdisision.service;
 
+import hackaton.fastdisision.BasicTest;
 import hackaton.fastdisision.data.User;
 import hackaton.fastdisision.data.UserRoles;
 import hackaton.fastdisision.excaptions.AccessDeniedException;
@@ -8,26 +9,21 @@ import hackaton.fastdisision.repo.UserRepo;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-class AdminServiceTest {
+class AdminServiceTest extends BasicTest {
 
     @Value("${admin.password}")
     private String rightAdminPassword;
 
-    private String wrongAdminPassword = " wrongAdminPassword";
+    private String wrongAdminPassword = "wrongAdminPassword";
 
     @Autowired
     private AdminService adminService;
