@@ -1,23 +1,43 @@
 <template>
     <v-card color="primary">
-        <div id="hidenData" v-if="!dataIsReviled">
-            <v-btn id="revealDataBtn" block class="white--text" color="accent" @click="revealData()">show voting link</v-btn>
+        <div v-if="!dataIsReviled"id="hidenData">
+            <v-btn id="revealDataBtn"
+                   class="white--text"
+                   color="accent"
+                   block
+                   @click="revealData()"
+            >
+                show voting link
+            </v-btn>
         </div>
         <div v-else id="reveledData">
             <v-card-text>
                 <v-col color="secondary">
                     <v-row align="center">
                         <v-col cols="10">
-                            <v-text-field id="data" v-model="dataToReveal" ref="textToCopy"></v-text-field>
+                            <v-text-field id="data"
+                                          v-model="dataToReveal"
+                                          ref="textToCopy"
+                            />
                         </v-col>
                         <v-col cols="2">
-                            <v-btn id="copyDataBtn" color="secondary" @click="copyData()">copy</v-btn>
+                            <v-btn id="copyDataBtn"
+                                   color="secondary"
+                                   @click="copyData()">
+                                copy
+                            </v-btn>
                         </v-col>
                     </v-row>
                 </v-col>
             </v-card-text>
             <v-card-actions>
-                <v-btn id="hideDataBtn" block class="white--text" color="accent" @click="hideData()">hide voting link</v-btn>
+                <v-btn id="hideDataBtn"
+                       class="white--text"
+                       color="accent"
+                       block
+                       @click="hideData()">
+                    hide voting link
+                </v-btn>
             </v-card-actions>
         </div>
     </v-card>

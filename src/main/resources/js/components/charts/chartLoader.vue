@@ -10,9 +10,13 @@
             />
         </v-layout>
         <div v-else>
-            <abstract-chart id="loadedChartData" :chartData="loadedChartData"/>
-            <v-layout v-if="loadedChartData.content.length > 0" justify-center>
-                <v-pagination v-model="currentPage" :length="loadedChartData.totalPages" :total-visible="visiblePages">
+            <abstract-chart id="loadedChartData"
+                            :chartData="loadedChartData"/>
+            <v-layout v-if="loadedChartData.content.length > 0"
+                      justify-center>
+                <v-pagination v-model="currentPage"
+                              :length="loadedChartData.totalPages"
+                              :total-visible="visiblePages">
                 </v-pagination>
             </v-layout>
         </div>

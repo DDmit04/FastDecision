@@ -1,11 +1,15 @@
 <template>
-    <v-app-bar
-            color="info"
-            app>
+    <v-app-bar color="info" app>
         <authModal :modalIsActive="modalIsActive" @close="modalIsActive = false"/>
         <v-toolbar-items>
-            <v-btn id="mainPageBtn" text @click="goToOtherRote(routesNames.MAIN)">Fast Decision</v-btn>
-            <v-btn id="switchThemeBtn" text @click="switchTheme()">
+            <v-btn id="mainPageBtn"
+                   text
+                   @click="goToOtherRote(routesNames.MAIN)">
+                Fast Decision
+            </v-btn>
+            <v-btn id="switchThemeBtn"
+                   text
+                   @click="switchTheme()">
                 <div v-if="getIsDark">
                     <v-icon>{{sunIcon}}</v-icon>
                 </div>
@@ -26,28 +30,46 @@
                class="mr-2"
                outlined
                :disabled="search.length == 0"
-               @click="goToSearch()"
-        >
+               @click="goToSearch()">
             <v-icon>{{searchIcon}}</v-icon>
         </v-btn>
         <v-toolbar-items>
-            <v-btn id="newestVotingsBtn" @click="goToOtherRote(routesNames.NEWEST_VOTINGS)" text>Newest</v-btn>
-            <v-btn id="popularVotingsBtn" @click="goToOtherRote(routesNames.POPULAR_VOTINGS)" text>Popular</v-btn>
-            <v-btn id="userVotingsBtn" text @click="goToUserVotings()">
+            <v-btn id="newestVotingsBtn"
+                   text
+                   @click="goToOtherRote(routesNames.NEWEST_VOTINGS)">
+                Newest
+            </v-btn>
+            <v-btn id="popularVotingsBtn"
+                   text
+                   @click="goToOtherRote(routesNames.POPULAR_VOTINGS)">
+                Popular
+            </v-btn>
+            <v-btn id="userVotingsBtn"
+                   text
+                   @click="goToUserVotings()">
                 <div id="userAvatar">
-                    <v-avatar v-if="getCurrentUserPic == null" class="mr-2" color="success" size="35">
+                    <v-avatar v-if="getCurrentUserPic == null"
+                              class="mr-2"
+                              color="success"
+                              size="35">
                         U
                     </v-avatar>
-                    <v-avatar v-else class="mr-2" size="35">
+                    <v-avatar v-else
+                              class="mr-2"
+                              size="35">
                         <img :src="getCurrentUserPic">
                     </v-avatar>
                 </div>
                 {{getCurrentUsername}}
             </v-btn>
-            <v-btn v-if="currentUser == null" @click.stop="modalIsActive = true" text>
+            <v-btn v-if="currentUser == null"
+                   @click.stop="modalIsActive = true"
+                   text>
                 <v-icon>{{signInIcon}}</v-icon>
             </v-btn>
-            <v-btn v-else icon href="/logout">
+            <v-btn v-else
+                   icon
+                   href="/logout">
                 <v-icon>{{signInIcon}}</v-icon>
             </v-btn>
         </v-toolbar-items>

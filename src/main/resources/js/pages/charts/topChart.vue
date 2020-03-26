@@ -1,7 +1,13 @@
 <template>
     <div>
-        <chart-loader id="popularVotings" v-if="topChartType == 'popular'" :loadFunction="loadPopularVotings"/>
-        <chart-loader id="newestVotings" v-else-if="topChartType == 'newest'" :loadFunction="loadNewestVotings"/>
+        <chart-loader v-if="topChartType == 'popular'"
+                      id="popularVotings"
+                      :loadFunction="loadPopularVotings"
+        />
+        <chart-loader v-else-if="topChartType == 'newest'"
+                      id="newestVotings"
+                      :loadFunction="loadNewestVotings"
+        />
         <div v-else @load="$router.push({ name: routesNames.ERROR_PAGE })"></div>
     </div>
 </template>

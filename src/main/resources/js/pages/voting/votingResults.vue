@@ -12,8 +12,7 @@
                     ></v-progress-circular>
                 </v-layout>
                 <v-col v-else lg="8" sm="12">
-                    <v-card id="votingResults"
-                            color="primary">
+                    <v-card id="votingResults" color="primary">
                         <v-card-title class="title">
                             <v-layout id="votingResultsTitle" justify-start>
                                 {{currentVoting.votingTitle}}
@@ -27,12 +26,10 @@
                             <div v-for="(option, index) in currentVoting.votingOptions"
                                  :key="index"
                                  :id="'votingResultsOptions' + index"
-                                 class="py-2"
-                            >
+                                 class="py-2">
                                 <v-row>
                                     <v-col cols="10" class="pa-0">
-                                        <v-layout justify-space-between
-                                                  class="font-weight-black subtitle-1">
+                                        <v-layout justify-space-between class="font-weight-black subtitle-1">
                                             <div :id="'votingResultsDiscription' + index">
                                                 {{option.voteDiscription}}
                                             </div>
@@ -59,7 +56,7 @@
                         </v-card-text>
                     </v-card>
                 </v-col>
-                <v-col id="votingDonut" v-if="currentVoting != null">
+                <v-col v-if="currentVoting != null" id="votingDonut">
                     <vc-donut :hasLegend="true" :thickness="100" :sections="sections"/>
                 </v-col>
             </v-row>

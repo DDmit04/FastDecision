@@ -1,9 +1,16 @@
 <template>
     <div>
         <auth-modal :modalIsActive="modalIsActive"/>
-        <v-tabs id="userChartsTabs" background-color="info" color="success" v-model="tabs">
-            <v-tab id="publicVotingsTab">Public votings</v-tab>
-            <v-tab id="privateVotingsTab" v-if="userIsCurrentUser">Private votings</v-tab>
+        <v-tabs id="userChartsTabs"
+                v-model="tabs"
+                background-color="info"
+                color="success">
+            <v-tab id="publicVotingsTab">
+                Public votings
+            </v-tab>
+            <v-tab v-if="userIsCurrentUser" id="privateVotingsTab">
+                Private votings
+            </v-tab>
         </v-tabs>
         <v-tabs-items v-model="tabs" :style="{ background: getBackgroundColor}">
             <v-tab-item>

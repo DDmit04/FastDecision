@@ -4,7 +4,11 @@
             <v-col lg="8" sm="12">
                 <v-card id="createVotingForm" color="primary">
                     <v-card-title>
-                        <v-text-field id="newVotingTitle" color="secondary" v-model="newVoting.votingTitle" placeholder="Vote title"/>
+                        <v-text-field id="newVotingTitle"
+                                      v-model="newVoting.votingTitle"
+                                      color="secondary"
+                                      placeholder="Vote title"
+                        />
                     </v-card-title>
                     <v-card-text>
                         <v-text-field v-for="(option, index) in newVoting.votingOptions" :key="index"
@@ -46,8 +50,7 @@
                                @click="tryAddVoting()"
                                :disabled="!voteReadyToAdd"
                                :block=true
-                               :loading="buttonLoading"
-                        >
+                               :loading="buttonLoading">
                             add voting
                         </v-btn>
                     </v-card-actions>

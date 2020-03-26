@@ -4,7 +4,9 @@
                              @close="modalIsActive = false"
                              @accept="deleteVoting()"/>
         <v-col id="votingsBlock" lg="8" sm="12">
-            <v-layout v-if="votings.length == 0" justify-center class="mt-3 display-3 font-italic">
+            <v-layout v-if="votings.length == 0"
+                      justify-center
+                      class="mt-3 display-3 font-italic">
                 Nothing Here!
             </v-layout>
             <v-card v-else
@@ -27,7 +29,11 @@
                                class="ml-2">
                             {{voting.owner.username | normalizeString}}
                         </v-btn>
-                        <v-btn :id="'unknownAuthorBtn' + voting.id" v-else color="accent" disabled class="ml-2">
+                        <v-btn v-else
+                               :id="'unknownAuthorBtn' + voting.id"
+                               color="accent"
+                               disabled
+                               class="ml-2">
                             {{'Unknown' | normalizeString}}
                         </v-btn>
                     </v-layout>
@@ -40,9 +46,11 @@
                         <div :id="'totalVotes' + voting.id">
                             total votes: {{voting.totalVotes}}
                         </div>
-                        <v-btn :id="'deleteBtn' + voting.id" v-if="canDelete(voting)"
+                        <v-btn v-if="canDelete(voting)"
+                               :id="'deleteBtn' + voting.id"
                                @click.stop="callDeleteVoting(voting)"
-                               class="ml-4" color="accent">
+                               class="ml-4"
+                               color="accent">
                             <v-icon>{{closeIcon}}</v-icon>
                         </v-btn>
                     </v-layout>
