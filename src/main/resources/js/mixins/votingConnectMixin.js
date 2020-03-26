@@ -4,11 +4,13 @@ import {connectWebsocket, disconnectWebsocket} from "../utils/websocket";
 import router from "../router/router"
 import routesNames from "../router/routesNames";
 
+
 export default {
     data() {
         return {
             mixinVotingKey: 'public',
-            mixinVoting: null
+            mixinVoting: null,
+            mixinVotingId: null
         }
     },
     destroyed() {
@@ -20,6 +22,7 @@ export default {
     methods: {
         ...mapActions(["checkCurrentSessionVotingAction"]),
         async mixinConnectToVoting(votingId, votingKey) {
+            this.mixinVotingId = votingId
             await this.mixinCheckVotingSession(votingId, votingKey)
             await this.mixinGetVoting(votingId, this.mixinVotingKey)
             await connectWebsocket(votingId, this.mixinVotingKey)
@@ -33,19 +36,21 @@ export default {
             this.mixinVotingKey = localStoreVoting.votingKey
         },
         async mixinGetVoting(votingId, votingKey) {
-            const response = await api.getOne(votingId, votingKey).catch(err => {
-                if(err.status == 403) {
+            let data = null
+            try {
+                data = await api.getOne(votingId, votingKey)
+            } catch (err) {
+                if (err.status == 403) {
                     router.push({
                         name: routesNames.PROTECTED_VOTING_ACCESS,
                         params: {
-                            votingId: this.votingId
+                            votingId: this.mixinVotingId
                         }
                     })
                 } else {
                     throw err;
                 }
-            })
-            const data = await response.json()
+            }
             this.mixinVoting = data
         },
     }

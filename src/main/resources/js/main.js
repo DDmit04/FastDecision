@@ -17,6 +17,7 @@ Vue.use(VueResource)
 Vue.config.productionTip = false
 
 Vue.config.errorHandler = (err, vm, info) => {
+    console.error(err)
     if(err.status != '' && err.status != null) {
         vm.$router.push({
             name: rotesNames.ERROR_PAGE,

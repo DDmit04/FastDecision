@@ -64,7 +64,7 @@
                         </v-btn>
                     </v-card-actions>
                 </v-card>
-                <data-revealer class="my-2" :dataToRevil="votingLink"/>
+                <data-revealer class="my-2" :dataToReveal="votingLink"/>
             </v-col>
         </v-container>
     </div>
