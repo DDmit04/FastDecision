@@ -126,7 +126,7 @@
                 this.$vuetify.theme.dark = this.getIsDark
             },
             goToOtherRote(roteName) {
-                this.$router.push({name: roteName})
+                this.$router.push({name: roteName}).catch(err => {})
             },
             goToUserVotings() {
                 if (this.currentUser != null) {

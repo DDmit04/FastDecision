@@ -84,7 +84,13 @@ class VotingCartsControllerTest extends BasicTest {
                                 fieldWithPath("content[].owner.username")
                                         .description("Voting owner username"),
                                 fieldWithPath("content[].owner.roles")
-                                        .description("Voting owner roles")
+                                        .description("Voting owner roles"),
+                                fieldWithPath("content[].votingOptions[].id")
+                                        .description("voting option ID."),
+                                fieldWithPath("content[].votingOptions[].voteDiscription")
+                                        .description("voting option discription."),
+                                fieldWithPath("content[].votingOptions[].pluses")
+                                        .description("voting option pluses.")
                         )
                 ))
                 .andExpect(status().isOk())

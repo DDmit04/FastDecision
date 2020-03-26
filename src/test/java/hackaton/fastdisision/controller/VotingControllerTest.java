@@ -70,7 +70,13 @@ class VotingControllerTest extends BasicTest {
                                 fieldWithPath("owner.username")
                                         .description("username of requested voting creator."),
                                 fieldWithPath("owner.roles")
-                                        .description("roles of requested voting creator.")
+                                        .description("roles of requested voting creator."),
+                                fieldWithPath("votingOptions[].id")
+                                        .description("voting option ID."),
+                                fieldWithPath("votingOptions[].voteDiscription")
+                                        .description("voting option discription."),
+                                fieldWithPath("votingOptions[].pluses")
+                                        .description("voting option pluses.")
                         )
                 ))
                 .andExpect(status().isOk())
@@ -134,7 +140,13 @@ class VotingControllerTest extends BasicTest {
                                 fieldWithPath("owner.username")
                                         .description("username of requested voting creator."),
                                 fieldWithPath("owner.roles")
-                                        .description("roles of requested voting creator.")
+                                        .description("roles of requested voting creator."),
+                                fieldWithPath("votingOptions[].id")
+                                        .description("voting option ID."),
+                                fieldWithPath("votingOptions[].voteDiscription")
+                                        .description("voting option discription."),
+                                fieldWithPath("votingOptions[].pluses")
+                                        .description("voting option pluses.")
                         )
                 ))
                 .andReturn();
