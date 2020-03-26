@@ -17,7 +17,7 @@ export const routes = [
         component: createVoting
     },
     {
-        path: '/dashboard/askAdmin',
+        path: '/admin',
         name: routesNames.ASK_ADMIN_PAGE,
         component: adminPage
     },
