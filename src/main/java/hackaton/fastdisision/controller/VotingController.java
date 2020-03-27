@@ -9,14 +9,20 @@ import hackaton.fastdisision.excaptions.WrongVotingKeyException;
 import hackaton.fastdisision.service.VotingService;
 import hackaton.fastdisision.views.VotingView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Collections;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/voteApi/votings")
 public class VotingController {
+
+    @Value("${voting.public.key}")
+    private String publicVotingKey;
 
     private VotingService votingService;
 
@@ -40,11 +46,14 @@ public class VotingController {
     }
 
     @GetMapping("{id}/validation/key")
-    public boolean validateVotingKey(@PathVariable("id") Voting voting, @RequestParam(required = false, defaultValue = "public") String votingKey) throws VotingNotFoundException {
+    public Map<String, Boolean> validateVotingKey(@PathVariable("id") Voting voting, @RequestParam(required = false, defaultValue = "${voting.public.key}") String votingKey) throws VotingNotFoundException {
         if (voting == null) {
             throw new VotingNotFoundException();
+        } else if(votingKey.equals(publicVotingKey)){
+            return Collections.singletonMap("keyIsValid", true);
         } else {
-            return voting.getVotingKey().equals(votingKey);
+            boolean keyIsValid = voting.getVotingKey().equals(votingKey);
+            return Collections.singletonMap("keyIsValid", keyIsValid);
         }
     }
 

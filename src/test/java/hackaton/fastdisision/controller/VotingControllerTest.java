@@ -7,7 +7,6 @@ import hackaton.fastdisision.repo.UserRepo;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
@@ -36,9 +35,6 @@ class VotingControllerTest extends BasicTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Value("${voting.public.key}")
-    private String publicVotingKey;
-
     private String rightProtectedVotingKey = "notPublic";
 
     private ObjectMapper mapper = new ObjectMapper();
@@ -47,7 +43,8 @@ class VotingControllerTest extends BasicTest {
     void getPublicVotingById() throws Exception {
         //user with id = 3 is owner of all votings (see SQL)
         User votingOwner = userRepo.findById("3").get();
-        MvcResult mvcResult = mockMvc.perform(get("/voteApi/votings/{id}", 1)) //default votingKey value = publicVotingKey
+        //default votingKey value = publicVotingKey
+        MvcResult mvcResult = mockMvc.perform(get("/voteApi/votings/{id}", 1))
                 .andDo(print())
                 .andDo(document("{ClassName}/{methodName}",
                         pathParameters(parameterWithName("id")
@@ -64,13 +61,15 @@ class VotingControllerTest extends BasicTest {
                                 fieldWithPath("isProtectedVoting")
                                         .description("Is requested voting protected by key."),
                                 fieldWithPath("owner")
-                                        .description("requested voting creator."),
+                                        .description("requested voting owner."),
                                 fieldWithPath("owner.id")
-                                        .description("ID of requested voting creator."),
+                                        .description("ID of requested voting owner."),
                                 fieldWithPath("owner.username")
-                                        .description("username of requested voting creator."),
+                                        .description("username of requested voting owner."),
                                 fieldWithPath("owner.roles")
-                                        .description("roles of requested voting creator."),
+                                        .description("roles of requested voting owner."),
+                                fieldWithPath("votingOptions")
+                                        .description("Array of voting options."),
                                 fieldWithPath("votingOptions[].id")
                                         .description("voting option ID."),
                                 fieldWithPath("votingOptions[].voteDiscription")
@@ -134,13 +133,15 @@ class VotingControllerTest extends BasicTest {
                                 fieldWithPath("isProtectedVoting")
                                         .description("Is requested voting protected by key."),
                                 fieldWithPath("owner")
-                                        .description("requested voting creator."),
+                                        .description("requested voting owner."),
                                 fieldWithPath("owner.id")
-                                        .description("ID of requested voting creator."),
+                                        .description("ID of requested voting owner."),
                                 fieldWithPath("owner.username")
-                                        .description("username of requested voting creator."),
+                                        .description("username of requested voting owner."),
                                 fieldWithPath("owner.roles")
-                                        .description("roles of requested voting creator."),
+                                        .description("roles of requested voting owner."),
+                                fieldWithPath("votingOptions")
+                                        .description("Array of voting options."),
                                 fieldWithPath("votingOptions[].id")
                                         .description("voting option ID."),
                                 fieldWithPath("votingOptions[].voteDiscription")
@@ -183,10 +184,14 @@ class VotingControllerTest extends BasicTest {
                 .andDo(document("{ClassName}/{methodName}",
                         pathParameters(
                                 parameterWithName("id")
-                                        .description("ID of validated voting."))
+                                        .description("ID of validated voting.")),
+                        responseFields(
+                                fieldWithPath("keyIsValid")
+                                        .description("Key is valid."))
                 ))
                 .andReturn();
-        assertTrue(Boolean.parseBoolean(votingKeyIsValidResponse.getResponse().getContentAsString()), "voting key is invalid!");
+        JSONObject responseObj = new JSONObject(votingKeyIsValidResponse.getResponse().getContentAsString());
+        assertTrue((Boolean) responseObj.get("keyIsValid"), "voting key is invalid!");
     }
 
     @Test
@@ -196,7 +201,8 @@ class VotingControllerTest extends BasicTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
-        assertTrue(Boolean.parseBoolean(votingKeyIsValidResponse.getResponse().getContentAsString()), "voting key is invalid!");
+        JSONObject responseObj = new JSONObject(votingKeyIsValidResponse.getResponse().getContentAsString());
+        assertTrue((Boolean) responseObj.get("keyIsValid"), "voting key is invalid!");
     }
 
     @Test

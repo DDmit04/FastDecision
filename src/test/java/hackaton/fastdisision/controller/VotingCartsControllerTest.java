@@ -71,6 +71,8 @@ class VotingCartsControllerTest extends BasicTest {
                                         .description("Is last page."),
                                 fieldWithPath("numberOfElements")
                                         .description("Total number of elements."),
+                                fieldWithPath("content")
+                                        .description("Page content."),
                                 fieldWithPath("content[].id")
                                         .description("Voting ID"),
                                 fieldWithPath("content[].totalVotes")
@@ -79,6 +81,8 @@ class VotingCartsControllerTest extends BasicTest {
                                         .description("Voting title"),
                                 fieldWithPath("content[].isProtectedVoting")
                                         .description("Is voting protected"),
+                                fieldWithPath("content[].owner")
+                                        .description("Voting owner"),
                                 fieldWithPath("content[].owner.id")
                                         .description("Voting owner ID"),
                                 fieldWithPath("content[].owner.username")
@@ -109,7 +113,56 @@ class VotingCartsControllerTest extends BasicTest {
     void getNewest() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/voteApi/charts/newest"))
                 .andDo(print())
-                .andDo(document("{ClassName}/{methodName}"))
+                .andDo(document("{ClassName}/{methodName}",
+                        responseFields(
+                                fieldWithPath("size")
+                                        .description("Page size."),
+                                fieldWithPath("number")
+                                        .description("Current page number."),
+                                fieldWithPath("totalElements")
+                                        .description("Total count of elements."),
+                                fieldWithPath("last")
+                                        .description("Is last page."),
+                                fieldWithPath("totalPages")
+                                        .description("Total page number."),
+                                fieldWithPath("sort")
+                                        .description("Page content sorting options."),
+                                fieldWithPath("sort.sorted")
+                                        .description("Is votings sorted."),
+                                fieldWithPath("sort.unsorted")
+                                        .description("Is votings unsorted."),
+                                fieldWithPath("sort.empty")
+                                        .description("Is votings empty."),
+                                fieldWithPath("first")
+                                        .description("Is last page."),
+                                fieldWithPath("numberOfElements")
+                                        .description("Total number of elements."),
+                                fieldWithPath("content")
+                                        .description("Page content."),
+                                fieldWithPath("content[].id")
+                                        .description("Voting ID"),
+                                fieldWithPath("content[].totalVotes")
+                                        .description("Total voting votes"),
+                                fieldWithPath("content[].votingTitle")
+                                        .description("Voting title"),
+                                fieldWithPath("content[].isProtectedVoting")
+                                        .description("Is voting protected"),
+                                fieldWithPath("content[].owner")
+                                        .description("Voting owner"),
+                                fieldWithPath("content[].owner.id")
+                                        .description("Voting owner ID"),
+                                fieldWithPath("content[].owner.username")
+                                        .description("Voting owner username"),
+                                fieldWithPath("content[].owner.roles")
+                                        .description("Voting owner roles"),
+                                fieldWithPath("content[].votingOptions[].id")
+                                        .description("voting option ID."),
+                                fieldWithPath("content[].votingOptions[].voteDiscription")
+                                        .description("voting option discription."),
+                                fieldWithPath("content[].votingOptions[].pluses")
+                                        .description("voting option pluses.")
+                        )
+                ))
                 .andExpect(status().isOk())
                 .andReturn();
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
@@ -129,7 +182,56 @@ class VotingCartsControllerTest extends BasicTest {
     void getPopular() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/voteApi/charts/popular"))
                 .andDo(print())
-                .andDo(document("{ClassName}/{methodName}"))
+                .andDo(document("{ClassName}/{methodName}",
+                        responseFields(
+                                fieldWithPath("size")
+                                        .description("Page size."),
+                                fieldWithPath("number")
+                                        .description("Current page number."),
+                                fieldWithPath("totalElements")
+                                        .description("Total count of elements."),
+                                fieldWithPath("last")
+                                        .description("Is last page."),
+                                fieldWithPath("totalPages")
+                                        .description("Total page number."),
+                                fieldWithPath("sort.sorted")
+                                        .description("Is votings sorted."),
+                                fieldWithPath("sort")
+                                        .description("Page content sorting options."),
+                                fieldWithPath("sort.unsorted")
+                                        .description("Is votings unsorted."),
+                                fieldWithPath("sort.empty")
+                                        .description("Is votings empty."),
+                                fieldWithPath("first")
+                                        .description("Is last page."),
+                                fieldWithPath("numberOfElements")
+                                        .description("Total number of elements."),
+                                fieldWithPath("content")
+                                        .description("Page content."),
+                                fieldWithPath("content[].id")
+                                        .description("Voting ID"),
+                                fieldWithPath("content[].totalVotes")
+                                        .description("Total voting votes"),
+                                fieldWithPath("content[].votingTitle")
+                                        .description("Voting title"),
+                                fieldWithPath("content[].isProtectedVoting")
+                                        .description("Is voting protected"),
+                                fieldWithPath("content[].owner")
+                                        .description("Voting owner"),
+                                fieldWithPath("content[].owner.id")
+                                        .description("Voting owner ID"),
+                                fieldWithPath("content[].owner.username")
+                                        .description("Voting owner username"),
+                                fieldWithPath("content[].owner.roles")
+                                        .description("Voting owner roles"),
+                                fieldWithPath("content[].votingOptions[].id")
+                                        .description("voting option ID."),
+                                fieldWithPath("content[].votingOptions[].voteDiscription")
+                                        .description("voting option discription."),
+                                fieldWithPath("content[].votingOptions[].pluses")
+                                        .description("voting option pluses.")
+                        )
+                ))
                 .andExpect(status().isOk())
                 .andReturn();
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
@@ -148,7 +250,56 @@ class VotingCartsControllerTest extends BasicTest {
     void getUserPublic() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/voteApi/charts/userPublic/3"))
                 .andDo(print())
-                .andDo(document("{ClassName}/{methodName}"))
+                .andDo(document("{ClassName}/{methodName}",
+                        responseFields(
+                                fieldWithPath("size")
+                                        .description("Page size."),
+                                fieldWithPath("number")
+                                        .description("Current page number."),
+                                fieldWithPath("totalElements")
+                                        .description("Total count of elements."),
+                                fieldWithPath("last")
+                                        .description("Is last page."),
+                                fieldWithPath("totalPages")
+                                        .description("Total page number."),
+                                fieldWithPath("sort")
+                                        .description("Page content sorting options."),
+                                fieldWithPath("sort.sorted")
+                                        .description("Is votings sorted."),
+                                fieldWithPath("sort.unsorted")
+                                        .description("Is votings unsorted."),
+                                fieldWithPath("sort.empty")
+                                        .description("Is votings empty."),
+                                fieldWithPath("first")
+                                        .description("Is last page."),
+                                fieldWithPath("numberOfElements")
+                                        .description("Total number of elements."),
+                                fieldWithPath("content")
+                                        .description("Page content."),
+                                fieldWithPath("content[].id")
+                                        .description("Voting ID"),
+                                fieldWithPath("content[].totalVotes")
+                                        .description("Total voting votes"),
+                                fieldWithPath("content[].votingTitle")
+                                        .description("Voting title"),
+                                fieldWithPath("content[].isProtectedVoting")
+                                        .description("Is voting protected"),
+                                fieldWithPath("content[].owner")
+                                        .description("Voting owner"),
+                                fieldWithPath("content[].owner.id")
+                                        .description("Voting owner ID"),
+                                fieldWithPath("content[].owner.username")
+                                        .description("Voting owner username"),
+                                fieldWithPath("content[].owner.roles")
+                                        .description("Voting owner roles"),
+                                fieldWithPath("content[].votingOptions[].id")
+                                        .description("voting option ID."),
+                                fieldWithPath("content[].votingOptions[].voteDiscription")
+                                        .description("voting option discription."),
+                                fieldWithPath("content[].votingOptions[].pluses")
+                                        .description("voting option pluses.")
+                        )
+                ))
                 .andExpect(status().isOk())
                 .andReturn();
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
@@ -163,7 +314,56 @@ class VotingCartsControllerTest extends BasicTest {
         User commonUser = userRepo.findById("3").get();
         MvcResult mvcResult = mockMvc.perform(get("/voteApi/charts/userPrivate/3").with(user(commonUser)))
                 .andDo(print())
-                .andDo(document("{ClassName}/{methodName}"))
+                .andDo(document("{ClassName}/{methodName}",
+                        responseFields(
+                                fieldWithPath("size")
+                                        .description("Page size."),
+                                fieldWithPath("number")
+                                        .description("Current page number."),
+                                fieldWithPath("totalElements")
+                                        .description("Total count of elements."),
+                                fieldWithPath("last")
+                                        .description("Is last page."),
+                                fieldWithPath("totalPages")
+                                        .description("Total page number."),
+                                fieldWithPath("sort")
+                                        .description("Page content sorting options."),
+                                fieldWithPath("sort.sorted")
+                                        .description("Is votings sorted."),
+                                fieldWithPath("sort.unsorted")
+                                        .description("Is votings unsorted."),
+                                fieldWithPath("sort.empty")
+                                        .description("Is votings empty."),
+                                fieldWithPath("first")
+                                        .description("Is last page."),
+                                fieldWithPath("numberOfElements")
+                                        .description("Total number of elements."),
+                                fieldWithPath("content")
+                                        .description("Page content."),
+                                fieldWithPath("content[].id")
+                                        .description("Voting ID"),
+                                fieldWithPath("content[].totalVotes")
+                                        .description("Total voting votes"),
+                                fieldWithPath("content[].votingTitle")
+                                        .description("Voting title"),
+                                fieldWithPath("content[].isProtectedVoting")
+                                        .description("Is voting protected"),
+                                fieldWithPath("content[].owner")
+                                        .description("Voting owner"),
+                                fieldWithPath("content[].owner.id")
+                                        .description("Voting owner ID"),
+                                fieldWithPath("content[].owner.username")
+                                        .description("Voting owner username"),
+                                fieldWithPath("content[].owner.roles")
+                                        .description("Voting owner roles"),
+                                fieldWithPath("content[].votingOptions[].id")
+                                        .description("voting option ID."),
+                                fieldWithPath("content[].votingOptions[].voteDiscription")
+                                        .description("voting option discription."),
+                                fieldWithPath("content[].votingOptions[].pluses")
+                                        .description("voting option pluses.")
+                        )
+                ))
                 .andExpect(status().isOk())
                 .andReturn();
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());

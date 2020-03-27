@@ -9,7 +9,8 @@ export let actions = {
         if (oldVotingSessionData == null) {
             await commit("addCurrentSessionVotingMutation", newVotingSessionData)
         } else {
-            let localVotingKeyIsValid = await serverValidation.validateKey(oldVotingSessionData.votingId, oldVotingSessionData.votingKey)
+            let keyValidationResult = await serverValidation.validateKey(oldVotingSessionData.votingId, oldVotingSessionData.votingKey)
+            let localVotingKeyIsValid = keyValidationResult.keyIsValid
             if (!localVotingKeyIsValid.body) {
                 await commit("deleteInvalidVotingSessionMutation", oldVotingSessionData)
                 await commit("addCurrentSessionVotingMutation", newVotingSessionData)

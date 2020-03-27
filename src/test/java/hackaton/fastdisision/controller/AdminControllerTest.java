@@ -64,10 +64,10 @@ class AdminControllerTest extends BasicTest {
                                         .description("ID of admined user."),
                                 fieldWithPath("username")
                                         .description("Username of admined user."),
-                                fieldWithPath("userPic")
-                                        .description("unadmined user avatar link."),
                                 fieldWithPath("roles")
-                                        .description("roles of unadmined user.")
+                                        .description("roles of unadmined user."),
+                                fieldWithPath("userPic")
+                                        .description("unadmined user avatar link.")
                         )
                 ))
                 .andExpect(status().isOk());
@@ -101,10 +101,10 @@ class AdminControllerTest extends BasicTest {
                                         .description("ID of unadmined user."),
                                 fieldWithPath("username")
                                         .description("Username of unadmined user."),
-                                fieldWithPath("userPic")
-                                        .description("unadmined user avatar link."),
                                 fieldWithPath("roles")
-                                        .description("roles of unadmined user.")
+                                        .description("roles of unadmined user."),
+                                fieldWithPath("userPic")
+                                        .description("unadmined user avatar link.")
                                 )
                 ))
                 .andExpect(status().isOk());
