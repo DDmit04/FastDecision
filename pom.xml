@@ -15,6 +15,7 @@
     <description>Demo project for Spring Boot</description>
 
     <properties>
+        <snippetsDirectory>${project.build.directory}/generated-snippets</snippetsDirectory>
         <java.version>1.8</java.version>
     </properties>
 
@@ -107,6 +108,45 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <version>1.5.6</version>
+                <executions>
+                    <execution>
+                        <id>generate-docs-src</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                        <configuration>
+                            <backend>html</backend>
+                            <doctype>book</doctype>
+                            <attributes>
+                                <snippets>${snippetsDirectory}</snippets>
+                            </attributes>
+                            <sourceDirectory>src/docs/asciidocs</sourceDirectory>
+                            <outputDirectory>src/docs/generated-docs</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-docs-target</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                        <configuration>
+                            <backend>html</backend>
+                            <doctype>book</doctype>
+                            <attributes>
+                                <snippets>${snippetsDirectory}</snippets>
+                            </attributes>
+                            <sourceDirectory>src/docs/asciidocs</sourceDirectory>
+                            <outputDirectory>target/generated-docs</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
@@ -122,10 +162,10 @@
                 <executions>
                     <execution>
                         <id>install node and yarn</id>
+                        <phase>site</phase>
                         <goals>
                             <goal>install-node-and-yarn</goal>
                         </goals>
-                        <phase>generate-resources</phase>
                         <configuration>
                             <nodeVersion>v10.16.0</nodeVersion>
                             <yarnVersion>v1.16.0</yarnVersion>
@@ -136,6 +176,7 @@
                     </execution>
                     <execution>
                         <id>yarn install</id>
+                        <phase>site</phase>
                         <goals>
                             <goal>yarn</goal>
                         </goals>
@@ -145,6 +186,7 @@
                     </execution>
                     <execution>
                         <id>yarn build</id>
+                        <phase>site</phase>
                         <goals>
                             <goal>yarn</goal>
                         </goals>
