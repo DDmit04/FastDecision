@@ -12,3 +12,5 @@ insert into user_role(user_id, roles) values
 ('2', 'ADMIN'),
 ('3', 'USER'),
 ('4', 'USER');
+
+alter sequence hibernate_sequence restart with 100;

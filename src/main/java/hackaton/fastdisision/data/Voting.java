@@ -20,7 +20,7 @@ public class Voting {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonView(VotingView.Id.class)
-    private long id;
+    private Long id;
 
     @JsonView(VotingView.MinimalData.class)
     private int totalVotes = 0;
@@ -53,7 +53,9 @@ public class Voting {
 
     @JsonView(VotingView.MinimalData.class)
     @OneToMany(mappedBy="voting", cascade=CascadeType.ALL, orphanRemoval = true)
-    @Size(min = 2, max = 32, message = "voting options count must be between 2 and 32")
+    @Valid
+    @Size(min = 2, max = 32, message = "voting options count must be between 2 and 32!")
+    @NotNull(message = "voting must contain vote options!")
     private List<VoteOption> votingOptions;
 
     @Override

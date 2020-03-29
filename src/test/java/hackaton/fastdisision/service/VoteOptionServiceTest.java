@@ -17,6 +17,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 class VoteOptionServiceTest extends BasicTest {
 
@@ -39,15 +40,15 @@ class VoteOptionServiceTest extends BasicTest {
 
     @BeforeAll
     public static void initData() {
-        inspectedVoting.setId(1);
+        inspectedVoting.setId((long) 1);
         inspectedVoting.setVotingKey(rightVotingKey);
         inspectedVoting.setVotingTitle("title");
 
-        firstVoteOption.setId(firstVoteOption.getId());
+        firstVoteOption.setId((long) 2);
         firstVoteOption.setVoteDiscription("Discription");
         firstVoteOption.setVoting(inspectedVoting);
 
-        secVoteOption.setId(secVoteOption.getId());
+        secVoteOption.setId((long) 3);
         secVoteOption.setVoteDiscription("Discription");
         secVoteOption.setVoting(inspectedVoting);
 
@@ -62,9 +63,12 @@ class VoteOptionServiceTest extends BasicTest {
     @Test
     void acceptVote() throws WrongVotingKeyException {
         Mockito.when(voteOptionRepo.findById(firstVoteOption.getId())).thenReturn(Optional.of(firstVoteOption));
+
         //twice
         voteOptionService.acceptVote(firstVoteOption.getId(), votedIp, rightVotingKey);
         voteOptionService.acceptVote(firstVoteOption.getId(), votedIp, rightVotingKey);
+
+        Mockito.verify(voteOptionRepo, times(2)).save(firstVoteOption);
         assertTrue(inspectedVoting.getTotalVotes() == 1, "total votes is not incremented correctly!");
         assertTrue(inspectedVoting.getVotedIps().contains(votedIp), "voted user's IP was not added to base!");
         assertTrue(firstVoteOption.getPluses() == 1, "total pluses is not incremented correctly!");

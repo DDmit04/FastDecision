@@ -1,5 +1,6 @@
 delete from voting;
 delete from vote_option;
+
 -- public voting key - see properties.yaml - voting.public.key;
 insert into voting(id, creation_date, is_private_voting, total_votes, is_protected_voting, voting_key, voting_title, owner_id) values
 
@@ -44,3 +45,5 @@ insert into vote_option(id, pluses, vote_discription, vote_id) values
 (19, 0, 'disc', 7),
 (20, 0, 'disc', 7),
 (21, 0, 'disc', 7);
+
+alter sequence hibernate_sequence restart with 100;

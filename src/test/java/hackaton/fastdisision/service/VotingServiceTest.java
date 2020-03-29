@@ -10,6 +10,7 @@ import hackaton.fastdisision.repo.UserRepo;
 import hackaton.fastdisision.repo.VotingRepo;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -18,6 +19,7 @@ import java.util.Collections;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 class VotingServiceTest extends BasicTest {
 
@@ -50,7 +52,7 @@ class VotingServiceTest extends BasicTest {
         adminUser.setRoles(new HashSet<>(Collections.singleton(UserRoles.ADMIN)));
 
         voting = new Voting();
-        voting.setId(1);
+        voting.setId((long) 1);
         voting.setVotingTitle("title");
 
         VoteOption firstVoteOption = new VoteOption();
@@ -75,6 +77,7 @@ class VotingServiceTest extends BasicTest {
         for(VoteOption voteOption: voting.getVotingOptions()) {
             assertTrue(voteOption.getVoting().equals(voting));
         }
+        Mockito.verify(votingRepo, times(1)).save(voting);
         assertNotNull(voting.getOwner(), "voting owner is empty!");
         assertNotNull(voting.getVotingKey(), "voting key is empty!");
         assertNotNull(voting.getCreationDate(), "voting creation date is empty!");
@@ -85,6 +88,9 @@ class VotingServiceTest extends BasicTest {
         commonUser.getUserVotings().add(voting);
         voting.setOwner(commonUser);
         votingService.deleteVoting(voting, commonUser);
+
+        Mockito.verify(userRepo, times(1)).save(commonUser);
+        Mockito.verify(votingRepo, times(1)).delete(voting);
         assertFalse(commonUser.getUserVotings().contains(voting), "deleted voting still present in user's votings!");
     }
 
@@ -102,6 +108,9 @@ class VotingServiceTest extends BasicTest {
         commonUser.getUserVotings().add(voting);
         voting.setOwner(commonUser);
         votingService.deleteVoting(voting, adminUser);
+
+        Mockito.verify(userRepo, times(1)).save(commonUser);
+        Mockito.verify(votingRepo, times(1)).delete(voting);
         assertFalse(commonUser.getUserVotings().contains(voting), "deleted by admin voting still present in user's votings!");
     }
 

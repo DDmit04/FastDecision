@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Sql(scripts = "classpath:create-user-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "classpath:create-user-after.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-class AdminControllerTest extends BasicTest {
+public class AdminControllerTest extends BasicTest {
 
     @Autowired
     private AdminController adminController;
@@ -67,10 +67,12 @@ class AdminControllerTest extends BasicTest {
                                 fieldWithPath("roles")
                                         .description("roles of unadmined user."),
                                 fieldWithPath("userPic")
+                                        .type(String.class)
                                         .description("unadmined user avatar link.")
                         )
                 ))
                 .andExpect(status().isOk());
+
         User adminedCommonUser = userRepo.findById(commonUserId).get();
         assertTrue(adminedCommonUser.getRoles().contains(UserRoles.ADMIN), "admin role was not given to common user!");
     }
@@ -81,6 +83,7 @@ class AdminControllerTest extends BasicTest {
         mockMvc.perform(post("/admin/giveAdmin/{id}", otherCommonUserId).with(user(commonUser)))
                 .andDo(print())
                 .andExpect(status().isForbidden());
+
         User adminedCommonUser = userRepo.findById(otherCommonUserId).get();
         assertFalse(adminedCommonUser.getRoles().contains(UserRoles.ADMIN), "give admin role request with wrong role was not denied!");
     }
@@ -104,10 +107,12 @@ class AdminControllerTest extends BasicTest {
                                 fieldWithPath("roles")
                                         .description("roles of unadmined user."),
                                 fieldWithPath("userPic")
+                                        .type(String.class)
                                         .description("unadmined user avatar link.")
                                 )
                 ))
                 .andExpect(status().isOk());
+
         User unadminedCommonUser = userRepo.findById(otherAdminUserId).get();
         assertFalse(unadminedCommonUser.getRoles().contains(UserRoles.ADMIN), "admin role was not removed!");
         assertTrue(unadminedCommonUser.getRoles().contains(UserRoles.USER), "unadmined user must be common user too!");
@@ -121,6 +126,7 @@ class AdminControllerTest extends BasicTest {
                 .content(wrongAdminPassword))
                 .andDo(print())
                 .andExpect(status().isForbidden());
+
         User unadminedCommonUser = userRepo.findById(otherAdminUserId).get();
         assertTrue(unadminedCommonUser.getRoles().contains(UserRoles.ADMIN), "admin remove request with wrong password was not denied!");
     }
@@ -133,6 +139,7 @@ class AdminControllerTest extends BasicTest {
                 .content(rightAdminPassword))
                 .andDo(print())
                 .andExpect(status().isForbidden());
+
         User unadminedCommonUser = userRepo.findById(adminUserId).get();
         assertTrue(unadminedCommonUser.getRoles().contains(UserRoles.ADMIN), "admin remove request with wrong role was not denied!");
     }

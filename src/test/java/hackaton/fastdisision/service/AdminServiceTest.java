@@ -9,6 +9,7 @@ import hackaton.fastdisision.repo.UserRepo;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -17,6 +18,7 @@ import java.util.Collections;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 class AdminServiceTest extends BasicTest {
 
@@ -61,6 +63,7 @@ class AdminServiceTest extends BasicTest {
     @Test
     void checkAdminRequest() throws WrongAdminPasswordException {
         adminService.checkAdminRequest(commonUser, rightAdminPassword);
+        Mockito.verify(userRepo, times(1)).save(commonUser);
         assertTrue(commonUser.getRoles().contains(UserRoles.ADMIN), "common user isn't get admin role!");
     }
 
@@ -78,6 +81,7 @@ class AdminServiceTest extends BasicTest {
     @Test
     void giveAdmin() throws AccessDeniedException {
         adminService.giveAdmin(commonUser, adminUser);
+        Mockito.verify(userRepo, times(1)).save(commonUser);
         assertTrue(commonUser.getRoles().contains(UserRoles.ADMIN), "admin isn't give common user an admin role!");
     }
 
@@ -94,6 +98,7 @@ class AdminServiceTest extends BasicTest {
     @Test
     void removeAdmin() throws AccessDeniedException, WrongAdminPasswordException {
         adminService.removeAdmin(otherAdminUser, adminUser, rightAdminPassword);
+        Mockito.verify(userRepo, times(1)).save(otherAdminUser);
         assertFalse(otherAdminUser.getRoles().contains(UserRoles.ADMIN), "admin role was not removed!");
     }
 

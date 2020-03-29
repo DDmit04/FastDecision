@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Sql(scripts = "classpath:create-user-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "classpath:create-user-after.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-class UserControllerTest extends BasicTest {
+public class UserControllerTest extends BasicTest {
 
     @Autowired
     private UserRepo userRepo;
@@ -58,10 +58,12 @@ class UserControllerTest extends BasicTest {
                                 fieldWithPath("roles")
                                         .description("admined user roles."),
                                 fieldWithPath("userPic")
+                                        .type(String.class)
                                         .description("admined user avatar.")
                         )
                 ))
                 .andExpect(status().isOk());
+
         User adminedCommonUser = userRepo.findById(commonUserId).get();
         assertTrue(adminedCommonUser.getRoles().contains(UserRoles.ADMIN), "user did not get admin role!");
     }
@@ -83,6 +85,7 @@ class UserControllerTest extends BasicTest {
                 .content(wrongAdminPassword))
                 .andDo(print())
                 .andExpect(status().isForbidden());
+
         User adminedCommonUser = userRepo.findById(commonUserId).get();
         assertFalse(adminedCommonUser.getRoles().contains(UserRoles.ADMIN), "admin request with wrong password was not denied!");
     }
