@@ -127,8 +127,19 @@
             async addVoting() {
                 this.buttonLoading = true
                 this.newVoting.votingOptions = this.newVoting.votingOptions.filter(option => option.voteDiscription != '')
-                this.addNewVotingAction(this.newVoting)
+                await this.addNewVotingAction(this.newVoting)
+                await router.push({
+                    name: rotesNames.CURRENT_VOTING,
+                    params: {
+                        votingId: this.currentVoting.id,
+                        votingKey: this.currentVoting.votingKey
+                    },
+                })
             },
+            /**
+             * @public
+             * Add new voting option
+             */
             addOption() {
                 if (this.newVoting.votingOptions.length < 10) {
                     let newOption = {

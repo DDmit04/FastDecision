@@ -21,13 +21,6 @@ export let actions = {
         try {
             const data = await api.addVoting(newVoting)
             await commit("addCurrentSessionVotingMutation", data)
-            await router.push({
-                name: rotesNames.CURRENT_VOTING,
-                params: {
-                    votingId: data.id,
-                    votingKey: data.votingKey
-                },
-            })
         } catch (err) {
             let allReasons = ''
             let separator = ', '
