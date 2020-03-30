@@ -19,6 +19,11 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.UUID;
 
+/**
+ * Service to manipulate votings entities
+ * @author Dmitrochenkov Daniil
+ * @version 1.0
+ */
 @Service
 public class VotingService {
 
@@ -34,6 +39,14 @@ public class VotingService {
         this.userRepo = userRepo;
     }
 
+    /**
+     * create voting (set creation data, voting key, owner and parent voting for options)
+     * @param voting voting to create
+     * @param user user requested creation voting
+     * @return saved voting
+     * @see Voting
+     * @see User
+     */
     public Voting addVoting(Voting voting, User user) {
         Voting savedVoting = null;
         if(!voting.getVotingTitle().trim().equals("") && voting.getVotingOptions().size() >= 2) {
@@ -54,6 +67,14 @@ public class VotingService {
         return savedVoting;
     }
 
+    /**
+     * delete voting and remove it from users's votings
+     * @param voting voting to delete
+     * @param user user requested deletion voting
+     * @throws AccessDeniedException user isn't voting owner
+     * @see Voting
+     * @see User
+     */
     public void deleteVoting(Voting voting, User user) throws AccessDeniedException {
         boolean userIsAdmin = user.getRoles().contains(UserRoles.ADMIN);
         boolean userIsOwner = voting.getOwner() != null && voting.getOwner().equals(user);
@@ -68,14 +89,33 @@ public class VotingService {
         }
     }
 
+    /**
+     * returns page of votings sorted by total votes count
+     * @param pageable requested pageable
+     * @return page of popular votings
+     * @see Voting
+     */
     public Page<Voting> getPopular(Pageable pageable) {
         return votingRepo.findByIsPrivateVotingOrderByTotalVotes(false, pageable);
     }
 
+    /**
+     * returns page of votings sorted by creation date
+     * @param pageable requested pageable
+     * @return page of newest votings
+     * @see Voting
+     */
     public Page<Voting> getNewest(Pageable pageable) {
         return votingRepo.findByIsPrivateVotingOrderByCreationDate(false, pageable);
     }
 
+    /**
+     *
+     * @param user user requested user public votings
+     * @param pageable requested pageable
+     * @return page of public user votings
+     * @see Voting
+     */
     public Page<Voting> getUserPublic(User user, Pageable pageable) {
         Page<Voting> votings = new PageImpl<Voting>(Collections.EMPTY_LIST, pageable, 0);
         if (user != null) {
@@ -84,6 +124,15 @@ public class VotingService {
         return votings;
     }
 
+    /**
+     * returns user private votings
+     * @param user user to get private votings
+     * @param currentUser user requested private votings
+     * @param pageable requested pageable
+     * @return page of private user votings
+     * @throws AccessDeniedException user neither currentUser nor admin or user is null
+     * @see Voting
+     */
     public Page<Voting> getUserPrivate(User user, User currentUser, Pageable pageable) throws AccessDeniedException {
         Page<Voting> votings = new PageImpl<Voting>(Collections.EMPTY_LIST, pageable, 0);
         if(user.equals(currentUser) || currentUser.getRoles().contains(UserRoles.ADMIN)) {
@@ -96,6 +145,13 @@ public class VotingService {
         return votings;
     }
 
+    /**
+     * returns votings which title contains string to search
+     * @param search string to search
+     * @param pageable requested pageable
+     * @return page of votings includes searched string
+     * @see Voting
+     */
     public Page<Voting> searchVotings(String search, Pageable pageable) {
         return votingRepo.findAllByIsPrivateVotingAndVotingTitleContains(false, search, pageable);
     }

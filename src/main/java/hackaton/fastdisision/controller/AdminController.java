@@ -10,6 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Controller that handles requests for admin role
+ *
+ * @author Dmitrochenkov Daniil
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
@@ -23,14 +29,17 @@ public class AdminController {
 
     @PostMapping("/giveAdmin/{id}")
     @JsonView(VotingView.CoreData.class)
-    public User giveAdminRole(@PathVariable("id") User user, @AuthenticationPrincipal User currentUser) throws AccessDeniedException {
+    public User giveAdminRole(@PathVariable("id") User user,
+                              @AuthenticationPrincipal User currentUser) throws AccessDeniedException {
         return adminService.giveAdmin(user, currentUser);
     }
 
     @PostMapping("/removeAdmin/{id}")
     @JsonView(VotingView.CoreData.class)
-    public User removeAdmin(@PathVariable("id") User user, @RequestBody(required = false) String clientAdminPassword, @AuthenticationPrincipal User currentUser) throws AccessDeniedException, WrongAdminPasswordException {
-        if(clientAdminPassword == null) {
+    public User removeAdmin(@PathVariable("id") User user,
+                            @RequestBody(required = false) String clientAdminPassword,
+                            @AuthenticationPrincipal User currentUser) throws AccessDeniedException, WrongAdminPasswordException {
+        if (clientAdminPassword == null) {
             clientAdminPassword = "";
         }
         return adminService.removeAdmin(user, currentUser, clientAdminPassword);

@@ -17,6 +17,11 @@ import javax.validation.Valid;
 import java.util.Collections;
 import java.util.Map;
 
+/**
+ * Controller that handles requests for voting
+ * @author Dmitrochenkov Daniil
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/voteApi/votings")
 public class VotingController {
@@ -33,7 +38,9 @@ public class VotingController {
 
     @GetMapping("{id}")
     @JsonView(VotingView.MinimalData.class)
-    public Voting getVotingById(@PathVariable("id") Voting voting, @RequestParam(required = false, defaultValue = "public") String votingKey, @AuthenticationPrincipal User currentUser) throws VotingNotFoundException, WrongVotingKeyException {
+    public Voting getVotingById(@PathVariable("id") Voting voting,
+                                @RequestParam(required = false, defaultValue = "public") String votingKey,
+                                @AuthenticationPrincipal User currentUser) throws VotingNotFoundException, WrongVotingKeyException {
         if (voting == null) {
             throw new VotingNotFoundException();
         }
@@ -46,7 +53,8 @@ public class VotingController {
     }
 
     @GetMapping("{id}/validation/key")
-    public Map<String, Boolean> validateVotingKey(@PathVariable("id") Voting voting, @RequestParam(required = false, defaultValue = "${voting.public.key}") String votingKey) throws VotingNotFoundException {
+    public Map<String, Boolean> validateVotingKey(@PathVariable("id") Voting voting,
+                                                  @RequestParam(required = false, defaultValue = "${voting.public.key}") String votingKey) throws VotingNotFoundException {
         if (voting == null) {
             throw new VotingNotFoundException();
         } else if(votingKey.equals(publicVotingKey)){
@@ -57,16 +65,17 @@ public class VotingController {
         }
     }
 
-    //not covered by tests!!!
     @PostMapping
     @JsonView(VotingView.CoreData.class)
-    public Voting addVoting(@Valid @RequestBody Voting voting, @AuthenticationPrincipal User user) {
+    public Voting addVoting(@Valid @RequestBody Voting voting,
+                            @AuthenticationPrincipal User user) {
         Voting newVoting = votingService.addVoting(voting, user);
         return newVoting;
     }
 
     @DeleteMapping("{id}")
-    public void deleteVoting(@PathVariable("id") Voting voting, @AuthenticationPrincipal User user) throws AccessDeniedException {
+    public void deleteVoting(@PathVariable("id") Voting voting,
+                             @AuthenticationPrincipal User user) throws AccessDeniedException {
         votingService.deleteVoting(voting, user);
     }
 

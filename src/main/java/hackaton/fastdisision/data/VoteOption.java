@@ -12,6 +12,11 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
+/**
+ * Represents vote option entity
+ * @author Dmitrochenkov Daniil
+ * @version 1.0
+ */
 @Getter
 @Setter
 @Entity
@@ -24,7 +29,7 @@ public class VoteOption {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonView(VotingView.Id.class)
-    private long id;
+    private Long id;
 
     @JsonView(VotingView.MinimalData.class)
     @NotBlank(message = "vote discription can not be empty")

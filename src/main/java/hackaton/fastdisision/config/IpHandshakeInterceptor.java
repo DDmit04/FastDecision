@@ -9,6 +9,11 @@ import org.springframework.web.socket.server.HandshakeInterceptor;
 
 import java.util.Map;
 
+/**
+ * Component that extract IP from websocket session
+ * @author Dmitrochenkov Daniil
+ * @version 1.0
+ */
 @Component
 public class IpHandshakeInterceptor implements HandshakeInterceptor {
 

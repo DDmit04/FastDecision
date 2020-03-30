@@ -14,6 +14,11 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.filter.CompositeFilter;
 
+/**
+ * App security configuration
+ * @author Dmitrochenkov Daniil
+ * @version 1.0
+ */
 @Configuration
 @EnableWebSecurity
 @EnableOAuth2Client

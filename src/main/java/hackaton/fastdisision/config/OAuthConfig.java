@@ -21,6 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Configuration of web security OAuth filters
+ * @author Dmitrochenkov Daniil
+ * @version 1.0
+ */
 @Configuration
 public class OAuthConfig {
 
@@ -56,6 +61,12 @@ public class OAuthConfig {
         return new ClientResources();
     }
 
+    /**
+     * Extract google OAuth response to user
+     * @param userRepo repo to save user
+     * @return data extractor
+     * @see UserRepo
+     */
     @Bean
     public PrincipalExtractor googlePrincipalExtractor(UserRepo userRepo) {
         return map -> {
@@ -74,6 +85,12 @@ public class OAuthConfig {
         };
     }
 
+    /**
+     * Extract github OAuth response to user
+     * @param userRepo repo to save user
+     * @return data extractor
+     * @see UserRepo
+     */
     @Bean
     public PrincipalExtractor githubPrincipalExtractor(UserRepo userRepo) {
         return map -> {
@@ -92,6 +109,10 @@ public class OAuthConfig {
         };
     }
 
+    /**
+     * Compare all OAuth filters to one
+     * @return Compared OAUth filters
+     */
     @Bean
     public CompositeFilter ssoFilter() {
         CompositeFilter filter = new CompositeFilter();
@@ -106,6 +127,13 @@ public class OAuthConfig {
         return filter;
     }
 
+    /**
+     * Construct new auth filter
+     * @param client client resources
+     * @param path login path
+     * @param principalExtractor OAuth response to user extractor
+     * @return Client authentication filter
+     */
     private OAuth2ClientAuthenticationProcessingFilter constructFilter(ClientResources client, String path, PrincipalExtractor principalExtractor) {
         OAuth2ClientAuthenticationProcessingFilter filter = new OAuth2ClientAuthenticationProcessingFilter(path);
         OAuth2RestTemplate template = new OAuth2RestTemplate(client.getClient(), oauth2ClientContext);

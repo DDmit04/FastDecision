@@ -22,6 +22,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class for custom OAuth authorization
+ * @author Dmitrochenkov Daniil
+ * @version 1.0
+ */
 public class CustomUserInfoTokenServices implements ResourceServerTokenServices {
 
     private String userInfoEndpointUrl;

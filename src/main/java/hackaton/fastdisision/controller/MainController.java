@@ -13,6 +13,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * Controller provides app entry point
+ * @author Dmitrochenkov Daniil
+ * @version 1.0
+ */
 @Controller
 @RequestMapping("/")
 public class MainController {
@@ -30,7 +35,8 @@ public class MainController {
     }
 
     @GetMapping
-    public String main(Model model, @AuthenticationPrincipal User user) throws JsonProcessingException {
+    public String main(Model model,
+                       @AuthenticationPrincipal User user) throws JsonProcessingException {
 
         boolean isDevMode = true;
         if(profile.equals("prod")) {

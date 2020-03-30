@@ -5,8 +5,19 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
+/**
+ * Repo to control user entities
+ * @author Dmitrochenkov Daniil
+ * @version 1.0
+ */
 public interface UserRepo extends CrudRepository<User, String> {
 
-    Optional<User> findById(String Id);
+    /**
+     * returns user by ID
+     * @param id searched user ID
+     * @return user
+     * @see User
+     */
+    Optional<User> findById(String id);
 
 }

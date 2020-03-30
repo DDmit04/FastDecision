@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Controller that handles requests for user state
+ * @author Dmitrochenkov Daniil
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("user")
 public class UserController {
@@ -25,7 +30,8 @@ public class UserController {
 
     @PostMapping("/getAdmin")
     @JsonView(VotingView.CoreData.class)
-    public User requestAdminRole(@RequestBody String clientAdminPassword, @AuthenticationPrincipal User currentUser) throws WrongAdminPasswordException {
+    public User requestAdminRole(@RequestBody String clientAdminPassword,
+                                 @AuthenticationPrincipal User currentUser) throws WrongAdminPasswordException {
         User user = adminService.checkAdminRequest(currentUser, clientAdminPassword);
         return user;
     }

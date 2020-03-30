@@ -12,6 +12,11 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
+/**
+ * Controller that handles requests for websocket votes
+ * @author Dmitrochenkov Daniil
+ * @version 1.0
+ */
 @Controller
 public class VoteOptionController {
 
@@ -25,7 +30,10 @@ public class VoteOptionController {
     @MessageMapping("/voting-websocket/{votingId}/{votingKey}")
     @SendTo("/topic/voting/{votingId}/{votingKey}")
     @JsonView(VotingView.MinimalData.class)
-    public VoteOption doVote(@DestinationVariable Long votingId, @DestinationVariable String votingKey, Long optionId, SimpMessageHeaderAccessor ipHandshakeInterceptor) throws WrongVotingKeyException {
+    public VoteOption doVote(@DestinationVariable Long votingId,
+                             @DestinationVariable String votingKey,
+                             Long optionId,
+                             SimpMessageHeaderAccessor ipHandshakeInterceptor) throws WrongVotingKeyException {
         String votedIp = (String) ipHandshakeInterceptor.getSessionAttributes().get("ip");
         VoteOption voteOption = voteOptionService.acceptVote(optionId, votedIp, votingKey);
         return voteOption;

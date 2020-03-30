@@ -14,6 +14,11 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.*;
 
+/**
+ * Represents user entity
+ * @author Dmitrochenkov Daniil
+ * @version 1.0
+ */
 @Getter
 @Setter
 @Table(name = "usr")
