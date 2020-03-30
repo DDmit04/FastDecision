@@ -50,12 +50,4 @@ describe('test create voting', () => {
 
         expect(actions.addNewVotingAction).toBeCalled()
     })
-    it('add new voting failed', async () => {
-        const wrapper = shallowMount(createVoting, {store, vuetify, localVue})
-
-        wrapper.find("#addVotingBtn").trigger("click")
-        await flushPromises()
-
-        expect(actions.addNewVotingAction).not.toBeCalled()
-    })
 })

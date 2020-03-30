@@ -62,7 +62,7 @@
 
 <script>
     import {mdiAlertCircleOutline} from '@mdi/js'
-    import {mapActions, mapState} from 'vuex'
+    import {mapActions} from 'vuex'
     import tooltip from "../../components/tooltip.vue"
     import router from "../../router/router";
     import rotesNames from "../../router/routesNames";
@@ -96,7 +96,7 @@
                     id: null,
                     voteDiscription: '',
                     pluses: 0,
-                },
+                }
             }
         },
         components: {
@@ -107,7 +107,6 @@
             this.newVoting.votingOptions.push(this.voteOption2)
         },
         computed: {
-            ...mapState(["currentVoting"]),
             /**
              * @public
              * Validate current voting
@@ -143,6 +142,7 @@
              * If current voting is valid call add voting method
              */
             tryAddVoting() {
+                console.log("lul")
                 if (this.voteReadyToAdd) {
                     this.addVoting()
                 }

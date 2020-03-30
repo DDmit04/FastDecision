@@ -78,7 +78,7 @@
              */
             userIsCurrentUserOrAdmin() {
                 return this.currentUser != null &&
-                    (this.currentUser.id == this.userId || this.currentUser.roles.contains("ADMIN"))
+                    (this.currentUser.id == this.userId || this.currentUser.roles.includes("ADMIN"))
             }
         },
         methods: {
