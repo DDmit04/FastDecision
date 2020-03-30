@@ -1,6 +1,24 @@
 = Voting Controller API
 
-This is an example output for a service running at http://localhost:8080:
+This is an example output for a service running at http://localhost:8080
+
+= Add voting
+
+.curl-request
+include::{snippets}/VotingControllerTest/addVoting/curl-request.adoc[]
+
+.httpie-request
+include::{snippets}/VotingControllerTest/addVoting/httpie-request.adoc[]
+
+.http-request
+include::{snippets}/VotingControllerTest/addVoting/http-request.adoc[]
+
+.http-response
+include::{snippets}/VotingControllerTest/addVoting/http-response.adoc[]
+
+.response-fields
+include::{snippets}/VotingControllerTest/addVoting/response-fields.adoc[]
+
 
 = Delete voting
 
