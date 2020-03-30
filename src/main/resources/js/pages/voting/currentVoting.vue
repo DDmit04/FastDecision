@@ -73,30 +73,35 @@
 <script>
     import {sendVote} from '../../utils/websocket'
     import routesNames from "../../router/routesNames"
-    import votingConnectMixin from "../../mixins/votingConnectMixin"
+    import votingConnectMixin from "../../mixins/votingConnectMixin";
     import dataRevealer from "../../components/dataRevealer.vue"
 
+    /**
+     * Page of current voting to vote
+     * @displayName Current voting page
+     * @author Dmitrochenkov Daniil
+     * @version 1.0
+     */
     export default {
+        name: "currentVoting",
         props: {
+            /** ID of current voting */
             votingId: {
                 required: true,
-                type: [String, Number]
+                type: [String, Number],
+                default: 0
             },
+            /** key of current voting */
             votingKey: {
                 required: false,
                 type: String,
                 default: 'public'
             },
-            votingProp: {
-                required: false,
-                type: Object,
-            }
         },
-        name: "currentVoting",
-        mixins: [votingConnectMixin],
         components: {
             dataRevealer
         },
+        mixins: [votingConnectMixin],
         data() {
             return {
                 currentVoting: this.votingProp,
@@ -104,12 +109,20 @@
                 modifiedVotingKey: this.votingKey,
             }
         },
+        /**
+         * @public
+         * Download current voting from server
+         */
         async created() {
             await this.mixinConnectToVoting(this.votingId, this.votingKey)
             this.currentVoting = this.mixinVoting
             this.modifiedVotingKey = this.mixinVotingKey
         },
         computed: {
+            /**
+             * @public
+             * Construct voting link with voting key
+             */
             votingLink() {
                 let origin = window.location.origin
                 let path = this.$router.currentRoute.path
@@ -117,20 +130,22 @@
             }
         },
         methods: {
+            /**
+             * @public
+             * Send vote to server and go to voting results
+             */
             async doVote() {
                 await sendVote(
                     this.currentVoting.votingOptions[this.selectedOptionIndex].id,
                     this.votingId,
                     this.modifiedVotingKey
                 )
-                await this.$router.push({
-                    name: routesNames.VOTING_RESULTS,
-                    params: {
-                        votingId: this.votingId,
-                        votingKey: this.modifiedVotingKey
-                    },
-                })
+                await this.goToResults()
             },
+            /**
+             * @public
+             * Redirect to voting results
+             */
             goToResults() {
                 this.$router.push({
                     name: routesNames.VOTING_RESULTS,

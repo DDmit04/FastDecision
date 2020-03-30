@@ -62,9 +62,17 @@
 
 <script>
     import {mdiAlertCircleOutline} from '@mdi/js'
-    import {mapActions} from 'vuex'
-    import tooltip from "../../components/tooltip.vue";
+    import {mapActions, mapState} from 'vuex'
+    import tooltip from "../../components/tooltip.vue"
+    import router from "../../router/router";
+    import rotesNames from "../../router/routesNames";
 
+    /**
+     * Page to create new voting
+     * @displayName Create voting page
+     * @author Dmitrochenkov Daniil
+     * @version 1.0
+     */
     export default {
         name: "createVoting",
         data() {
@@ -99,6 +107,12 @@
             this.newVoting.votingOptions.push(this.voteOption2)
         },
         computed: {
+            ...mapState(["currentVoting"]),
+            /**
+             * @public
+             * Validate current voting
+             * @returns {boolean} new voting is valid
+             */
             voteReadyToAdd() {
                 let isReady = false
                 let counter = 0
@@ -113,17 +127,30 @@
         },
         methods: {
             ...mapActions(["addNewVotingAction"]),
+            /**
+             * @public
+             * Call add new voting option method if user select or click last voting option
+             * @param {Number} index clicked option ID
+             */
             checkOptionCount(index) {
                 if (index == this.lastOptionIndex) {
                     this.addOption()
                     this.lastOptionIndex++
                 }
             },
+            /**
+             * @public
+             * If current voting is valid call add voting method
+             */
             tryAddVoting() {
                 if (this.voteReadyToAdd) {
                     this.addVoting()
                 }
             },
+            /**
+             * @public
+             * Send add voting request to server
+             */
             async addVoting() {
                 this.buttonLoading = true
                 this.newVoting.votingOptions = this.newVoting.votingOptions.filter(option => option.voteDiscription != '')

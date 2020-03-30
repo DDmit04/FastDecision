@@ -29,12 +29,20 @@
 <script>
     import routesNames from "../../router/routesNames"
 
+    /**
+     * If voting key is wrong this page ask to input new voting key
+     * @displayName Wrong voting key page
+     * @author Dmitrochenkov Daniil
+     * @version 1.0
+     */
     export default {
         name: "protectedVointgAccess",
         props: {
+            /** ID of accessing voting */
             votingId: {
                 required: true,
-                type: [String, Number]
+                type: [String, Number],
+                default: 1
             },
         },
         data() {
@@ -43,6 +51,10 @@
             }
         },
         methods: {
+            /**
+             * @public
+             * Try access protected voting with inputed key
+             */
             accessVoting() {
                 this.$router.push({
                     name: routesNames.CURRENT_VOTING,

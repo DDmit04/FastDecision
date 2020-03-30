@@ -78,6 +78,12 @@
     import {mapMutations, mapState} from 'vuex'
     import routesNames from "../router/routesNames";
 
+    /**
+     * Page for admin works
+     * @displayName Admin page
+     * @author Dmitrochenkov Daniil
+     * @version 1.0
+     */
     export default {
         name: "adminPage",
         data() {
@@ -89,6 +95,10 @@
         },
         computed: {
             ...mapState(['currentUser']),
+            /**
+             * @public
+             * Check current user roles contains admin role
+             */
             currentUserIsAdmin() {
                 return this.currentUser != null && this.currentUser.roles.includes('ADMIN')
             }
@@ -100,14 +110,26 @@
         },
         methods: {
             ...mapMutations(['refreshCurrentUserRolesMutations']),
+            /**
+             * @public
+             * Send request to server for give admin role to current user and update it's data with response
+             */
             async askAdmin() {
                 const data = await admin.getAdmin(this.adminKey)
                 this.refreshCurrentUserRolesMutations(data.roles)
                 this.adminKey = ''
             },
+            /**
+             * @public
+             * Send request to server for give admin role to other user
+             */
             async giveAdmin() {
                 const data = await admin.giveAdmin(this.userId)
             },
+            /**
+             * @public
+             * Send request to server for remove admin role from other user
+             */
             async removeAdmin() {
                 const data = await admin.removeAdmin(this.userId, this.adminKey)
             }

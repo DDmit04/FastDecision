@@ -20,16 +20,21 @@
 </template>
 
 <script>
+    /**
+     * Component to display voting deletion modal dialog
+     * @displayName Deletion modal component
+     * @author Dmitrochenkov Daniil
+     * @version 1.0
+     */
     export default {
+        name: "votindDeletionModal",
         props: {
+            /** Is dialog shown */
             modalIsActive: {
                 required: true,
-                type: Boolean
+                type: Boolean,
+                default: false
             },
-        },
-        name: "votindDeletionModal",
-        data() {
-            return {}
         },
         computed: {
             active: {
@@ -38,14 +43,20 @@
                 },
                 set(value) {
                     if (!value) {
+                        /** Close dialog event */
                         this.$emit('close')
                     }
                 }
             }
         },
         methods: {
+            /**
+             * @public
+             * Close dialog and calls dialog accept event
+             */
             deleteVoting() {
                 this.active = false
+                /** Accept dialog event */
                 this.$emit('accept')
             }
         }

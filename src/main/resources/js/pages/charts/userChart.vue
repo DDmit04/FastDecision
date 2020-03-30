@@ -8,7 +8,7 @@
             <v-tab id="publicVotingsTab">
                 Public votings
             </v-tab>
-            <v-tab v-if="userIsCurrentUser" id="privateVotingsTab">
+            <v-tab v-if="userIsCurrentUserOrAdmin" id="privateVotingsTab">
                 Private votings
             </v-tab>
         </v-tabs>
@@ -18,7 +18,7 @@
                               :userId="userId"
                 />
             </v-tab-item>
-            <v-tab-item v-if="userIsCurrentUser">
+            <v-tab-item v-if="userIsCurrentUserOrAdmin">
                 <chart-loader :load-function="loadUserPrivate"
                               :userId="userId"
                 />
@@ -33,6 +33,12 @@
     import authModal from "../../components/modal/authModal.vue";
     import chartLoader from "../../components/charts/chartLoader.vue"
 
+    /**
+     * Page which download user votings
+     * @displayName User voting page
+     * @author Dmitrochenkov Daniil
+     * @version 1.0
+     */
     export default {
         props: {
             userId: {
@@ -65,17 +71,37 @@
                     return this.$vuetify.theme.themes.light.background
                 }
             },
-            userIsCurrentUser() {
-                return this.currentUser != null && this.currentUser.id == this.userId
+            /**
+             * @public
+             * Returns is current user can access user private votings
+             * @return {boolean} is current user is user or admin
+             */
+            userIsCurrentUserOrAdmin() {
+                return this.currentUser != null &&
+                    (this.currentUser.id == this.userId || this.currentUser.roles.contains("ADMIN"))
             }
         },
         methods: {
+            /**
+             * @public
+             * Returns page of searched votings
+             * @param{Number} id user ID which votings fetch
+             * @param page{Number} number of page to download
+             * @returns {Promise<void>} page of votings downloaded from server
+             */
             async loadUserPublic(id, page) {
                 const data = await votingChart.getUserPublic(id, page)
                 return data
             },
+            /**
+             * @public
+             * Returns page of searched votings
+             * @param{Number} id user ID which votings fetch
+             * @param page{Number} number of page to download
+             * @returns {Promise<void>} page of votings downloaded from server
+             */
             async loadUserPrivate(id, page) {
-                if(this.userIsCurrentUser) {
+                if(this.userIsCurrentUserOrAdmin) {
                     const data = await votingChart.getUserPrivate(id, page)
                     return data
                 }

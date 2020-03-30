@@ -10,10 +10,4 @@ export let state = {
      */
         currentSessionVotings: [],
         version: ''
-    // inside each currentSessionVotings:
-    //{
-    //     votingId: voting.id,
-    //     votingKey: voting.votingKey
-    //}
-
 }

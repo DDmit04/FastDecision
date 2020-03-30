@@ -82,6 +82,12 @@
     import authModal from "./modal/authModal.vue"
     import routesNames from "../router/routesNames";
 
+    /**
+     * Component displaying app navbar
+     * @displayName Navbar component
+     * @author Dmitrochenkov Daniil
+     * @version 1.0
+     */
     export default {
         name: "navbar",
         data() {
@@ -101,6 +107,11 @@
         },
         computed: {
             ...mapState(['currentUser', 'isDarkTheme']),
+            /**
+             * @public
+             * Returns current username
+             * @return {string|*} checked username
+             */
             getCurrentUsername() {
                 if (this.currentUser == null) {
                     return 'Unknown'
@@ -108,6 +119,11 @@
                     return this.currentUser.username
                 }
             },
+            /**
+             * @public
+             * Returns current userpic link
+             * @return {string|*} checked userpic link
+             */
             getCurrentUserPic() {
                 if (this.currentUser == null) {
                     return null
@@ -121,13 +137,26 @@
         },
         methods: {
             ...mapMutations(['changeThemeMutation']),
+            /**
+             * @public
+             * Switch current theme
+             */
             switchTheme() {
                 this.changeThemeMutation()
                 this.$vuetify.theme.dark = this.getIsDark
             },
+            /**
+             * @public
+             * Redirect to other rote
+             * @param roteName{String} new rote name
+             */
             goToOtherRote(roteName) {
                 this.$router.push({name: roteName}).catch(err => {})
             },
+            /**
+             * @public
+             * If user exists redirect to current user profile
+             */
             goToUserVotings() {
                 if (this.currentUser != null) {
                     this.$router.push({
@@ -138,6 +167,10 @@
                     this.modalIsActive = true
                 }
             },
+            /**
+             * @public
+             * Redirect to voting search results
+             */
             goToSearch() {
                 this.$router.push({name: routesNames.SEARCH_RESULTS, params: {stringToSearch: this.search}})
             }

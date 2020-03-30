@@ -26,18 +26,32 @@
 <script>
     import abstractChart from "./abstractChart.vue"
 
+    /**
+     * Component to show loading while client fetching votings from server
+     * @displayName Data loader component
+     * @author Dmitrochenkov Daniil
+     * @version 1.0
+     */
     export default {
+        name: "chartLoader",
         props: {
+            /** Function fetching data from server */
             loadFunction: {
                 required: true,
-                type: Function
+                type: Function,
+                default: () => {
+                    return {
+                        content: []
+                    }
+                }
             },
+            /** user ID for work some of loadFunctions*/
             userId: {
                 required: false,
-                type: [Number, String]
+                type: [Number, String],
+                default: 1
             },
         },
-        name: "chartLoader",
         data() {
             return {
                 loadedChartData: null,
@@ -58,6 +72,12 @@
             this.loadPage()
         },
         methods: {
+            /**
+             * @public
+             * Call loadFunction with current page number argument after loading remove loading animation
+             * (it calls when component created or current page changed)
+             * @return {Promise<void>}
+             */
             async loadPage() {
                 this.dataIsLoading = true
                 const data = await this.loadFunction(this.currentPage - 1, this.userId)

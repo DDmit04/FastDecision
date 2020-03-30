@@ -68,21 +68,26 @@
     import {addHandler} from '../../utils/websocket'
     import votingMixin from "../../mixins/votingConnectMixin"
 
+    /**
+     * Page displaying current voting results
+     * @displayName Voting results page
+     * @author Dmitrochenkov Daniil
+     * @version 1.0
+     */
     export default {
         props: {
+            /** result voting ID */
             votingId: {
                 required: true,
-                type: [String, Number]
+                type: [String, Number],
+                default: 1
             },
+            /** result voting key */
             votingKey: {
                 required: false,
                 type: String,
                 default: 'public'
             },
-            votingProp: {
-                required: false,
-                type: Object,
-            }
         },
         name: "votingResults",
         mixins: [votingMixin],
@@ -99,6 +104,10 @@
                 this.sections = this.calcDonut
             }
         },
+        /**
+         * @public
+         * Download current voting from server
+         */
         async created() {
             await this.mixinConnectToVoting(this.votingId, this.votingKey)
             this.currentVoting = this.mixinVoting
@@ -110,6 +119,11 @@
             })
         },
         computed: {
+            /**
+             * @public
+             * Calculate array of section values to display donut
+             * @returns {[]} calculated donut sections (100 in sum)
+             */
             calcDonut() {
                 let sections = []
                 let sectionValue = 0
@@ -133,6 +147,11 @@
                 }
                 return sections;
             },
+            /**
+             * @public
+             * Returns total votes count from all current voting options
+             * @returns {Number} total votes count
+             */
             getTotalVotes() {
                 let votes = 0
                 this.currentVoting.votingOptions.forEach(opt => {
@@ -142,6 +161,12 @@
             },
         },
         methods: {
+            /**
+             * @public
+             * Calculate voting option line length
+             * @param optionPluses{Number} voting option votes count
+             * @returns {Number} % of optionPluses of the total number of votes
+             */
             calcLine(optionPluses) {
                 let lineValue = optionPluses / this.getTotalVotes * 100
                 if (isNaN(lineValue)) {
@@ -149,6 +174,10 @@
                 }
                 return lineValue
             },
+            /**
+             * @public
+             * Sort voting options by it's votes count to display options from most popular to least popular
+             */
             sortVoteOptions() {
                 this.currentVoting.votingOptions.sort((first, sec) => sec.pluses - first.pluses)
             }

@@ -22,6 +22,11 @@
     import {mapState} from 'vuex'
     import navbar from "../components/navbar.vue";
 
+    /**
+     * App entry point
+     * @author Dmitrochenkov Daniil
+     * @version 1.0
+     */
     export default {
         data() {
             return {
@@ -36,6 +41,11 @@
         },
         computed: {
             ...mapState(['isDarkTheme']),
+            /**
+             * @public
+             * returns vuetify background color from vuetify plugin settings
+             * @returns {*} vuetify background color
+             */
             getBackgroundColor() {
                 if (this.isDarkTheme) {
                     return this.$vuetify.theme.themes.dark.background

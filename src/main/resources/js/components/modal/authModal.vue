@@ -28,11 +28,19 @@
 <script>
     import {mdiGithubCircle, mdiGoogle} from '@mdi/js'
 
+    /**
+     * Component to display user authentication modal dialog
+     * @displayName Authentication modal component
+     * @author Dmitrochenkov Daniil
+     * @version 1.0
+     */
     export default {
         props: {
+            /** Is dialog shown */
             modalIsActive: {
                 required: true,
-                type: Boolean
+                type: Boolean,
+                default: false
             },
         },
         name: "authModal",
@@ -49,6 +57,7 @@
                 },
                 set(value) {
                     if (!value) {
+                        /** Close dialog event */
                         this.$emit('close')
                     }
                 }

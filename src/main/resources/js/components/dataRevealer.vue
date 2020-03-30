@@ -44,12 +44,20 @@
 </template>
 
 <script>
+    /**
+     * Component to hide/show some data
+     * @displayName Data revealer component
+     * @author Dmitrochenkov Daniil
+     * @version 1.0
+     */
     export default {
         name: "dataRevealer",
         props: {
+            /** Data to hide/show in component */
             dataToReveal: {
                 required: true,
-                type: [String, Number]
+                type: [String, Number],
+                default: "No data to reveal"
             }
         },
         data() {
@@ -58,12 +66,24 @@
             }
         },
         methods: {
+            /**
+             * @public
+             * Show hiden data
+             */
             revealData() {
                 this.dataIsReviled = true
             },
+            /**
+             * @public
+             * Hide shown data
+             */
             hideData() {
                 this.dataIsReviled = false
             },
+            /**
+             * @public
+             * Copy shown data to client buffer
+             */
             copyData() {
                 let textToCopy = this.$refs.textToCopy.$el.querySelector('input')
                 textToCopy.select()

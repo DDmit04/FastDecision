@@ -10,16 +10,26 @@
 </template>
 
 <script>
+    /**
+     * Component wrapper for <v-tooltip>
+     * @displayName Tooltip wrapper component
+     * @author Dmitrochenkov Daniil
+     * @version 1.0
+     */
     export default {
         name: "tooltip",
         props: {
+            /** Custom tooltip icon */
             icon: {
                 required: true,
-                type: String
+                type: String,
+                default: ""
             },
+            /** Custom tooltip message */
             tooltipMessage: {
                 required: true,
-                type: String
+                type: String,
+                default: "No message"
             }
         },
         data() {

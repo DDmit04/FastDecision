@@ -1,6 +1,6 @@
 import Vue from 'vue'
-import '@babel/polyfill'
 import 'api/resource'
+import 'regenerator-runtime'
 import {store} from 'store/store'
 import App from 'pages/App.vue'
 import VueResource from 'vue-resource'

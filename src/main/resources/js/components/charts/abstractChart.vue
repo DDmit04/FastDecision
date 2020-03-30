@@ -69,14 +69,24 @@
     import routesNames from "../../router/routesNames"
     import tooltip from "../tooltip.vue";
 
+    /**
+     * Component to show votings page
+     * @displayName Voting page component
+     * @author Dmitrochenkov Daniil
+     * @version 1.0
+     */
     export default {
+        name: "abstractChart",
         props: {
+            /** Loaded votings page */
             chartData: {
                 required: true,
-                type: Object
+                type: Object,
+                default: {
+                    content: []
+                }
             },
         },
-        name: "abstractChart",
         data() {
             return {
                 modalIsActive: false,
@@ -91,37 +101,50 @@
             votingDeletionModal,
             tooltip
         },
-        filters: {
-            normalizeString(value) {
-                let filteredValue = value
-                if (value.length >= 13) {
-                    filteredValue = value.slice(0, 12) + '...'
-                } else {
-                    let placeholder = '_'
-                    filteredValue += placeholder.repeat(15 - value.length)
-                }
-                return filteredValue
-            },
-        },
         computed: {
             ...mapState(['currentUser']),
         },
         methods: {
+            /**
+             * @public
+             * Redirect to voting
+             * @param votingId{Number} voting ID
+             */
             goToVoting(votingId) {
                 this.$router.push({name: routesNames.CURRENT_VOTING, params: {votingId: votingId}})
             },
+            /**
+             * @public
+             * Redirect to voting owner profile
+             * @param votingOwnerId{Number} voting owner ID
+             */
             goToUser(votingOwnerId) {
                 this.$router.push({name: routesNames.USER_VOTINGS_CHART, params: {userId: votingOwnerId}})
             },
+            /**
+             * @public
+             * Display dialog for delete voting
+             * @param voting{Object} voting to delete
+             */
             callDeleteVoting(voting) {
                 this.deletedVoting = voting
                 this.modalIsActive = true
             },
+            /**
+             * @public
+             * Check current user to have permission for delete voting
+             * @param voting{Object} voting to check
+             * @return {boolean} is user can delete voting
+             */
             canDelete(voting) {
                 let userIsOwner = (voting.owner != null && this.currentUser != null) && voting.owner.id == this.currentUser.id
                 let currentUserIsAdmin = this.currentUser != null && this.currentUser.roles.includes('ADMIN')
                 return userIsOwner || currentUserIsAdmin
             },
+            /**
+             * @public
+             * Send request to server to delete voting if success delete voting from display
+             */
             async deleteVoting() {
                 if (this.deletedVoting != null) {
                     const result = await server.deleteOne(this.deletedVoting.id)

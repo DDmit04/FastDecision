@@ -20,23 +20,33 @@
 <script>
     import routesNames from "../router/routesNames"
 
+    /**
+     * Error page foe handle all http errors
+     * @displayName Error page
+     * @author Dmitrochenkov Daniil
+     * @version 1.0
+     */
     export default {
         name: "errorPage",
         props: {
+            /** http error code */
             errorCode: {
                 required: false,
-                type: [String, Number]
+                type: [String, Number],
+                default: 'unknown'
             },
+            /** http error reason */
             errorReason: {
                 required: false,
-                type: String
+                type: String,
+                default: 'this is error page'
             },
         },
         data() {
             return {
                 routesNames: routesNames,
-                errorDisplayText: this.errorReason || 'this is error page',
-                errorDisplayCode: this.errorCode || 'unknown'
+                errorDisplayText: this.errorReason,
+                errorDisplayCode: this.errorCode
             }
         },
         created() {
