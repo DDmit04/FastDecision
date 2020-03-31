@@ -174,7 +174,7 @@
                 <executions>
                     <execution>
                         <id>install node and yarn</id>
-                        <phase>site</phase>
+                        <phase>build</phase>
                         <goals>
                             <goal>install-node-and-yarn</goal>
                         </goals>
@@ -188,7 +188,7 @@
                     </execution>
                     <execution>
                         <id>yarn install</id>
-                        <phase>site</phase>
+                        <phase>build</phase>
                         <goals>
                             <goal>yarn</goal>
                         </goals>
@@ -198,7 +198,7 @@
                     </execution>
                     <execution>
                         <id>yarn build</id>
-                        <phase>site</phase>
+                        <phase>build</phase>
                         <goals>
                             <goal>yarn</goal>
                         </goals>
