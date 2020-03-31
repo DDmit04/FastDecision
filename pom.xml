@@ -108,6 +108,11 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>com.heroku.sdk</groupId>
+                <artifactId>heroku-maven-plugin</artifactId>
+                <version>2.0.8</version>
+            </plugin>
+            <plugin>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
                 <version>1.5.6</version>
@@ -160,18 +165,12 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>com.heroku.sdk</groupId>
-                <artifactId>heroku-maven-plugin</artifactId>
-                <version>2.0.8</version>
-            </plugin>
-            <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
                 <version>1.7.6</version>
                 <executions>
                     <execution>
                         <id>install node and yarn</id>
-                        <phase>site</phase>
                         <goals>
                             <goal>install-node-and-yarn</goal>
                         </goals>
@@ -185,7 +184,6 @@
                     </execution>
                     <execution>
                         <id>yarn install</id>
-                        <phase>site</phase>
                         <goals>
                             <goal>yarn</goal>
                         </goals>
@@ -195,7 +193,6 @@
                     </execution>
                     <execution>
                         <id>yarn build</id>
-                        <phase>site</phase>
                         <goals>
                             <goal>yarn</goal>
                         </goals>
