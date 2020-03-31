@@ -29,6 +29,7 @@
     /**
      * Component to show loading while client fetching votings from server
      * @displayName Data loader component
+     * @example [none]
      * @author Dmitrochenkov Daniil
      * @version 1.0
      */

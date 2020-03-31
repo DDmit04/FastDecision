@@ -11,6 +11,7 @@
     /**
      * Page which download voting search result
      * @displayName Searched voting page
+     * @example [none]
      * @author Dmitrochenkov Daniil
      * @version 1.0
      */

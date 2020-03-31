@@ -32,6 +32,7 @@
     /**
      * If voting key is wrong this page ask to input new voting key
      * @displayName Wrong voting key page
+     * @example ./../../examples/pages/voting/protectedVotintgAccess.md
      * @author Dmitrochenkov Daniil
      * @version 1.0
      */

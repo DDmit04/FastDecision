@@ -20,6 +20,7 @@
     /**
      * Page which download popular or newest votings
      * @displayName Popular or newest voting page
+     * @example [none]
      * @author Dmitrochenkov Daniil
      * @version 1.0
      */

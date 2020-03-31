@@ -81,6 +81,7 @@
     /**
      * Page for admin works
      * @displayName Admin page
+     * @example ./../examples/pages/adminPage.md
      * @author Dmitrochenkov Daniil
      * @version 1.0
      */

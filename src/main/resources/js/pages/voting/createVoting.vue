@@ -70,6 +70,7 @@
     /**
      * Page to create new voting
      * @displayName Create voting page
+     * @example ./../../examples/pages/voting/createVoting.md
      * @author Dmitrochenkov Daniil
      * @version 1.0
      */
@@ -102,7 +103,7 @@
         components: {
             tooltip
         },
-        async created() {
+        created() {
             this.newVoting.votingOptions.push(this.voteOption1)
             this.newVoting.votingOptions.push(this.voteOption2)
         },
@@ -142,7 +143,6 @@
              * If current voting is valid call add voting method
              */
             tryAddVoting() {
-                console.log("lul")
                 if (this.voteReadyToAdd) {
                     this.addVoting()
                 }

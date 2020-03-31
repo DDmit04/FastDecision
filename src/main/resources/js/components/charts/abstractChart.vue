@@ -72,6 +72,7 @@
     /**
      * Component to show votings page
      * @displayName Voting page component
+     * @example ./../../examples/components/charts/abstractChart.md
      * @author Dmitrochenkov Daniil
      * @version 1.0
      */

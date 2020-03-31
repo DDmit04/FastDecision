@@ -47,6 +47,7 @@
     /**
      * Component to hide/show some data
      * @displayName Data revealer component
+     * @example ./../examples/components/dataRevealer.md
      * @author Dmitrochenkov Daniil
      * @version 1.0
      */

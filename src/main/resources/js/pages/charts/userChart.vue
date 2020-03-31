@@ -36,6 +36,7 @@
     /**
      * Page which download user votings
      * @displayName User voting page
+     * @example [none]
      * @author Dmitrochenkov Daniil
      * @version 1.0
      */

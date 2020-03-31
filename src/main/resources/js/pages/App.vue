@@ -24,6 +24,8 @@
 
     /**
      * App entry point
+     * @displayName App page
+     * @example [none]
      * @author Dmitrochenkov Daniil
      * @version 1.0
      */

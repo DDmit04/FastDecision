@@ -13,6 +13,7 @@
     /**
      * Component wrapper for <v-tooltip>
      * @displayName Tooltip wrapper component
+     * @example [none]
      * @author Dmitrochenkov Daniil
      * @version 1.0
      */

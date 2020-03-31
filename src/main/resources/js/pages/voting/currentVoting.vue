@@ -79,6 +79,7 @@
     /**
      * Page of current voting to vote
      * @displayName Current voting page
+     * @example ./../../examples/pages/voting/currentVoting.md
      * @author Dmitrochenkov Daniil
      * @version 1.0
      */
@@ -104,7 +105,7 @@
         mixins: [votingConnectMixin],
         data() {
             return {
-                currentVoting: this.votingProp,
+                currentVoting: null,
                 selectedOptionIndex: -1,
                 modifiedVotingKey: this.votingKey,
             }

@@ -71,6 +71,7 @@
     /**
      * Page displaying current voting results
      * @displayName Voting results page
+     * @example ./../../examples/pages/voting/votingResults.md
      * @author Dmitrochenkov Daniil
      * @version 1.0
      */
@@ -94,7 +95,7 @@
         data() {
             return {
                 sections: [],
-                currentVoting: this.votingProp,
+                currentVoting: null,
                 totalVotes: 0,
             }
         },
@@ -134,11 +135,11 @@
                     sectionsSum += sectionValue
                     sections.push({label: opt.voteDiscription, value: sectionValue})
                 })
-                if(sectionsSum < 100) {
+                if (sectionsSum < 100) {
                     let maxInd = -1
                     let max = -1
                     sections.forEach((sec, i) => {
-                        if(sec.value > max) {
+                        if (sec.value > max) {
                             maxInd = i
                             max = sec.value
                         }

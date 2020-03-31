@@ -85,6 +85,7 @@
     /**
      * Component displaying app navbar
      * @displayName Navbar component
+     * @example ./../examples/components/navbar.md
      * @author Dmitrochenkov Daniil
      * @version 1.0
      */
