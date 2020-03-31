@@ -1,6 +1,13 @@
+const path = require('path')
+
 module.exports = {
     webpackConfig: require('./webpack.common'),
     styleguideDir: "src/docs/styleguide",
+    require: [
+        path.join(__dirname, 'src/main/resources/js/examples/styleguideConfigGlobal.js'),
+        path.join(__dirname, 'src/main/resources/js/examples/styleguideStyleConfig.styles.scss')
+    ],
+    renderRootJsx: path.join(__dirname, 'src/main/resources/js/examples/styleguideConfigRender.js'),
     sections: [
         {
             name: 'Pages',
