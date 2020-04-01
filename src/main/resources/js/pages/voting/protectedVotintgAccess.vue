@@ -4,12 +4,12 @@
                   class="mt-5">
             <v-card id="votingAccessForm" color="primary">
                 <v-card-title id="votingAccessTitle" class="title">
-                    This voting is protected! input voting-key to access it!
+                    This voting is protected! input voting-key or full link to access it!
                 </v-card-title>
                 <v-divider color="secondary"></v-divider>
                 <v-card-text class="ma-3">
                     <v-text-field id="votingAccessKey"
-                                  v-model="votingKey"
+                                  v-model="votingAccessString"
                                   color="secondary"
                                   placeholder="voting key"/>
                 </v-card-text>
@@ -34,7 +34,7 @@
      * @displayName Wrong voting key page
      * @example ./../../examples/pages/voting/protectedVotintgAccess.md
      * @author Dmitrochenkov Daniil
-     * @version 1.0
+     * @version 1.1
      */
     export default {
         name: "protectedVointgAccess",
@@ -48,7 +48,7 @@
         },
         data() {
             return {
-                votingKey: ""
+                votingAccessString: ""
             }
         },
         methods: {
@@ -57,13 +57,21 @@
              * Try access protected voting with inputed key
              */
             accessVoting() {
+                if (this.votingAccessString.includes("http")) {
+                    let votingKeyUrlParam = 'votingKey='
+                    let votingKeyUrlParamIndex = this.votingAccessString.indexOf(votingKeyUrlParam)
+                    this.votingAccessString = this.votingAccessString.substr(
+                        votingKeyUrlParamIndex + votingKeyUrlParam.length,
+                        this.votingAccessString.length
+                    )
+                }
                 this.$router.push({
                     name: routesNames.CURRENT_VOTING,
                     params: {
                         votingId: this.votingId,
                     },
                     query: {
-                        votingKey: this.votingKey
+                        votingKey: this.votingAccessString
                     }
                 })
             }

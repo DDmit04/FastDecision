@@ -60,14 +60,9 @@
                         <img :src="getCurrentUserPic">
                     </v-avatar>
                 </div>
-                {{getCurrentUsername}}
+                {{getCurrentUsername | normalizeString(10)}}
             </v-btn>
-            <v-btn v-if="currentUser == null"
-                   @click.stop="modalIsActive = true"
-                   text>
-                <v-icon>{{signInIcon}}</v-icon>
-            </v-btn>
-            <v-btn v-else
+            <v-btn v-if="currentUser != null"
                    icon
                    href="/logout">
                 <v-icon>{{signInIcon}}</v-icon>
@@ -87,7 +82,7 @@
      * @displayName Navbar component
      * @example ./../examples/components/navbar.md
      * @author Dmitrochenkov Daniil
-     * @version 1.0
+     * @version 1.1
      */
     export default {
         name: "navbar",

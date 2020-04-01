@@ -11,24 +11,28 @@
                         />
                     </v-card-title>
                     <v-card-text>
-                        <v-text-field v-for="(option, index) in newVoting.votingOptions" :key="index"
-                                      v-model="option.voteDiscription"
-                                      color="secondary"
-                                      placeholder="Some option"
-                                      :id="'newVotingOption' + index"
-                                      @click="checkOptionCount(index)"
-                                      @focus="checkOptionCount(index)"
-                        />
+                        <transition-group name="fade">
+                            <v-text-field v-for="(option, index) in newVoting.votingOptions"
+                                          :key="index"
+                                          v-model="option.voteDiscription"
+                                          color="secondary"
+                                          placeholder="Some option"
+                                          :id="'newVotingOption' + index"
+                                          @click="checkOptionCount(index)"
+                                          @focus="checkOptionCount(index)"
+                            />
+                        </transition-group>
                         <v-row>
                             <v-checkbox v-model="newVoting.isPrivateVoting"
                                         label="private voting"
                                         class="mx-2"
+                                        :disabled="currentUser == null"
                                         id="newIsPrivateVoting"
                                         color="success"
                             />
                             <tooltip class="mt-5"
-                                     tooltipMessage="Hide from charts and other users"
-                                     :icon="alertIcon" />
+                                     :tooltipMessage="privateVotingTooltipMessage"
+                                     :icon="alertIcon"/>
                         </v-row>
                         <v-row>
                             <v-checkbox v-model="newVoting.isProtectedVoting"
@@ -38,7 +42,7 @@
                                         color="success"
                             />
                             <tooltip class="mt-5"
-                                     tooltipMessage="Protect voting by key"
+                                     :tooltipMessage="protectedVotingTooltipMessage"
                                      :icon="alertIcon"></tooltip>
                         </v-row>
                     </v-card-text>
@@ -72,13 +76,15 @@
      * @displayName Create voting page
      * @example ./../../examples/pages/voting/createVoting.md
      * @author Dmitrochenkov Daniil
-     * @version 1.0
+     * @version 1.1
      */
     export default {
         name: "createVoting",
         data() {
             return {
                 alertIcon: mdiAlertCircleOutline,
+                privateVotingTooltipMessage: 'Hide from charts and other users (auth users only)',
+                protectedVotingTooltipMessage: 'Protect voting by key',
                 buttonLoading: false,
                 lastOptionIndex: 1,
                 newVoting: {
@@ -108,7 +114,7 @@
             this.newVoting.votingOptions.push(this.voteOption2)
         },
         computed: {
-            ...mapState(['currentVoting']),
+            ...mapState(['currentVoting', 'currentUser']),
             /**
              * @public
              * Validate current voting
@@ -183,5 +189,11 @@
 </script>
 
 <style scoped>
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s;
+    }
 
+    .fade-enter, .fade-leave-to {
+        opacity: 0;
+    }
 </style>

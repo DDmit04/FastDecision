@@ -73,7 +73,7 @@
      * @displayName Voting results page
      * @example ./../../examples/pages/voting/votingResults.md
      * @author Dmitrochenkov Daniil
-     * @version 1.0
+     * @version 1.1
      */
     export default {
         props: {
@@ -114,9 +114,14 @@
             this.currentVoting = this.mixinVoting
         },
         mounted() {
+            /**
+             * @public
+             * Add websocket handler
+             */
             addHandler(async (data) => {
                 let optionId = await this.currentVoting.votingOptions.findIndex(option => option.id == data.id)
                 this.currentVoting.votingOptions[optionId].pluses = data.pluses
+                this.currentVoting.totalVotes = this.getTotalVotes
             })
         },
         computed: {

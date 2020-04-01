@@ -12,26 +12,30 @@
                           />
                       </v-card-title>
                       <v-card-text>
-                          <v-text-field v-for="(option, index) in newVoting.votingOptions" :key="index"
-                                        v-model="option.voteDiscription"
-                                        color="secondary"
-                                        placeholder="Some option"
-                                        :id="'newVotingOption' + index"
-                                        @click="checkOptionCount(index)"
-                                        @focus="checkOptionCount(index)"
-                          />
+                          <transition-group name="fade">
+                              <v-text-field v-for="(option, index) in newVoting.votingOptions"
+                                            :key="option.voteDiscription + index"
+                                            v-model="option.voteDiscription"
+                                            color="secondary"
+                                            placeholder="Some option"
+                                            :id="'newVotingOption' + index"
+                                            @click="checkOptionCount(index)"
+                                            @focus="checkOptionCount(index)"
+                              />
+                          </transition-group>
                           <v-row>
                               <v-checkbox v-model="newVoting.isPrivateVoting"
                                           :off-icon="checkBoxOffIcon"
                                           :on-icon="checkBoxOnIcon"
                                           label="private voting"
                                           class="mx-2"
+                                          disabled
                                           id="newIsPrivateVoting"
                                           color="success"
                               />
                               <tooltip class="mt-5"
-                                       tooltipMessage="Hide from charts and other users"
-                                       :icon="alertIcon" />
+                                       :tooltipMessage="privateVotingTooltipMessage"
+                                       :icon="alertIcon"/>
                           </v-row>
                           <v-row>
                               <v-checkbox v-model="newVoting.isProtectedVoting"
@@ -43,7 +47,7 @@
                                           color="success"
                               />
                               <tooltip class="mt-5"
-                                       tooltipMessage="Protect voting by key"
+                                       :tooltipMessage="protectedVotingTooltipMessage"
                                        :icon="alertIcon"></tooltip>
                           </v-row>
                       </v-card-text>
@@ -76,6 +80,8 @@
                   alertIcon: mdiAlertCircleOutline,
                   checkBoxOffIcon: mdiCheckboxBlankOutline,
                   checkBoxOnIcon: mdiCheckBoxOutline,
+                  privateVotingTooltipMessage: 'Hide from charts and other users (auth users only)',
+                  protectedVotingTooltipMessage: 'Protect voting by key',
                   buttonLoading: false,
                   lastOptionIndex: 1,
                   newVoting: {
@@ -145,6 +151,12 @@
   </script>
   
   <style scoped>
-  
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s;
+    }
+
+    .fade-enter, .fade-leave-to {
+        opacity: 0;
+    }
   </style>
 ```

@@ -63,10 +63,6 @@
                   </div>
                   {{getCurrentUsername}}
               </v-btn>
-              <v-btn @click.stop="modalIsActive = true"
-                     text>
-                  <v-icon>{{signInIcon}}</v-icon>
-              </v-btn>
           </v-toolbar-items>
       </v-app-bar>
       </div>

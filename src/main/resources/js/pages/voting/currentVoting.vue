@@ -1,26 +1,26 @@
 <template>
-    <div>
-        <v-container>
-            <v-layout v-if="currentVoting == null" justify-center>
-                <v-progress-circular
-                        id="circularProgress"
-                        :size="70"
-                        :width="7"
-                        color="success"
-                        indeterminate
-                />
-            </v-layout>
-            <v-col v-else lg="8" sm="12">
-                <v-card id="currentVoting" color="primary">
-                    <v-card-title id="currentVotingTitle"
-                                  class="title"
-                    >
-                        {{currentVoting.votingTitle}}
-                    </v-card-title>
-                    <v-divider color="secondary"></v-divider>
-                    <v-card-text class="mx-3 mt-3">
+    <v-container>
+        <v-layout v-if="currentVoting == null" justify-center>
+            <v-progress-circular
+                    id="circularProgress"
+                    :size="70"
+                    :width="7"
+                    color="success"
+                    indeterminate
+            />
+        </v-layout>
+        <v-col v-else lg="8" sm="12">
+            <v-card id="currentVoting" color="primary">
+                <v-card-title id="currentVotingTitle"
+                              class="title"
+                >
+                    {{currentVoting.votingTitle}}
+                </v-card-title>
+                <v-divider color="secondary"></v-divider>
+                <v-card-text class="mx-3 mt-3">
+                    <transition-group name="fade">
                         <div v-for="(option, index) in currentVoting.votingOptions"
-                             :key="index"
+                             :key="option.id"
                              :id="'currentVotingOption' + index"
                              class="py-2"
                         >
@@ -44,30 +44,30 @@
                             </v-row>
                             <v-divider color="secondary"></v-divider>
                         </div>
-                    </v-card-text>
-                    <v-card-actions class="pa-3">
-                        <v-btn id="doVoteBtn"
-                               class="white--text"
-                               color="accent"
-                               :x-large="true"
-                               :disabled="selectedOptionIndex == -1"
-                               @click="doVote()"
-                        >
-                            vote!
-                        </v-btn>
-                        <v-btn id="goToResultsBtn"
-                               class="white--text"
-                               color="secondary"
-                               :x-large="true"
-                               @click="goToResults()">
-                            results
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
-                <data-revealer class="my-2" :dataToReveal="votingLink"/>
-            </v-col>
-        </v-container>
-    </div>
+                    </transition-group>
+                </v-card-text>
+                <v-card-actions class="pa-3">
+                    <v-btn id="doVoteBtn"
+                           class="white--text"
+                           color="accent"
+                           :x-large="true"
+                           :disabled="selectedOptionIndex == -1"
+                           @click="doVote()"
+                    >
+                        vote!
+                    </v-btn>
+                    <v-btn id="goToResultsBtn"
+                           class="white--text"
+                           color="secondary"
+                           :x-large="true"
+                           @click="goToResults()">
+                        results
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+            <data-revealer class="my-2" :dataToReveal="votingLink"/>
+        </v-col>
+    </v-container>
 </template>
 
 <script>
@@ -81,7 +81,7 @@
      * @displayName Current voting page
      * @example ./../../examples/pages/voting/currentVoting.md
      * @author Dmitrochenkov Daniil
-     * @version 1.0
+     * @version 1.1
      */
     export default {
         name: "currentVoting",
