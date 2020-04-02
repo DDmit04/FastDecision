@@ -56,6 +56,11 @@ devServer: {
     },
 ```
 
+<strong>In this case don't forget change port in templates/index.html too:</strong>
+```
+<script th:src="${isDevMode} ? 'http://localhost:8002/main.js' : '../js/main.js'"></script>
+```
+
 Before start spring boot app don't forget configure application.yaml for your database:
 ```
  datasource:
