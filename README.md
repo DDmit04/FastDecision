@@ -34,7 +34,6 @@ git clone git@github.com:DDmit04/FastDecision.git
 ```
 
 To start frontend hot-reload server:
-
 ```
 cd FastDecision
 yarn install
@@ -43,7 +42,7 @@ yarn start
 
 By default it running on http://localhost:8002
 
-You can configure port in webpack.dev.js
+You can configure port in webpack.dev.js:
 ```
 devServer: {
         contentBase: './dist',
@@ -79,6 +78,6 @@ And if you need - server port to run backend:
 server:
   port: 9002
 ```
-<strong>New Port must be added to allowedHosts in webpack.dev.js</strong>
+<strong>New port must be added to allowedHosts in webpack.dev.js</strong>
 
 Then start spring boot application in IDE and app will be running on http://localhost:9002 (by default)
