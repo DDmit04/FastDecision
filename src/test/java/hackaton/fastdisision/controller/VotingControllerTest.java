@@ -77,7 +77,7 @@ class VotingControllerTest extends BasicTest {
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
         User user = mapper.readValue(responseObj.get("owner").toString(), User.class);
 
-        assertTrue((int) responseObj.get("id") == 1, "voting id in request not compared to id in result!");
+        assertEquals(1, (int) responseObj.get("id"), "voting id in request not compared to id in result!");
         assertEquals(user, votingOwner);
         assertFalse(responseObj.has("creationDate"));
         assertFalse(responseObj.has("isPrivateVoting"));
@@ -137,7 +137,7 @@ class VotingControllerTest extends BasicTest {
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
         User user = mapper.readValue(responseObj.get("owner").toString(), User.class);
 
-        assertTrue((int) responseObj.get("id") == 6, "voting id in request not compared to id in result!");
+        assertEquals(6, (int) responseObj.get("id"), "voting id in request not compared to id in result!");
         assertEquals(user, votingOwner);
         assertFalse(responseObj.has("votingKey"));
         assertFalse(responseObj.has("creationDate"));

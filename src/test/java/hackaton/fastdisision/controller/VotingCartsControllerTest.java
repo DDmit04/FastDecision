@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -80,8 +81,8 @@ public class VotingCartsControllerTest extends BasicTest {
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
         List<Voting> content = Arrays.asList(mapper.readValue(responseObj.get("content").toString(), Voting[].class));
 
-        assertTrue((int)responseObj.get("totalElements") == 3, "total elements count is wrong!");
-        assertTrue((int)responseObj.get("numberOfElements") == 3, "number of elements is wrong!");
+        assertEquals( 3, (int)responseObj.get("totalElements"), "total elements count is wrong!");
+        assertEquals( 3, (int)responseObj.get("numberOfElements"), "number of elements is wrong!");
         content.forEach(voting -> {
             assertTrue(voting.getVotingTitle().contains(searchString), "voting title isn't contain searched string!");
         });
@@ -123,8 +124,8 @@ public class VotingCartsControllerTest extends BasicTest {
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
         List<Voting> content = Arrays.asList(mapper.readValue(responseObj.get("content").toString(), Voting[].class));
 
-        assertTrue((int)responseObj.get("totalElements") == 5, "total elements count is wrong!");
-        assertTrue((int)responseObj.get("numberOfElements") == 5, "number of elements is wrong!");
+        assertEquals(5, (int)responseObj.get("totalElements"), "total elements count is wrong!");
+        assertEquals(5, (int)responseObj.get("numberOfElements"), "number of elements is wrong!");
 
         for(int i = 0; i < content.size() - 1; i++) {
             // check ID's because API doesn't return CreationDate in response (change SQL file carefully!!!)
@@ -169,8 +170,8 @@ public class VotingCartsControllerTest extends BasicTest {
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
         List<Voting> content = Arrays.asList(mapper.readValue(responseObj.get("content").toString(), Voting[].class));
 
-        assertTrue((int)responseObj.get("totalElements") == 5, "total elements count is wrong!");
-        assertTrue((int)responseObj.get("numberOfElements") == 5, "number of elements is wrong!");
+        assertEquals(5, (int)responseObj.get("totalElements"), "total elements count is wrong!");
+        assertEquals(5, (int)responseObj.get("numberOfElements"), "number of elements is wrong!");
 
         for(int i = 0; i < content.size() - 1; i++) {
             // change SQL file carefully!!!
@@ -213,8 +214,8 @@ public class VotingCartsControllerTest extends BasicTest {
                 .andReturn();
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
         List<Voting> content = Arrays.asList(mapper.readValue(responseObj.get("content").toString(), Voting[].class));
-        assertTrue((int)responseObj.get("totalElements") == 5, "total elements count is wrong!");
-        assertTrue((int)responseObj.get("numberOfElements") == 5, "number of elements is wrong!");
+        assertEquals(5, (int)responseObj.get("totalElements"), "total elements count is wrong!");
+        assertEquals(5, (int)responseObj.get("numberOfElements"), "number of elements is wrong!");
     }
 
     @Test
@@ -256,8 +257,8 @@ public class VotingCartsControllerTest extends BasicTest {
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
         List<Voting> content = Arrays.asList(mapper.readValue(responseObj.get("content").toString(), Voting[].class));
 
-        assertTrue((int)responseObj.get("totalElements") == 2, "total elements count is wrong!");
-        assertTrue((int)responseObj.get("numberOfElements") == 2, "number of elements is wrong!");
+        assertEquals(2, (int)responseObj.get("totalElements"), "total elements count is wrong!");
+        assertEquals(2, (int)responseObj.get("numberOfElements"), "number of elements is wrong!");
         for(int i = 0; i < content.size() - 1; i++) {
             // change SQL file carefully!!!
             assertTrue(content.get(i).getOwner().equals(commonUser), "user is not owner of it's public voitngs! (pay extra attantion to SQL and this test)");
@@ -277,8 +278,8 @@ public class VotingCartsControllerTest extends BasicTest {
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
         List<Voting> content = Arrays.asList(mapper.readValue(responseObj.get("content").toString(), Voting[].class));
 
-        assertTrue((int)responseObj.get("totalElements") == 2, "total elements count is wrong!");
-        assertTrue((int)responseObj.get("numberOfElements") == 2, "number of elements is wrong!");
+        assertEquals(2, (int)responseObj.get("totalElements"), "total elements count is wrong!");
+        assertEquals(2, (int)responseObj.get("numberOfElements"), "number of elements is wrong!");
         for(int i = 0; i < content.size() - 1; i++) {
             // change SQL file carefully!!!
             assertTrue(content.get(i).getOwner().equals(commonUser), "user is not owner of it's public voitngs! (pay extra attantion to SQL and this test)");

@@ -6,7 +6,7 @@ import hackaton.fastdisision.data.Voting;
 import hackaton.fastdisision.excaptions.WrongVotingKeyException;
 import hackaton.fastdisision.repo.VoteOptionRepo;
 import hackaton.fastdisision.repo.VotingRepo;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 class VoteOptionServiceTest extends BasicTest {
@@ -38,8 +37,11 @@ class VoteOptionServiceTest extends BasicTest {
     private static String rightVotingKey = "trueKey";
     private static String wrongVotingKey = "wrongKey";
 
-    @BeforeAll
-    public static void initData() {
+    @BeforeEach
+    public void initData() {
+        inspectedVoting = new Voting();
+        firstVoteOption = new VoteOption();
+        secVoteOption = new VoteOption();
         inspectedVoting.setId((long) 1);
         inspectedVoting.setVotingKey(rightVotingKey);
         inspectedVoting.setVotingTitle("title");
@@ -54,14 +56,35 @@ class VoteOptionServiceTest extends BasicTest {
 
         inspectedVoting.setVotingOptions(new ArrayList<VoteOption>() {
             {
-               add(firstVoteOption);
-               add(secVoteOption);
+                add(firstVoteOption);
+                add(secVoteOption);
             }
         });
     }
 
     @Test
-    void acceptVote() throws WrongVotingKeyException {
+    void acceptVoteCheckingIp() throws WrongVotingKeyException {
+
+        inspectedVoting.setCheckingIpVoting(true);
+
+        Mockito.when(voteOptionRepo.findById(firstVoteOption.getId())).thenReturn(Optional.of(firstVoteOption));
+
+        //twice
+        voteOptionService.acceptVote(firstVoteOption.getId(), votedIp, rightVotingKey);
+        voteOptionService.acceptVote(firstVoteOption.getId(), votedIp, rightVotingKey);
+
+        Mockito.verify(voteOptionRepo, times(1)).save(firstVoteOption);
+        Mockito.verify(votingRepo, times(2)).save(inspectedVoting);
+        assertEquals(1, inspectedVoting.getTotalVotes(), "total votes is not incremented correctly!");
+        assertTrue(inspectedVoting.getVotedIps().contains(votedIp), "voted user's IP was not added to base!");
+        assertEquals(1, firstVoteOption.getPluses(), "total pluses is not incremented correctly!");
+    }
+
+    @Test
+    void acceptVoteUnCheckingIp() throws WrongVotingKeyException {
+
+        inspectedVoting.setCheckingIpVoting(false);
+
         Mockito.when(voteOptionRepo.findById(firstVoteOption.getId())).thenReturn(Optional.of(firstVoteOption));
 
         //twice
@@ -69,9 +92,10 @@ class VoteOptionServiceTest extends BasicTest {
         voteOptionService.acceptVote(firstVoteOption.getId(), votedIp, rightVotingKey);
 
         Mockito.verify(voteOptionRepo, times(2)).save(firstVoteOption);
-        assertTrue(inspectedVoting.getTotalVotes() == 1, "total votes is not incremented correctly!");
-        assertTrue(inspectedVoting.getVotedIps().contains(votedIp), "voted user's IP was not added to base!");
-        assertTrue(firstVoteOption.getPluses() == 1, "total pluses is not incremented correctly!");
+        Mockito.verify(votingRepo, times(2)).save(inspectedVoting);
+        assertEquals(2, inspectedVoting.getTotalVotes(), "total votes is not incremented correctly!");
+        assertFalse(inspectedVoting.getVotedIps().contains(votedIp), "voted user's IP was added to base!");
+        assertEquals(2, firstVoteOption.getPluses(), "total pluses is not incremented correctly!");
     }
 
     @Test

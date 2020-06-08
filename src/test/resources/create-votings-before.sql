@@ -2,20 +2,20 @@ delete from voting;
 delete from vote_option;
 
 -- public voting key - see properties.yaml - voting.public.key;
-insert into voting(id, creation_date, is_private_voting, total_votes, is_protected_voting, voting_key, voting_title, owner_id) values
+insert into voting(id, creation_date, is_private_voting, total_votes, is_protected_voting, is_checking_ip_voting, voting_key, voting_title, owner_id) values
 
-(1, '2020-01-05 16:14:02.616', false, 1, false, 'public', 'search1', (select id from usr u where u.id = '3')),
-(2, '2020-02-05 16:14:02.616', false, 2, false, 'public', 'search2', (select id from usr u where u.id = '3')),
-(3, '2020-03-05 16:14:02.616', false, 3, false, 'public', 'search3', (select id from usr u where u.id = '3')),
+(1, '2020-01-05 16:14:02.616', false, 1, false, false, 'public', 'search1', (select id from usr u where u.id = '3')),
+(2, '2020-02-05 16:14:02.616', false, 2, false, false, 'public', 'search2', (select id from usr u where u.id = '3')),
+(3, '2020-03-05 16:14:02.616', false, 3, false, false, 'public', 'search3', (select id from usr u where u.id = '3')),
 
-(4, '2020-04-05 16:14:02.616', true, 4, false, 'public', 'private1', (select id from usr u where u.id = '3')),
-(5, '2020-05-05 16:14:02.616', true, 5, false, 'public', 'private2', (select id from usr u where u.id = '3')),
+(4, '2020-04-05 16:14:02.616', true, 4, false, false, 'public', 'private1', (select id from usr u where u.id = '3')),
+(5, '2020-05-05 16:14:02.616', true, 5, false, false, 'public', 'private2', (select id from usr u where u.id = '3')),
 
-(6, '2020-06-05 16:14:02.616', false, 6, true, 'notPublic', 'protected1', (select id from usr u where u.id = '3')),
-(7, '2020-07-05 16:14:02.616', false, 7, true, 'notPublic', 'protected2', (select id from usr u where u.id = '3')),
+(6, '2020-06-05 16:14:02.616', false, 6, true, false, 'notPublic', 'protected1', (select id from usr u where u.id = '3')),
+(7, '2020-07-05 16:14:02.616', false, 7, true, false, 'notPublic', 'protected2', (select id from usr u where u.id = '3')),
 
-(8, '2020-06-05 16:14:02.616', true, 6, true, 'notPublic', 'protected1', (select id from usr u where u.id = '1')),
-(9, '2020-07-05 16:14:02.616', true, 7, true, 'notPublic', 'protected2', (select id from usr u where u.id = '1'));
+(8, '2020-06-05 16:14:02.616', true, 6, true, false, 'notPublic', 'protected1', (select id from usr u where u.id = '1')),
+(9, '2020-07-05 16:14:02.616', true, 7, true, false, 'notPublic', 'protected2', (select id from usr u where u.id = '1'));
 
 insert into vote_option(id, pluses, vote_discription, vote_id) values
 (1, 0, 'disc', 1),

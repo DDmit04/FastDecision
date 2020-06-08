@@ -1,5 +1,6 @@
 package hackaton.fastdisision;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -16,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class BasicTest {
 
+    @Ignore
     @Test
     public void basicTest() {
         System.out.println("This is basic test class message!");
