@@ -33,7 +33,7 @@ public class VotingCartsController {
     @GetMapping("search")
     @JsonView(VotingView.MinimalData.class)
     public Page<Voting> searchVotings(@RequestParam("search") String search,
-                                      @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable) {
+                                         @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Voting> votings = votingService.searchVotings(search, pageable);
         return votings;
     }

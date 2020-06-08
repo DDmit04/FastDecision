@@ -1,0 +1,1 @@
+alter table voting add column is_checking_ip_voting boolean not null default true;

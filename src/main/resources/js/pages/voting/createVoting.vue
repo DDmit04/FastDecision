@@ -45,6 +45,17 @@
                                      :tooltipMessage="protectedVotingTooltipMessage"
                                      :icon="alertIcon"></tooltip>
                         </v-row>
+                        <v-row>
+                            <v-checkbox v-model="newVoting.isCheckingIpVoting"
+                                        label="votes IP check"
+                                        class="mx-2"
+                                        id="newIsCheckingIpVoting"
+                                        color="success"
+                            />
+                            <tooltip class="mt-5"
+                                     :tooltipMessage="ipCheckVotingTooltipMessage"
+                                     :icon="alertIcon"></tooltip>
+                        </v-row>
                     </v-card-text>
                     <v-divider color="secondary"></v-divider>
                     <v-card-actions class="pa-3">
@@ -85,6 +96,7 @@
                 alertIcon: mdiAlertCircleOutline,
                 privateVotingTooltipMessage: 'Hide from charts and other users (auth users only)',
                 protectedVotingTooltipMessage: 'Protect voting by key',
+                ipCheckVotingTooltipMessage: 'Accept only one vote per IP',
                 buttonLoading: false,
                 lastOptionIndex: 1,
                 newVoting: {
@@ -92,7 +104,8 @@
                     votingTitle: '',
                     votingOptions: [],
                     isPrivateVoting: false,
-                    isProtectedVoting: false
+                    isProtectedVoting: false,
+                    isCheckingIpVoting: false
                 },
                 voteOption1: {
                     id: null,

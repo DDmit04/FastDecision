@@ -68,7 +68,7 @@
     "sass-loader": "^8.0.0",
     "url-loader": "^3.0.0",
     "vue-docgen-api": "^4.15.0",
-    "vue-loader": "^15.9.1",
+    "vue-loader": "^15.9.2",
     "vue-styleguidist": "^4.15.0",
     "vue-template-compiler": "^2.6.11",
     "webpack": "^4.35.2",

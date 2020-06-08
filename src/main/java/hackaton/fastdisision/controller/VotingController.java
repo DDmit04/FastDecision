@@ -68,7 +68,7 @@ public class VotingController {
     @PostMapping
     @JsonView(VotingView.CoreData.class)
     public Voting addVoting(@Valid @RequestBody Voting voting,
-                            @AuthenticationPrincipal User user) {
+                               @AuthenticationPrincipal User user) {
         Voting newVoting = votingService.addVoting(voting, user);
         return newVoting;
     }

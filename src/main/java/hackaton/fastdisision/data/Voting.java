@@ -48,6 +48,9 @@ public class Voting {
     @JsonView(VotingView.FullData.class)
     private boolean isPrivateVoting = false;
 
+    @JsonView(VotingView.FullData.class)
+    private boolean isCheckingIpVoting = false;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="owner_id")
     @JsonView(VotingView.MinimalData.class)

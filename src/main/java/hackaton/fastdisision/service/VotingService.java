@@ -21,6 +21,7 @@ import java.util.UUID;
 
 /**
  * Service to manipulate votings entities
+ *
  * @author Dmitrochenkov Daniil
  * @version 1.0
  */
@@ -41,15 +42,16 @@ public class VotingService {
 
     /**
      * create voting (set creation data, voting key, owner and parent voting for options)
+     *
      * @param voting voting to create
-     * @param user user requested creation voting
+     * @param user   user requested creation voting
      * @return saved voting
      * @see Voting
      * @see User
      */
     public Voting addVoting(Voting voting, User user) {
         Voting savedVoting = null;
-        if(!voting.getVotingTitle().trim().equals("") && voting.getVotingOptions().size() >= 2) {
+        if (!voting.getVotingTitle().trim().equals("") && voting.getVotingOptions().size() >= 2) {
             for (VoteOption voteOption : voting.getVotingOptions()) {
                 voteOption.setVoting(voting);
             }
@@ -57,7 +59,7 @@ public class VotingService {
             if (user != null) {
                 voting.setOwner(user);
             }
-            if(voting.isProtectedVoting()) {
+            if (voting.isProtectedVoting()) {
                 voting.setVotingKey(UUID.randomUUID().toString());
             } else {
                 voting.setVotingKey(publicVotingKey);
@@ -69,8 +71,9 @@ public class VotingService {
 
     /**
      * delete voting and remove it from users's votings
+     *
      * @param voting voting to delete
-     * @param user user requested deletion voting
+     * @param user   user requested deletion voting
      * @throws AccessDeniedException user isn't voting owner
      * @see Voting
      * @see User
@@ -79,7 +82,7 @@ public class VotingService {
         boolean userIsAdmin = user.getRoles().contains(UserRoles.ADMIN);
         boolean userIsOwner = voting.getOwner() != null && voting.getOwner().equals(user);
         if (userIsOwner || userIsAdmin) {
-            if(voting.getOwner() != null) {
+            if (voting.getOwner() != null) {
                 voting.getOwner().getUserVotings().remove(voting);
                 userRepo.save(voting.getOwner());
             }
@@ -91,8 +94,9 @@ public class VotingService {
 
     /**
      * returns page of votings sorted by total votes count
+     *
      * @param pageable requested pageable
-     * @return page of popular votings
+     * @return page of popular votings DTO
      * @see Voting
      */
     public Page<Voting> getPopular(Pageable pageable) {
@@ -101,8 +105,9 @@ public class VotingService {
 
     /**
      * returns page of votings sorted by creation date
+     *
      * @param pageable requested pageable
-     * @return page of newest votings
+     * @return page of newest votings DTO
      * @see Voting
      */
     public Page<Voting> getNewest(Pageable pageable) {
@@ -110,10 +115,9 @@ public class VotingService {
     }
 
     /**
-     *
-     * @param user user requested user public votings
+     * @param user     user requested user public votings
      * @param pageable requested pageable
-     * @return page of public user votings
+     * @return page of public user votings DTO
      * @see Voting
      */
     public Page<Voting> getUserPublic(User user, Pageable pageable) {
@@ -126,16 +130,17 @@ public class VotingService {
 
     /**
      * returns user private votings
-     * @param user user to get private votings
+     *
+     * @param user        user to get private votings
      * @param currentUser user requested private votings
-     * @param pageable requested pageable
-     * @return page of private user votings
+     * @param pageable    requested pageable
+     * @return page of private user votings DTO
      * @throws AccessDeniedException user neither currentUser nor admin or user is null
      * @see Voting
      */
     public Page<Voting> getUserPrivate(User user, User currentUser, Pageable pageable) throws AccessDeniedException {
         Page<Voting> votings = new PageImpl<Voting>(Collections.EMPTY_LIST, pageable, 0);
-        if(user.equals(currentUser) || currentUser.getRoles().contains(UserRoles.ADMIN)) {
+        if (user.equals(currentUser) || currentUser.getRoles().contains(UserRoles.ADMIN)) {
             if (user != null) {
                 votings = votingRepo.findByOwner_IdAndIsPrivateVotingOrderByCreationDate(user.getId(), true, pageable);
             }
@@ -147,9 +152,10 @@ public class VotingService {
 
     /**
      * returns votings which title contains string to search
-     * @param search string to search
+     *
+     * @param search   string to search
      * @param pageable requested pageable
-     * @return page of votings includes searched string
+     * @return page of votings DTO includes searched string
      * @see Voting
      */
     public Page<Voting> searchVotings(String search, Pageable pageable) {
