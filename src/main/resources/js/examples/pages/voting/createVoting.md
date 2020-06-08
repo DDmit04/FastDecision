@@ -50,6 +50,19 @@
                                        :tooltipMessage="protectedVotingTooltipMessage"
                                        :icon="alertIcon"></tooltip>
                           </v-row>
+                          <v-row>
+                              <v-checkbox v-model="newVoting.isCheckingIpVoting"
+                                          :off-icon="checkBoxOffIcon"
+                                          :on-icon="checkBoxOnIcon"
+                                          label="votes IP check"
+                                          class="mx-2"
+                                          id="newIsCheckingIpVoting"
+                                          color="success"
+                              />
+                              <tooltip class="mt-5"
+                                       :tooltipMessage="ipCheckVotingTooltipMessage"
+                                       :icon="alertIcon"></tooltip>
+                        </v-row>
                       </v-card-text>
                       <v-divider color="secondary"></v-divider>
                       <v-card-actions class="pa-3">
@@ -82,6 +95,7 @@
                   checkBoxOnIcon: mdiCheckBoxOutline,
                   privateVotingTooltipMessage: 'Hide from charts and other users (auth users only)',
                   protectedVotingTooltipMessage: 'Protect voting by key',
+                  ipCheckVotingTooltipMessage: 'Accept only one vote per IP',
                   buttonLoading: false,
                   lastOptionIndex: 1,
                   newVoting: {
@@ -89,7 +103,8 @@
                       votingTitle: '',
                       votingOptions: [],
                       isPrivateVoting: false,
-                      isProtectedVoting: false
+                      isProtectedVoting: false,
+                      isCheckingIpVoting: false
                   },
                   voteOption1: {
                       id: null,
@@ -130,11 +145,7 @@
                       this.lastOptionIndex++
                   }
               },
-              tryAddVoting() {
-                  if (this.voteReadyToAdd) {
-                      this.addVoting()
-                  }
-              },
+              tryAddVoting() {},
               addVoting() {},
               addOption() {
                   if (this.newVoting.votingOptions.length < 10) {
