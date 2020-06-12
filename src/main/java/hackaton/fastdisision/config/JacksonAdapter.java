@@ -15,7 +15,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import java.io.IOException;
 
 /**
- * Configuration for serialize page to JSON
+ * Configuration for serialize Page<T> to JSON
+ *
  * @version 1.0
  */
 @Configuration

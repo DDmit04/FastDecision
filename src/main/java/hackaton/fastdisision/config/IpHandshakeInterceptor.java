@@ -11,6 +11,7 @@ import java.util.Map;
 
 /**
  * Component that extract IP from websocket session
+ *
  * @author Dmitrochenkov Daniil
  * @version 1.0
  */
@@ -35,5 +36,6 @@ public class IpHandshakeInterceptor implements HandshakeInterceptor {
     @Override
     public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response,
                                WebSocketHandler wsHandler, Exception exception) {
+
     }
 }

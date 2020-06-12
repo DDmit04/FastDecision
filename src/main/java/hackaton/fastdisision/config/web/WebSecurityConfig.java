@@ -1,6 +1,6 @@
-package hackaton.fastdisision.config;
+package hackaton.fastdisision.config.web;
 
-import hackaton.fastdisision.data.UserRoles;
+import hackaton.fastdisision.data.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +16,7 @@ import org.springframework.web.filter.CompositeFilter;
 
 /**
  * App security configuration
+ *
  * @author Dmitrochenkov Daniil
  * @version 1.0
  */
@@ -24,17 +25,17 @@ import org.springframework.web.filter.CompositeFilter;
 @EnableOAuth2Client
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final CompositeFilter oAuthSsoFilter;
+    private final CompositeFilter OAuthFilter;
 
     @Autowired
-    public WebSecurityConfig(CompositeFilter oAuthSsoFilter) {
-        this.oAuthSsoFilter = oAuthSsoFilter;
+    public WebSecurityConfig(CompositeFilter OAuthFilter) {
+        this.OAuthFilter = OAuthFilter;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/admin/**").hasAnyRole(UserRoles.ADMIN.name())
+                .antMatchers("/admin/**").hasAnyRole(UserRole.ADMIN.name())
                 .antMatchers("/user/**").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/voteApi/votings").authenticated()
                 .antMatchers("/**").permitAll()
@@ -42,7 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout().logoutUrl("/logout").logoutSuccessUrl("/").permitAll();
         http
-                .addFilterBefore(oAuthSsoFilter, BasicAuthenticationFilter.class)
+                .addFilterBefore(OAuthFilter, BasicAuthenticationFilter.class)
                 .csrf().disable();
     }
 

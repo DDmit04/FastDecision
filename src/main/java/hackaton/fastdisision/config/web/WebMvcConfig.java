@@ -1,4 +1,4 @@
-package hackaton.fastdisision.config;
+package hackaton.fastdisision.config.web;
 
 import org.springframework.boot.web.server.ErrorPage;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
@@ -9,7 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * Configuration that always return redirect user to app entry point (for frontend works)
+ * Configuration that always return redirect user to app entry point (for frontend routing works)
+ *
  * @author Dmitrochenkov Daniil
  * @version 1.0
  */

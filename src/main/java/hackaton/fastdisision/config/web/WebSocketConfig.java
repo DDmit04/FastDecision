@@ -1,5 +1,6 @@
-package hackaton.fastdisision.config;
+package hackaton.fastdisision.config.web;
 
+import hackaton.fastdisision.config.IpHandshakeInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -8,8 +9,9 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 /**
  * Configuration of WebSockets
+ *
  * @author Dmitrochenkov Daniil
- * @version 1.0
+ * @version 1.2
  */
 @Configuration
 @EnableWebSocketMessageBroker

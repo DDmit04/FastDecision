@@ -1,4 +1,4 @@
-package hackaton.fastdisision.config;
+package hackaton.fastdisision.config.auth;
 
 import hackaton.fastdisision.data.User;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.AuthoritiesExtractor;
@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * Class for custom OAuth authorization
  * @author Dmitrochenkov Daniil
- * @version 1.0
+ * @version 1.1
  */
 public class CustomUserInfoTokenServices implements ResourceServerTokenServices {
 
