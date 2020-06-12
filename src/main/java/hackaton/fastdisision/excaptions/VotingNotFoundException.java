@@ -1,8 +1,15 @@
 package hackaton.fastdisision.excaptions;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.server.ResponseStatusException;
 
-@ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "Voting not found!")
-public class VotingNotFoundException extends Exception {
+/**
+ * @author Daniil Dmitrochenkov
+ * @version 1.2
+ **/
+public class VotingNotFoundException extends ResponseStatusException {
+
+    public VotingNotFoundException() {
+        super(HttpStatus.NOT_FOUND, "Voting not found!");
+    }
 }
