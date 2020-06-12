@@ -9,8 +9,7 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD:sa}
   jpa:
     generate-ddl: true
-    show-sql: false
-    hibernate.hbm2ddl.auto: update
+    show-sql: true
     hibernate.ddl-auto: validate
     properties:
       hibernate:
@@ -40,8 +39,8 @@ google:
 
 github:
   client:
-    clientId: ${githubClient}
-    clientSecret: ${githubSecret}
+    clientId: ${githubDevClient}
+    clientSecret: ${githubDevSecret}
     accessTokenUri: https://github.com/login/oauth/access_token
     userAuthorizationUri: https://github.com/login/oauth/authorize
     tokenName: oauth_token
@@ -49,6 +48,8 @@ github:
     clientAuthenticationScheme: form
   resource:
     userInfoUri: https://api.github.com/user
+
+
 
 server:
   port: 9002

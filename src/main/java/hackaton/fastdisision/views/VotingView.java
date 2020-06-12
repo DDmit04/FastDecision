@@ -13,9 +13,14 @@ public class VotingView {
     public interface Id {}
 
     /**
+     * Data to display in charts
+     */
+    public interface ChartData extends Id {}
+
+    /**
      * normal data for sent to frontend
      */
-    public interface MinimalData extends Id {}
+    public interface MinimalData extends ChartData {}
 
     /**
      * data for send to reliable requests (admin requests, voting creation request)

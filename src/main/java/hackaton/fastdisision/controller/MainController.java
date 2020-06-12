@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * Controller provides app entry point
+ *
  * @author Dmitrochenkov Daniil
  * @version 1.0
  */
