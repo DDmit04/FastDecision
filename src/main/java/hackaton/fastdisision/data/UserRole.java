@@ -5,9 +5,9 @@ import org.springframework.security.core.GrantedAuthority;
 /**
  * Represents user roles/authorities
  * @author Dmitrochenkov Daniil
- * @version 1.0
+ * @version 1.1
  */
-public enum UserRoles implements GrantedAuthority {
+public enum UserRole implements GrantedAuthority {
 
     USER, ADMIN;
 

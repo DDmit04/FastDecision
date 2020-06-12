@@ -55,4 +55,8 @@ public class VoteOption {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    public void addVote() {
+        pluses++;
+    }
 }

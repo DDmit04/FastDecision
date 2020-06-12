@@ -17,11 +17,15 @@ import java.util.*;
 /**
  * Represents user entity
  * @author Dmitrochenkov Daniil
- * @version 1.0
+ * @version 1.1
  */
 @Getter
 @Setter
-@Table(name = "usr")
+@Table(name = "usr",
+        indexes = {
+                @Index(columnList = "username", name = "username_index"),
+                @Index(columnList = "email", name = "email_index"),
+        })
 @Entity
 public class User implements UserDetails {
 
@@ -29,7 +33,7 @@ public class User implements UserDetails {
     @JsonView(VotingView.Id.class)
     private String id;
 
-    @JsonView(VotingView.MinimalData.class)
+    @JsonView(VotingView.ChartData.class)
     @NotBlank(message = "username can not be empty")
     private String username;
 
@@ -41,10 +45,10 @@ public class User implements UserDetails {
     private String password;
 
     @JsonView(VotingView.MinimalData.class)
-    @ElementCollection(targetClass = UserRoles.class, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
-    private Set<UserRoles> roles = new HashSet<>();
+    private Set<UserRole> roles = new HashSet<>(Arrays.asList(UserRole.USER));
 
     @JsonView(VotingView.CoreData.class)
     private String userPic;
@@ -97,5 +101,13 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return false;
+    }
+
+    public boolean isAdmin() {
+        return roles.contains(UserRole.ADMIN);
+    }
+
+    public void deleteVotingRelationship(Voting voting) {
+        userVotings.remove(voting);
     }
 }

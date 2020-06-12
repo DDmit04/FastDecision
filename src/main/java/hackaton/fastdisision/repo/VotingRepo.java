@@ -1,53 +1,96 @@
 package hackaton.fastdisision.repo;
 
 import hackaton.fastdisision.data.Voting;
+import hackaton.fastdisision.data.VotingDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
+
+import java.util.Optional;
 
 /**
  * Repo to control votings entities
+ *
  * @author Dmitrochenkov Daniil
  * @version 1.0
+ * @see Voting
+ * @see VotingDTO
  */
 public interface VotingRepo extends CrudRepository<Voting, Long> {
 
     /**
-     * returns page of votings ordered by total votes
-     * @param isPrivate get private or public votings
-     * @param pageable default pageable
-     * @return page of votings
-     * @see Voting
+     * returns voting DTO by id
+     *
+     * @param id ID to search voting
+     * @return voting DTO
+     * @see VotingDTO
      */
-    Page<Voting> findByIsPrivateVotingOrderByTotalVotes(boolean isPrivate, Pageable pageable);
+    @Query("select new hackaton.fastdisision.data.VotingDTO(voting) " +
+            "from Voting as voting " +
+            "where voting.id = :id " +
+            "group by voting"
+    )
+    VotingDTO findDtoById(@Param("id") long id);
 
     /**
-     * returns page of votings ordered by total votes
-     * @param isPrivate get private or public votings
-     * @param pageable default pageable
-     * @return page of votings
+     * returns voting entity by id
+     *
+     * @param id ID to search voting
+     * @return voting
      * @see Voting
      */
-    Page<Voting> findByIsPrivateVotingOrderByCreationDate(boolean isPrivate, Pageable pageable);
+    @EntityGraph(attributePaths = {"votingOptions"})
+    Optional<Voting> findById(Long id);
 
     /**
-     * returns page of user votings ordered by creation date
-     * @param id votings owner ID
+     * returns page of votings DTO ordered by total votes
+     *
      * @param isPrivate get private or public votings
-     * @param pageable default pageable
-     * @return page of votings
-     * @see Voting
+     * @param pageable  default pageable
+     * @return page of votings DTO
+     * @see VotingDTO
      */
-    Page<Voting> findByOwner_IdAndIsPrivateVotingOrderByCreationDate(String id, boolean isPrivate, Pageable pageable);
+    @Query("select new hackaton.fastdisision.data.VotingDTO(voting, sum(votingOptions.pluses)) " +
+            "from Voting as voting join voting.votingOptions as votingOptions " +
+            "where voting.isPrivateVoting = :isPrivate " +
+            "group by voting " +
+            "order by sum(votingOptions.pluses) desc"
+    )
+    Page<VotingDTO> findByIsPrivateAndVoteOptionsPlusesSum(@Param("isPrivate") boolean isPrivate, Pageable pageable);
 
     /**
-     * returns page of votings which titles contains searched string
+     * returns page of votings DTO ordered by total votes
+     *
      * @param isPrivate get private or public votings
-     * @param title string to search
-     * @param pageable default pageable
-     * @return page of votings
-     * @see Voting
+     * @param pageable  default pageable
+     * @return page of votings DTO
+     * @see VotingDTO
      */
-    Page<Voting> findAllByIsPrivateVotingAndVotingTitleContains(boolean isPrivate, String title, Pageable pageable);
+    Page<VotingDTO> findByIsPrivateVotingOrderByCreationDate(boolean isPrivate, Pageable pageable);
+
+    /**
+     * returns page of user votings DTO ordered by creation date
+     *
+     * @param id        votings owner ID
+     * @param isPrivate get private or public votings
+     * @param pageable  default pageable
+     * @return page of votings DTO
+     * @see VotingDTO
+     */
+    Page<VotingDTO> findByOwner_IdAndIsPrivateVotingOrderByCreationDate(String id, boolean isPrivate, Pageable pageable);
+
+    /**
+     * returns page of votings DTO which titles contains searched string
+     *
+     * @param isPrivate get private or public votings
+     * @param title     string to search
+     * @param pageable  default pageable
+     * @return page of votings DTO
+     * @see VotingDTO
+     */
+    Page<VotingDTO> findAllByIsPrivateVotingAndVotingTitleContains(boolean isPrivate, String title, Pageable pageable);
 
 }
