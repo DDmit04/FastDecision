@@ -3,7 +3,7 @@ package hackaton.fastdisision.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hackaton.fastdisision.BasicTest;
 import hackaton.fastdisision.data.User;
-import hackaton.fastdisision.data.Voting;
+import hackaton.fastdisision.data.VotingDTO;
 import hackaton.fastdisision.repo.UserRepo;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -28,6 +28,10 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * @author Daniil Dmitrochenkov
+ * @version 1.2
+ */
 @AutoConfigureMockMvc
 @Sql(scripts = {"classpath:create-user-before.sql", "classpath:create-votings-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = {"classpath:create-votings-after.sql", "classpath:create-user-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
@@ -41,6 +45,11 @@ public class VotingCartsControllerTest extends BasicTest {
 
     private ObjectMapper mapper = new ObjectMapper();
 
+    private String commonUserID = "3";
+    private String adminUserID = "1";
+
+    private long votingId = 3;
+    private String nonOwnerUserId = "4";
 
     @Test
     void searchVotings() throws Exception {
@@ -79,7 +88,7 @@ public class VotingCartsControllerTest extends BasicTest {
                 .andReturn();
         
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
-        List<Voting> content = Arrays.asList(mapper.readValue(responseObj.get("content").toString(), Voting[].class));
+        List<VotingDTO> content = Arrays.asList(mapper.readValue(responseObj.get("content").toString(), VotingDTO[].class));
 
         assertEquals( 3, (int)responseObj.get("totalElements"), "total elements count is wrong!");
         assertEquals( 3, (int)responseObj.get("numberOfElements"), "number of elements is wrong!");
@@ -112,17 +121,13 @@ public class VotingCartsControllerTest extends BasicTest {
                                 fieldWithPath("content[].isProtectedVoting").description("Is voting protected"),
                                 fieldWithPath("content[].owner").description("Voting owner"),
                                 fieldWithPath("content[].owner.id").description("Voting owner ID"),
-                                fieldWithPath("content[].owner.username").description("Voting owner username"),
-                                fieldWithPath("content[].owner.roles").description("Voting owner roles"),
-                                fieldWithPath("content[].votingOptions[].id").description("voting option ID."),
-                                fieldWithPath("content[].votingOptions[].voteDiscription").description("voting option discription."),
-                                fieldWithPath("content[].votingOptions[].pluses").description("voting option pluses.")
+                                fieldWithPath("content[].owner.username").description("Voting owner username")
                         )
                 ))
                 .andExpect(status().isOk())
                 .andReturn();
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
-        List<Voting> content = Arrays.asList(mapper.readValue(responseObj.get("content").toString(), Voting[].class));
+        List<VotingDTO> content = Arrays.asList(mapper.readValue(responseObj.get("content").toString(), VotingDTO[].class));
 
         assertEquals(5, (int)responseObj.get("totalElements"), "total elements count is wrong!");
         assertEquals(5, (int)responseObj.get("numberOfElements"), "number of elements is wrong!");
@@ -158,30 +163,26 @@ public class VotingCartsControllerTest extends BasicTest {
                                 fieldWithPath("content[].isProtectedVoting").description("Is voting protected"),
                                 fieldWithPath("content[].owner").description("Voting owner"),
                                 fieldWithPath("content[].owner.id").description("Voting owner ID"),
-                                fieldWithPath("content[].owner.username").description("Voting owner username"),
-                                fieldWithPath("content[].owner.roles").description("Voting owner roles"),
-                                fieldWithPath("content[].votingOptions[].id").description("voting option ID."),
-                                fieldWithPath("content[].votingOptions[].voteDiscription").description("voting option discription."),
-                                fieldWithPath("content[].votingOptions[].pluses").description("voting option pluses.")
+                                fieldWithPath("content[].owner.username").description("Voting owner username")
                         )
                 ))
                 .andExpect(status().isOk())
                 .andReturn();
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
-        List<Voting> content = Arrays.asList(mapper.readValue(responseObj.get("content").toString(), Voting[].class));
+        List<VotingDTO> content = Arrays.asList(mapper.readValue(responseObj.get("content").toString(), VotingDTO[].class));
 
         assertEquals(5, (int)responseObj.get("totalElements"), "total elements count is wrong!");
         assertEquals(5, (int)responseObj.get("numberOfElements"), "number of elements is wrong!");
 
         for(int i = 0; i < content.size() - 1; i++) {
             // change SQL file carefully!!!
-            assertTrue(content.get(i).getTotalVotes() < content.get(i + 1).getTotalVotes(), "wrong votings soring! (pay extra attantion to SQL and this test)");
+            assertTrue(content.get(i).getTotalVotes() >= content.get(i + 1).getTotalVotes(), "wrong votings soring! (pay extra attantion to SQL and this test)");
         }
     }
 
     @Test
     void getUserPublic() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/voteApi/charts/userPublic/3"))
+        MvcResult mvcResult = mockMvc.perform(get("/voteApi/charts/userPublic/" + votingId))
                 .andDo(print())
                 .andDo(document("{ClassName}/{methodName}",
                         responseFields(
@@ -213,16 +214,14 @@ public class VotingCartsControllerTest extends BasicTest {
                 .andExpect(status().isOk())
                 .andReturn();
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
-        List<Voting> content = Arrays.asList(mapper.readValue(responseObj.get("content").toString(), Voting[].class));
         assertEquals(5, (int)responseObj.get("totalElements"), "total elements count is wrong!");
         assertEquals(5, (int)responseObj.get("numberOfElements"), "number of elements is wrong!");
     }
 
     @Test
     void getUserPrivate() throws Exception {
-        // id = 3 - user with id = 3 is not admin
-        User commonUser = userRepo.findById("3").get();
-        MvcResult mvcResult = mockMvc.perform(get("/voteApi/charts/userPrivate/3").with(user(commonUser)))
+        User commonUser = userRepo.findById(commonUserID).get();
+        MvcResult mvcResult = mockMvc.perform(get("/voteApi/charts/userPrivate/" + votingId).with(user(commonUser)))
                 .andDo(print())
                 .andDo(document("{ClassName}/{methodName}",
                         responseFields(
@@ -255,7 +254,7 @@ public class VotingCartsControllerTest extends BasicTest {
                 .andReturn();
 
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
-        List<Voting> content = Arrays.asList(mapper.readValue(responseObj.get("content").toString(), Voting[].class));
+        List<VotingDTO> content = Arrays.asList(mapper.readValue(responseObj.get("content").toString(), VotingDTO[].class));
 
         assertEquals(2, (int)responseObj.get("totalElements"), "total elements count is wrong!");
         assertEquals(2, (int)responseObj.get("numberOfElements"), "number of elements is wrong!");
@@ -267,16 +266,15 @@ public class VotingCartsControllerTest extends BasicTest {
 
     @Test
     void getUserPrivateByAdmin() throws Exception {
-        // id = 3 - user with id = 3 is not admin (see SQL)
-        User commonUser = userRepo.findById("3").get();
-        User adminUser = userRepo.findById("1").get();
-        MvcResult mvcResult = mockMvc.perform(get("/voteApi/charts/userPrivate/3").with(user(adminUser)))
+        User commonUser = userRepo.findById(commonUserID).get();
+        User adminUser = userRepo.findById(adminUserID).get();
+        MvcResult mvcResult = mockMvc.perform(get("/voteApi/charts/userPrivate/" + votingId).with(user(adminUser)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
 
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
-        List<Voting> content = Arrays.asList(mapper.readValue(responseObj.get("content").toString(), Voting[].class));
+        List<VotingDTO> content = Arrays.asList(mapper.readValue(responseObj.get("content").toString(), VotingDTO[].class));
 
         assertEquals(2, (int)responseObj.get("totalElements"), "total elements count is wrong!");
         assertEquals(2, (int)responseObj.get("numberOfElements"), "number of elements is wrong!");
@@ -288,9 +286,8 @@ public class VotingCartsControllerTest extends BasicTest {
 
     @Test
     void getUserPrivateByOtherUser() throws Exception {
-        // id = 4 - user with id = 4 is not admin and not owner of votings(see SQL)
-        User otherCommonUser = userRepo.findById("4").get();
-        mockMvc.perform(get("/voteApi/charts/userPrivate/3").with(user(otherCommonUser)))
+        User otherCommonUser = userRepo.findById(nonOwnerUserId).get();
+        mockMvc.perform(get("/voteApi/charts/userPrivate/" + votingId).with(user(otherCommonUser)))
                 .andDo(print())
                 .andExpect(status().isForbidden());
     }

@@ -2,10 +2,10 @@ package hackaton.fastdisision.service;
 
 import hackaton.fastdisision.BasicTest;
 import hackaton.fastdisision.data.User;
-import hackaton.fastdisision.data.UserRoles;
+import hackaton.fastdisision.data.UserRole;
 import hackaton.fastdisision.excaptions.AccessDeniedException;
-import hackaton.fastdisision.excaptions.WrongAdminPasswordException;
 import hackaton.fastdisision.repo.UserRepo;
+import hackaton.fastdisision.service.intrface.AdminService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +20,10 @@ import java.util.HashSet;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
+/**
+ * @author Daniil Dmitrochenkov
+ * @version 1.2
+ */
 class AdminServiceTest extends BasicTest {
 
     @Value("${admin.password}")
@@ -55,23 +59,23 @@ class AdminServiceTest extends BasicTest {
 
     @BeforeEach
     void refreshTestData() {
-        otherAdminUser.setRoles(new HashSet<>(Collections.singleton(UserRoles.ADMIN)));
-        adminUser.setRoles(new HashSet<>(Collections.singleton(UserRoles.ADMIN)));
-        commonUser.setRoles(new HashSet<>(Collections.singleton(UserRoles.USER)));
+        otherAdminUser.setRoles(new HashSet<>(Collections.singleton(UserRole.ADMIN)));
+        adminUser.setRoles(new HashSet<>(Collections.singleton(UserRole.ADMIN)));
+        commonUser.setRoles(new HashSet<>(Collections.singleton(UserRole.USER)));
     }
 
     @Test
-    void checkAdminRequest() throws WrongAdminPasswordException {
-        adminService.checkAdminRequest(commonUser, rightAdminPassword);
+    void checkAdminRequest() throws AccessDeniedException {
+        adminService.getAdminRole(commonUser, rightAdminPassword);
         Mockito.verify(userRepo, times(1)).save(commonUser);
-        assertTrue(commonUser.getRoles().contains(UserRoles.ADMIN), "common user isn't get admin role!");
+        assertTrue(commonUser.getRoles().contains(UserRole.ADMIN), "common user isn't get admin role!");
     }
 
     @Test
     void checkAdminRequestFail() {
         assertThrows(
-                WrongAdminPasswordException.class,
-                () -> adminService.checkAdminRequest(
+                AccessDeniedException.class,
+                () -> adminService.getAdminRole(
                         commonUser,
                         wrongAdminPassword
                 ), "wrong password admin request was not denied!"
@@ -80,33 +84,33 @@ class AdminServiceTest extends BasicTest {
 
     @Test
     void giveAdmin() throws AccessDeniedException {
-        adminService.giveAdmin(commonUser, adminUser);
+        adminService.giveAdminRole(commonUser, adminUser);
         Mockito.verify(userRepo, times(1)).save(commonUser);
-        assertTrue(commonUser.getRoles().contains(UserRoles.ADMIN), "admin isn't give common user an admin role!");
+        assertTrue(commonUser.getRoles().contains(UserRole.ADMIN), "admin isn't give common user an admin role!");
     }
 
     @Test
     void giveAdminFailed() {
         assertThrows(
                 AccessDeniedException.class,
-                () -> adminService.giveAdmin(
+                () -> adminService.giveAdminRole(
                         adminUser, commonUser
                 ), "give admin request was not denied!"
         );
     }
 
     @Test
-    void removeAdmin() throws AccessDeniedException, WrongAdminPasswordException {
-        adminService.removeAdmin(otherAdminUser, adminUser, rightAdminPassword);
+    void removeAdmin() throws AccessDeniedException, AccessDeniedException {
+        adminService.removeAdminRole(otherAdminUser, adminUser, rightAdminPassword);
         Mockito.verify(userRepo, times(1)).save(otherAdminUser);
-        assertFalse(otherAdminUser.getRoles().contains(UserRoles.ADMIN), "admin role was not removed!");
+        assertFalse(otherAdminUser.getRoles().contains(UserRole.ADMIN), "admin role was not removed!");
     }
 
     @Test
     void removeAdminFailedPassword() {
-        commonUser.getRoles().add(UserRoles.ADMIN);
-        assertThrows(WrongAdminPasswordException.class,
-                () -> adminService.removeAdmin(
+        commonUser.getRoles().add(UserRole.ADMIN);
+        assertThrows(AccessDeniedException.class,
+                () -> adminService.removeAdminRole(
                         otherAdminUser, adminUser, wrongAdminPassword
                 ), "remove admin request with wrong password was not denied!"
         );
@@ -115,7 +119,7 @@ class AdminServiceTest extends BasicTest {
     @Test
     void removeAdminFailedAccess() {
         assertThrows(AccessDeniedException.class,
-                () -> adminService.removeAdmin(
+                () -> adminService.removeAdminRole(
                         otherAdminUser, commonUser, rightAdminPassword
                 ), "remove admin request with wrong role was not denied!"
         );

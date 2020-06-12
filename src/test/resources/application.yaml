@@ -8,7 +8,7 @@ spring:
     username: ${SPRING_DATASOURCE_USERNAME:postgres}
     password: ${SPRING_DATASOURCE_PASSWORD:sa}
   jpa:
-    generate-ddl: false
+    generate-ddl: true
     show-sql: true
     hibernate.ddl-auto: create-drop
     properties:

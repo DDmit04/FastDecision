@@ -2,7 +2,6 @@ package hackaton.fastdisision.controller;
 
 import hackaton.fastdisision.BasicTest;
 import hackaton.fastdisision.data.User;
-import hackaton.fastdisision.data.UserRoles;
 import hackaton.fastdisision.repo.UserRepo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +21,10 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * @author Daniil Dmitrochenkov
+ * @version 1.2
+ */
 @AutoConfigureMockMvc
 @Sql(scripts = "classpath:create-user-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "classpath:create-user-after.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
@@ -65,7 +68,7 @@ public class UserControllerTest extends BasicTest {
                 .andExpect(status().isOk());
 
         User adminedCommonUser = userRepo.findById(commonUserId).get();
-        assertTrue(adminedCommonUser.getRoles().contains(UserRoles.ADMIN), "user did not get admin role!");
+        assertTrue(adminedCommonUser.isAdmin(), "user did not get admin role!");
     }
 
     @Test
@@ -87,6 +90,6 @@ public class UserControllerTest extends BasicTest {
                 .andExpect(status().isForbidden());
 
         User adminedCommonUser = userRepo.findById(commonUserId).get();
-        assertFalse(adminedCommonUser.getRoles().contains(UserRoles.ADMIN), "admin request with wrong password was not denied!");
+        assertFalse(adminedCommonUser.isAdmin(), "admin request with wrong password was not denied!");
     }
 }

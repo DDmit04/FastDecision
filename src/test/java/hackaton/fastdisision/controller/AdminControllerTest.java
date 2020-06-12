@@ -2,7 +2,7 @@ package hackaton.fastdisision.controller;
 
 import hackaton.fastdisision.BasicTest;
 import hackaton.fastdisision.data.User;
-import hackaton.fastdisision.data.UserRoles;
+import hackaton.fastdisision.data.UserRole;
 import hackaton.fastdisision.repo.UserRepo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +24,10 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * @author Daniil Dmitrochenkov
+ * @version 1.2
+ */
 @AutoConfigureMockMvc
 @Sql(scripts = "classpath:create-user-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "classpath:create-user-after.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
@@ -74,7 +78,7 @@ public class AdminControllerTest extends BasicTest {
                 .andExpect(status().isOk());
 
         User adminedCommonUser = userRepo.findById(commonUserId).get();
-        assertTrue(adminedCommonUser.getRoles().contains(UserRoles.ADMIN), "admin role was not given to common user!");
+        assertTrue(adminedCommonUser.isAdmin(), "admin role was not given to common user!");
     }
 
     @Test
@@ -85,7 +89,7 @@ public class AdminControllerTest extends BasicTest {
                 .andExpect(status().isForbidden());
 
         User adminedCommonUser = userRepo.findById(otherCommonUserId).get();
-        assertFalse(adminedCommonUser.getRoles().contains(UserRoles.ADMIN), "give admin role request with wrong role was not denied!");
+        assertFalse(adminedCommonUser.isAdmin(), "give admin role request with wrong role was not denied!");
     }
 
     @Test
@@ -114,8 +118,8 @@ public class AdminControllerTest extends BasicTest {
                 .andExpect(status().isOk());
 
         User unadminedCommonUser = userRepo.findById(otherAdminUserId).get();
-        assertFalse(unadminedCommonUser.getRoles().contains(UserRoles.ADMIN), "admin role was not removed!");
-        assertTrue(unadminedCommonUser.getRoles().contains(UserRoles.USER), "unadmined user must be common user too!");
+        assertFalse(unadminedCommonUser.isAdmin(), "admin role was not removed!");
+        assertTrue(unadminedCommonUser.getRoles().contains(UserRole.USER), "unadmined user must be common user too!");
     }
 
     @Test
@@ -128,7 +132,7 @@ public class AdminControllerTest extends BasicTest {
                 .andExpect(status().isForbidden());
 
         User unadminedCommonUser = userRepo.findById(otherAdminUserId).get();
-        assertTrue(unadminedCommonUser.getRoles().contains(UserRoles.ADMIN), "admin remove request with wrong password was not denied!");
+        assertTrue(unadminedCommonUser.isAdmin(), "admin remove request with wrong password was not denied!");
     }
 
     @Test
@@ -141,7 +145,7 @@ public class AdminControllerTest extends BasicTest {
                 .andExpect(status().isForbidden());
 
         User unadminedCommonUser = userRepo.findById(adminUserId).get();
-        assertTrue(unadminedCommonUser.getRoles().contains(UserRoles.ADMIN), "admin remove request with wrong role was not denied!");
+        assertTrue(unadminedCommonUser.isAdmin(), "admin remove request with wrong role was not denied!");
     }
 
 }

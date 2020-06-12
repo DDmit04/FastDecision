@@ -9,7 +9,11 @@ insert into usr(id, username, password) values
 
 insert into user_role(user_id, roles) values
 ('1', 'ADMIN'),
+('1', 'USER'),
+
 ('2', 'ADMIN'),
+('2', 'USER'),
+
 ('3', 'USER'),
 ('4', 'USER');
 
