@@ -9,7 +9,7 @@ import java.util.Optional;
  * Service to control user entity
  *
  * @author Daniil Dmitrochenkov
- * @version 1.2
+ * @version 1.3
  **/
 public interface UserService {
 
@@ -48,8 +48,17 @@ public interface UserService {
      * Search user by is in DB
      *
      * @param id ID to search
-     * @return search result
+     * @return user search result
      * @see User
      */
-    Optional<User> findById(String id);
+    User findById(String id);
+
+    /**
+     * Search user by is in DB
+     *
+     * @param id ID to search
+     * @return user search result
+     * @see User
+     */
+    Optional<User> findByIdOptional(String id);
 }

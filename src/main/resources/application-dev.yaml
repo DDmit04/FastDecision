@@ -10,12 +10,13 @@ spring:
   jpa:
     generate-ddl: true
     show-sql: true
-    hibernate.ddl-auto: validate
+    hibernate.ddl-auto: create-drop
     properties:
       hibernate:
         jdbc:
           lob:
             non_contextual_creation: true
+        format_sql: true
 
   session:
     jdbc:
@@ -60,4 +61,3 @@ admin:
 voting:
   public:
     key: "public"
-

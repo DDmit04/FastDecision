@@ -1,6 +1,7 @@
 <template>
     <div>
         <auth-modal :modalIsActive="modalIsActive"/>
+        <userTitle :userId="userId"/>
         <v-tabs id="userChartsTabs"
                 v-model="tabs"
                 background-color="info"
@@ -32,13 +33,14 @@
     import {mapState} from 'vuex'
     import authModal from "../../components/modal/authModal.vue";
     import chartLoader from "../../components/charts/chartLoader.vue"
+    import userTitle from "../../components/userTitle.vue";
 
     /**
      * Page which download user votings
      * @displayName User voting page
      * @example [none]
      * @author Dmitrochenkov Daniil
-     * @version 1.0
+     * @version 1.3
      */
     export default {
         props: {
@@ -52,16 +54,13 @@
             return {
                 tabs: null,
                 modalIsActive: false,
+                user: null
             }
         },
         components: {
             authModal,
-            chartLoader
-        },
-        async created() {
-            if (this.currentUser == null) {
-                this.modalIsActive = true
-            }
+            chartLoader,
+            userTitle
         },
         computed: {
             ...mapState(['currentUser', 'isDarkTheme']),

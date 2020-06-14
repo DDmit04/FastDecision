@@ -1,0 +1,1 @@
+alter table usr add column registration_date timestamp;

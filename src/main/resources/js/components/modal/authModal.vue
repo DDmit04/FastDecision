@@ -10,11 +10,21 @@
             <v-card-text>
                 <v-row align="center">
                     <v-col class="text-center">
-                        <v-btn href='/login/google' class="my-2" color="red white--text" block >
+                        <v-btn href='/login/google'
+                               class="my-2"
+                               @click="googleLoading = true"
+                               :loading="googleLoading"
+                               color="red white--text"
+                               block>
                             <v-icon class="mr-2">{{googleIcon}}</v-icon>
                             Google
                         </v-btn>
-                        <v-btn href='/login/github' class="my-2" color="black white--text" block>
+                        <v-btn href='/login/github'
+                               class="my-2"
+                               @click="githubLoading = true"
+                               :loading="githubLoading"
+                               color="black white--text"
+                               block>
                             <v-icon class="mr-2">{{githubIcon}}</v-icon>
                             Github
                         </v-btn>
@@ -32,7 +42,7 @@
      * Component to display user authentication modal dialog
      * @displayName Authentication modal component
      * @author Dmitrochenkov Daniil
-     * @version 1.0
+     * @version 1.2
      */
     export default {
         props: {
@@ -48,6 +58,8 @@
             return {
                 googleIcon: mdiGoogle,
                 githubIcon: mdiGithubCircle,
+                googleLoading: false,
+                githubLoading: false
             }
         },
         computed: {

@@ -26,8 +26,6 @@ Vue.config.errorHandler = (err, vm, info) => {
                 errorReason: err.data.message
             }
         })
-    } else {
-        console.error(err)
     }
 }
 

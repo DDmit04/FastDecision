@@ -2,17 +2,20 @@ package hackaton.fastdisision.service.implementation;
 
 import hackaton.fastdisision.data.User;
 import hackaton.fastdisision.data.UserRole;
+import hackaton.fastdisision.excaptions.NotFoundException;
 import hackaton.fastdisision.repo.UserRepo;
 import hackaton.fastdisision.service.intrface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
  * @author Daniil Dmitrochenkov
- * @version 1.2
+ * @version 1.3
  **/
 @Service
 public class UserServiceImpl implements UserService {
@@ -47,11 +50,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRegistrationDate(LocalDateTime.now(Clock.systemUTC()));
         return userRepo.save(user);
     }
 
     @Override
-    public Optional<User> findById(String id) {
+    public User findById(String id) {
+        Optional<User> user = userRepo.findById(id);
+        if(user.isPresent()) {
+            return user.get();
+        } else {
+            throw new NotFoundException("User not found!");
+        }
+    }
+
+    @Override
+    public Optional<User> findByIdOptional(String id) {
         return userRepo.findById(id);
     }
 

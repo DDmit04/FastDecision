@@ -8,7 +8,7 @@ import routesNames from "../router/routesNames";
  * Mixin to fetch voting and connect voting websocket
  * @displayName Voting connect mixin
  * @author Dmitrochenkov Daniil
- * @version 1.0
+ * @version 1.3
  */
 export default {
     data() {
@@ -40,7 +40,7 @@ export default {
         },
         /**
          * @public
-         * Check store for current voting session (add or update voting session data)
+         * Check vuex store for current voting session (add or update voting session data)
          * @param{Number} votingId voting ID for add or update voting session data
          * @param{String} votingKey voting key for add or update voting session data
          */
@@ -66,9 +66,7 @@ export default {
                 if (err.status == 403) {
                     router.push({
                         name: routesNames.PROTECTED_VOTING_ACCESS,
-                        params: {
-                            votingId: this.mixinVotingId
-                        }
+                        params: { votingId: this.mixinVotingId }
                     })
                 } else {
                     throw err;

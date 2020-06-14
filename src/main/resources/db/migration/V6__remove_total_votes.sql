@@ -1,0 +1,1 @@
+alter table voting drop column total_votes;
