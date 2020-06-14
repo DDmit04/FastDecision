@@ -12,21 +12,44 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
  * Represents user entity
  * @author Dmitrochenkov Daniil
- * @version 1.1
+ * @version 1.3
  */
 @Getter
 @Setter
+@Entity
 @Table(name = "usr",
         indexes = {
                 @Index(columnList = "username", name = "username_index"),
                 @Index(columnList = "email", name = "email_index"),
+                @Index(columnList = "registrationDate", name = "registration_date_index")
         })
-@Entity
+@NamedEntityGraphs({
+        @NamedEntityGraph(
+                name = "fullUserData",
+                attributeNodes = {
+                        @NamedAttributeNode("roles"),
+                        @NamedAttributeNode("userVotings"),
+                }
+        ),
+        @NamedEntityGraph(
+                name = "userDataWithRoles",
+                attributeNodes = {
+                        @NamedAttributeNode("roles"),
+                }
+        ),
+        @NamedEntityGraph(
+                name = "userDataWithVotings",
+                attributeNodes = {
+                        @NamedAttributeNode("userVotings"),
+                }
+        ),
+})
 public class User implements UserDetails {
 
     @Id
@@ -44,17 +67,20 @@ public class User implements UserDetails {
     @NotBlank(message = "password can not be empty")
     private String password;
 
+    @JsonView(VotingView.FullData.class)
+    private LocalDateTime registrationDate;
+
     @JsonView(VotingView.MinimalData.class)
     @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
-    private Set<UserRole> roles = new HashSet<>(Arrays.asList(UserRole.USER));
+    private Set<UserRole> roles = new HashSet<>(Collections.singletonList(UserRole.USER));
 
     @JsonView(VotingView.CoreData.class)
     private String userPic;
 
     @JsonView(VotingView.FullData.class)
-    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade= CascadeType.ALL)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade= CascadeType.ALL)
     @JsonIdentityInfo(property = "id", generator = ObjectIdGenerators.PropertyGenerator.class)
     private Set<Voting> userVotings = new HashSet<>();
 
@@ -77,9 +103,7 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        roles.forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.name()));
-        });
+        roles.forEach(role -> authorities.add(new SimpleGrantedAuthority("ROLE_" + role.name())));
         return authorities;
     }
 
@@ -103,10 +127,20 @@ public class User implements UserDetails {
         return false;
     }
 
+    /**
+     * Check is user has admin permissions
+     *
+     * @return is user has admin permissions
+     */
     public boolean isAdmin() {
         return roles.contains(UserRole.ADMIN);
     }
 
+    /**
+     * Remove voting from user votings
+     *
+     * @param voting voting to remove
+     */
     public void deleteVotingRelationship(Voting voting) {
         userVotings.remove(voting);
     }

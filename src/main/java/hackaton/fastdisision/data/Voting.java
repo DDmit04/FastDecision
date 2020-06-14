@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * Represents voting entity
  *
  * @author Dmitrochenkov Daniil
- * @version 1.1
+ * @version 1.3
  */
 @Getter
 @Setter
@@ -28,6 +28,30 @@ import java.util.stream.Collectors;
 @Table(indexes = {
         @Index(columnList = "votingTitle", name = "voting_title_index"),
         @Index(columnList = "creationDate", name = "voting_creation_date_index"),
+})
+@NamedEntityGraphs({
+        @NamedEntityGraph(
+                name = "fullVotingData",
+                attributeNodes = {
+                        @NamedAttributeNode("votingOptions"),
+                        @NamedAttributeNode("votedIps"),
+                        @NamedAttributeNode("owner")
+                }
+        ),
+        @NamedEntityGraph(
+                name = "coreVotingData",
+                attributeNodes = {
+                        @NamedAttributeNode("votingOptions"),
+                        @NamedAttributeNode("owner")}
+        ),
+        @NamedEntityGraph(
+                name = "votingGraphWithOwner",
+                attributeNodes = {@NamedAttributeNode("owner")}
+        ),
+        @NamedEntityGraph(
+                name = "votingGraphWithOptions",
+                attributeNodes = {@NamedAttributeNode("votingOptions")}
+        )
 })
 public class Voting {
 
@@ -53,11 +77,11 @@ public class Voting {
     @JsonProperty
     private boolean isCheckingIpVoting;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
     private User owner;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "voted_users_ips", joinColumns = @JoinColumn(name = "vote_option_id"))
     private List<String> votedIps = new ArrayList<>();
 
@@ -82,11 +106,18 @@ public class Voting {
         return (int) (getId() ^ (getId() >>> 32));
     }
 
+    /**
+     * Check is user can access voting
+     *
+     * @param user user to check
+     * @param key voting key provided by user
+     * @return is user access voting
+     */
     public boolean userTryAccessVoting(User user, String key) {
         boolean userIsPresent = user != null;
         boolean userIsAdmin = userIsPresent && user.isAdmin();
 
-        if (userIsAdmin || isOwner(user)) {
+        if (userIsAdmin || checkOwner(user)) {
             return true;
         } else if (isProtectedVoting && !keyMatches(key)) {
             throw new VotingAccessException("Voting key is invalid!");
@@ -97,21 +128,42 @@ public class Voting {
         }
     }
 
-    public boolean isOwner(User user) {
+    /**
+     * Check is provided user voting owner
+     *
+     * @param user user to Check
+     * @return is user voting owner
+     */
+    public boolean checkOwner(User user) {
         return owner != null && user != null && owner.equals(user);
     }
 
+    /**
+     * Match voting key with provided key
+     *
+     * @param key key to match
+     * @return are keys matches
+     */
     public boolean keyMatches(String key) {
         return votingKey.equals(key);
     }
 
+    /**
+     * Check is voted IP list contains provided IP
+     *
+     * @param ip IP to check
+     * @return is voted IP list contains provided IP
+     */
     public boolean isIpAlreadyVote(String ip) {
         return votedIps.contains(ip);
     }
 
-    public void updateVotingOptionToVotingRelationship(Voting voting) {
+    /**
+     * Sets all voting options parent voting
+     */
+    public void updateVotingOptionToVotingRelationship() {
         votingOptions = votingOptions.stream()
-                .peek(voteOption -> voteOption.setVoting(voting))
+                .peek(voteOption -> voteOption.setVoting(this))
                 .collect(Collectors.toList());
     }
 }

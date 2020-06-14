@@ -15,7 +15,7 @@ import java.util.Objects;
 /**
  * Represents vote option entity
  * @author Dmitrochenkov Daniil
- * @version 1.0
+ * @version 1.3
  */
 @Getter
 @Setter
@@ -24,6 +24,12 @@ import java.util.Objects;
         property = "id",
         generator = ObjectIdGenerators.PropertyGenerator.class
 )
+@NamedEntityGraphs({
+        @NamedEntityGraph(
+                name = "votingOptionWithParent",
+                attributeNodes = {@NamedAttributeNode("voting")}
+        )
+})
 public class VoteOption {
 
     @Id
@@ -38,7 +44,7 @@ public class VoteOption {
     @JsonView(VotingView.MinimalData.class)
     private long pluses = 0;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="vote_id")
     @JsonView(VotingView.FullData.class)
     private Voting voting;

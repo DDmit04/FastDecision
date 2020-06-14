@@ -15,25 +15,11 @@ import java.util.Optional;
  * Repo to control votings entities
  *
  * @author Dmitrochenkov Daniil
- * @version 1.0
+ * @version 1.3
  * @see Voting
  * @see VotingDTO
  */
 public interface VotingRepo extends CrudRepository<Voting, Long> {
-
-    /**
-     * returns voting DTO by id
-     *
-     * @param id ID to search voting
-     * @return voting DTO
-     * @see VotingDTO
-     */
-    @Query("select new hackaton.fastdisision.data.VotingDTO(voting) " +
-            "from Voting as voting " +
-            "where voting.id = :id " +
-            "group by voting"
-    )
-    VotingDTO findDtoById(@Param("id") long id);
 
     /**
      * returns voting entity by id
@@ -42,7 +28,7 @@ public interface VotingRepo extends CrudRepository<Voting, Long> {
      * @return voting
      * @see Voting
      */
-    @EntityGraph(attributePaths = {"votingOptions"})
+    @EntityGraph(value = "coreVotingData")
     Optional<Voting> findById(Long id);
 
     /**
@@ -57,8 +43,7 @@ public interface VotingRepo extends CrudRepository<Voting, Long> {
             "from Voting as voting join voting.votingOptions as votingOptions " +
             "where voting.isPrivateVoting = :isPrivate " +
             "group by voting " +
-            "order by sum(votingOptions.pluses) desc"
-    )
+            "order by sum(votingOptions.pluses) desc")
     Page<VotingDTO> findByIsPrivateAndVoteOptionsPlusesSum(@Param("isPrivate") boolean isPrivate, Pageable pageable);
 
     /**
@@ -69,6 +54,7 @@ public interface VotingRepo extends CrudRepository<Voting, Long> {
      * @return page of votings DTO
      * @see VotingDTO
      */
+    @EntityGraph(value = "votingGraphWithOwner")
     Page<VotingDTO> findByIsPrivateVotingOrderByCreationDate(boolean isPrivate, Pageable pageable);
 
     /**
@@ -80,6 +66,7 @@ public interface VotingRepo extends CrudRepository<Voting, Long> {
      * @return page of votings DTO
      * @see VotingDTO
      */
+    @EntityGraph(value = "votingGraphWithOwner")
     Page<VotingDTO> findByOwner_IdAndIsPrivateVotingOrderByCreationDate(String id, boolean isPrivate, Pageable pageable);
 
     /**
@@ -91,6 +78,7 @@ public interface VotingRepo extends CrudRepository<Voting, Long> {
      * @return page of votings DTO
      * @see VotingDTO
      */
+    @EntityGraph(value = "votingGraphWithOwner")
     Page<VotingDTO> findAllByIsPrivateVotingAndVotingTitleContains(boolean isPrivate, String title, Pageable pageable);
 
 }
