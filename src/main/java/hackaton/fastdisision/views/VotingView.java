@@ -28,7 +28,7 @@ public class VotingView {
     public interface CoreData extends MinimalData {}
 
     /**
-     * all fields of entity never send to frontend
+     * all fields of entity thad should never send to frontend
      */
     public interface FullData extends CoreData {}
 

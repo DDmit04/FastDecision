@@ -2,11 +2,12 @@ package hackaton.fastdisision.service;
 
 import hackaton.fastdisision.data.User;
 import hackaton.fastdisision.data.VoteOption;
+import hackaton.fastdisision.data.Voting;
 import hackaton.fastdisision.excaptions.VoteException;
 import hackaton.fastdisision.excaptions.VotingAccessException;
 
 /**
- * Service to accept vote in voting and votingOption
+ * Service to accept vote for voting and votingOption
  *
  * @author Dmitrochenkov Daniil
  * @version 1.2
@@ -24,6 +25,7 @@ public interface AcceptVoteFacade {
      * @throws VotingAccessException if voting key is invalid
      * @throws VoteException if voting accept only one vote per IP and votedIp already vote
      * @see VoteOption
+     * @see Voting
      */
     VoteOption acceptVote(User user, Long optionId, String votedIp, String votingKey) throws VotingAccessException, VoteException;
 }

@@ -3,7 +3,6 @@ package hackaton.fastdisision.config.web;
 import hackaton.fastdisision.config.auth.CustomUserInfoTokenServices;
 import hackaton.fastdisision.data.ClientResources;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
@@ -16,14 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Auth filter class for spring security
+ *
  * @author Daniil Dmitrochenkov
- * @version 1.2
+ * @version 1.3
  **/
 @Component
 public class OAuthFilter extends CompositeFilter {
-
-    @Value("${voting.public.key}")
-    private String publicVotingKey;
 
     private final OAuth2ClientContext oauth2ClientContext;
     private final ClientResources githubOAuthResource;

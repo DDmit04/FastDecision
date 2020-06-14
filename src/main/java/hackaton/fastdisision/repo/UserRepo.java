@@ -7,13 +7,15 @@ import java.util.Optional;
 
 /**
  * Repo to control user entities
+ *
  * @author Dmitrochenkov Daniil
- * @version 1.0
+ * @version 1.2
  */
 public interface UserRepo extends CrudRepository<User, String> {
 
     /**
      * returns user by ID
+     *
      * @param id searched user ID
      * @return user
      * @see User

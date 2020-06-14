@@ -4,8 +4,8 @@ import hackaton.fastdisision.data.User;
 import hackaton.fastdisision.data.Voting;
 import hackaton.fastdisision.data.VotingDTO;
 import hackaton.fastdisision.excaptions.AccessDeniedException;
+import hackaton.fastdisision.excaptions.NotFoundException;
 import hackaton.fastdisision.excaptions.VotingAccessException;
-import hackaton.fastdisision.excaptions.VotingNotFoundException;
 import hackaton.fastdisision.repo.UserRepo;
 import hackaton.fastdisision.repo.VotingRepo;
 import hackaton.fastdisision.service.intrface.VotingService;
@@ -45,7 +45,7 @@ public class VotingServiceImpl implements VotingService {
     @Override
     public VotingDTO addVoting(Voting voting, User user) {
         Voting savedVoting;
-        voting.updateVotingOptionToVotingRelationship(voting);
+        voting.updateVotingOptionToVotingRelationship();
         voting.setCreationDate(LocalDateTime.now(Clock.systemUTC()));
         if (user != null) {
             voting.setOwner(user);
@@ -62,7 +62,7 @@ public class VotingServiceImpl implements VotingService {
     @Override
     public void deleteVoting(Voting voting, User user) throws AccessDeniedException {
         boolean userIsAdmin = user.isAdmin();
-        boolean userIsOwner = voting.isOwner(user);
+        boolean userIsOwner = voting.checkOwner(user);
         User votingOwner = voting.getOwner();
         if (userIsOwner || userIsAdmin) {
             votingOwner.deleteVotingRelationship(voting);
@@ -109,10 +109,10 @@ public class VotingServiceImpl implements VotingService {
     }
 
     @Override
-    public VotingDTO findVotingDtoById(User user, String votingKey, long id) throws VotingNotFoundException, VotingAccessException {
+    public VotingDTO findVotingDtoById(User user, String votingKey, long id) throws NotFoundException, VotingAccessException {
         Optional<Voting> voting = votingRepo.findById(id);
         if (!voting.isPresent()) {
-            throw new VotingNotFoundException();
+            throw new NotFoundException();
         } else if (voting.get().userTryAccessVoting(user, votingKey)) {
             return new VotingDTO(voting.get());
         } else {
@@ -121,9 +121,9 @@ public class VotingServiceImpl implements VotingService {
     }
 
     @Override
-    public boolean validateVotingKey(Voting voting, String votingKey) throws VotingNotFoundException {
+    public boolean validateVotingKey(Voting voting, String votingKey) throws NotFoundException {
         if (voting == null) {
-            throw new VotingNotFoundException();
+            throw new NotFoundException();
         } else {
             return voting.keyMatches(votingKey);
         }

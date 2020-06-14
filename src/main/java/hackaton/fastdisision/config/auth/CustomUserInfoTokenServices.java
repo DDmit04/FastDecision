@@ -24,6 +24,7 @@ import java.util.Map;
 
 /**
  * Class for custom OAuth authorization
+ *
  * @author Dmitrochenkov Daniil
  * @version 1.1
  */
@@ -115,7 +116,7 @@ public class CustomUserInfoTokenServices implements ResourceServerTokenServices 
             }
             return restTemplate.getForEntity(path, Map.class).getBody();
         } catch (Exception ex) {
-            return Collections.<String, Object>singletonMap("error", "Could not fetch user details");
+            return Collections.singletonMap("error", "Could not fetch user details");
         }
     }
 }

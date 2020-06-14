@@ -7,9 +7,13 @@ import org.springframework.web.server.ResponseStatusException;
  * @author Daniil Dmitrochenkov
  * @version 1.2
  **/
-public class VotingNotFoundException extends ResponseStatusException {
+public class NotFoundException extends ResponseStatusException {
 
-    public VotingNotFoundException() {
+    public NotFoundException() {
         super(HttpStatus.NOT_FOUND, "Voting not found!");
+    }
+
+    public NotFoundException(String reason) {
+        super(HttpStatus.NOT_FOUND, reason);
     }
 }

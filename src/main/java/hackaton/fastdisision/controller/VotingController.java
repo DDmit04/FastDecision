@@ -5,8 +5,8 @@ import hackaton.fastdisision.data.User;
 import hackaton.fastdisision.data.Voting;
 import hackaton.fastdisision.data.VotingDTO;
 import hackaton.fastdisision.excaptions.AccessDeniedException;
+import hackaton.fastdisision.excaptions.NotFoundException;
 import hackaton.fastdisision.excaptions.VotingAccessException;
-import hackaton.fastdisision.excaptions.VotingNotFoundException;
 import hackaton.fastdisision.service.intrface.VotingService;
 import hackaton.fastdisision.views.VotingView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import java.util.Map;
  * Controller that handles requests for voting
  *
  * @author Dmitrochenkov Daniil
- * @version 1.2
+ * @version 1.3
  */
 @RestController
 @RequestMapping("/voteApi/votings")
@@ -38,14 +38,13 @@ public class VotingController {
     @JsonView(VotingView.MinimalData.class)
     public VotingDTO getVotingById(@PathVariable("id") long id,
                                    @RequestParam(required = false, defaultValue = "${voting.public.key}") String votingKey,
-                                   @AuthenticationPrincipal User currentUser) throws VotingNotFoundException, VotingAccessException {
-        VotingDTO voting = votingService.findVotingDtoById(currentUser, votingKey, id);
-        return voting;
+                                   @AuthenticationPrincipal User currentUser) throws NotFoundException, VotingAccessException {
+        return votingService.findVotingDtoById(currentUser, votingKey, id);
     }
 
     @GetMapping("{id}/validation/key")
     public Map<String, Boolean> validateVotingKey(@PathVariable("id") Voting voting,
-                                                  @RequestParam(required = false, defaultValue = "${voting.public.key}") String votingKey) throws VotingNotFoundException {
+                                                  @RequestParam(required = false, defaultValue = "${voting.public.key}") String votingKey) throws NotFoundException {
         boolean keyIsValid = votingService.validateVotingKey(voting, votingKey);
         return Collections.singletonMap("keyIsValid", keyIsValid);
     }
@@ -54,8 +53,7 @@ public class VotingController {
     @JsonView(VotingView.CoreData.class)
     public VotingDTO addVoting(@Valid @RequestBody Voting voting,
                                @AuthenticationPrincipal User user) {
-        VotingDTO newVoting = votingService.addVoting(voting, user);
-        return newVoting;
+        return votingService.addVoting(voting, user);
     }
 
     @DeleteMapping("{id}")

@@ -3,6 +3,7 @@ package hackaton.fastdisision.service;
 import hackaton.fastdisision.data.User;
 import hackaton.fastdisision.data.VoteOption;
 import hackaton.fastdisision.data.Voting;
+import hackaton.fastdisision.excaptions.NotFoundException;
 import hackaton.fastdisision.excaptions.VoteException;
 import hackaton.fastdisision.excaptions.VotingAccessException;
 import hackaton.fastdisision.repo.VoteOptionRepo;
@@ -10,6 +11,8 @@ import hackaton.fastdisision.service.intrface.VoteOptionService;
 import hackaton.fastdisision.service.intrface.VotingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 /**
  * @author Daniil Dmitrochenkov
@@ -30,8 +33,14 @@ public class AcceptVoteFacadeImpl implements AcceptVoteFacade {
     }
 
     @Override
-    public VoteOption acceptVote(User user, Long optionId, String votedIp, String votingKey) throws VotingAccessException, VoteException {
-        VoteOption voteOption = voteOptionRepo.findById(optionId).get();
+    public VoteOption acceptVote(User user, Long optionId, String votedIp, String votingKey) throws VotingAccessException, VoteException, NotFoundException {
+        Optional<VoteOption> voteOptionOptional = voteOptionRepo.findById(optionId);
+        VoteOption voteOption;
+        if(voteOptionOptional.isPresent()) {
+            voteOption = voteOptionOptional.get();
+        } else {
+            throw new NotFoundException("Voting option not found!");
+        }
         Voting voting = voteOption.getVoting();
         voting.userTryAccessVoting(user, votingKey);
         doFacade(voting, voteOption, votedIp);

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
  * Controller that handles requests for voting charts/pages
  *
  * @author Dmitrochenkov Daniil
- * @version 1.2
+ * @version 1.3
  */
 @RestController
 @RequestMapping("/voteApi/charts")
@@ -35,38 +35,33 @@ public class VotingCartsController {
     @JsonView(VotingView.MinimalData.class)
     public Page<VotingDTO> searchVotings(@RequestParam("search") String search,
                                       @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<VotingDTO> votings = votingService.searchVotings(search, pageable);
-        return votings;
+        return votingService.searchVotings(search, pageable);
     }
 
     @GetMapping("/newest")
     @JsonView(VotingView.ChartData.class)
     public Page<VotingDTO> getNewestVotings(@PageableDefault(sort = {"creationDate"}, direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<VotingDTO> votings = votingService.getNewest(pageable);
-        return votings;
+        return votingService.getNewest(pageable);
     }
 
     @GetMapping("/popular")
     @JsonView(VotingView.ChartData.class)
     public Page<VotingDTO> getPopularVotings(@PageableDefault Pageable pageable) {
-        Page<VotingDTO> votings = votingService.getPopular(pageable);
-        return votings;
+        return votingService.getPopular(pageable);
     }
 
     @GetMapping("/userPublic/{id}")
     @JsonView(VotingView.MinimalData.class)
     public Page<VotingDTO> getUserPublicVotings(@PathVariable("id") User user,
                                              @PageableDefault(sort = {"creationDate"}, direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<VotingDTO> votings = votingService.getUserPublic(user, pageable);
-        return votings;
+        return votingService.getUserPublic(user, pageable);
     }
 
     @GetMapping("/userPrivate/{id}")
     @JsonView(VotingView.MinimalData.class)
     public Page<VotingDTO> getUserPrivateVotings(@PathVariable("id") User user,
                                               @PageableDefault(sort = {"creationDate"}, direction = Sort.Direction.DESC) Pageable pageable, @AuthenticationPrincipal User currentUser) throws AccessDeniedException {
-        Page<VotingDTO> votings = votingService.getUserPrivate(user, currentUser, pageable);
-        return votings;
+        return votingService.getUserPrivate(user, currentUser, pageable);
     }
 
 }

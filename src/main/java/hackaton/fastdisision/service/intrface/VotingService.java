@@ -4,8 +4,8 @@ import hackaton.fastdisision.data.User;
 import hackaton.fastdisision.data.Voting;
 import hackaton.fastdisision.data.VotingDTO;
 import hackaton.fastdisision.excaptions.AccessDeniedException;
+import hackaton.fastdisision.excaptions.NotFoundException;
 import hackaton.fastdisision.excaptions.VotingAccessException;
-import hackaton.fastdisision.excaptions.VotingNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -94,10 +94,10 @@ public interface VotingService {
      * @param votingKey
      * @param id
      * @return
-     * @throws VotingNotFoundException
+     * @throws NotFoundException
      * @throws VotingAccessException
      */
-    VotingDTO findVotingDtoById(User user, String votingKey, long id) throws VotingNotFoundException, VotingAccessException;
+    VotingDTO findVotingDtoById(User user, String votingKey, long id) throws NotFoundException, VotingAccessException;
 
     /**
      * Check voting key
@@ -105,10 +105,10 @@ public interface VotingService {
      * @param voting voting to check key
      * @param votingKey key to check
      * @return is votingKey valid for voting
-     * @throws VotingNotFoundException if voting = null
+     * @throws NotFoundException if voting = null
      * @see Voting
      */
-    boolean validateVotingKey(Voting voting, String votingKey) throws VotingNotFoundException;
+    boolean validateVotingKey(Voting voting, String votingKey) throws NotFoundException;
 
     /**
      * Add new IP to voting voted IPs

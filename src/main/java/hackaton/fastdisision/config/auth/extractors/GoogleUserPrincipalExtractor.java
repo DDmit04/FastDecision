@@ -15,7 +15,7 @@ import java.util.UUID;
  * Google user extraction class
  *
  * @author Daniil Dmitrochenkov
- * @version 1.2
+ * @version 1.3
  **/
 
 @Component
@@ -37,7 +37,7 @@ public class GoogleUserPrincipalExtractor implements PrincipalExtractor {
     @Override
     public Object extractPrincipal(Map<String, Object> map) {
         String id = String.valueOf(map.get("sub"));
-        User extractedUser = userService.findById(id).orElseGet(() -> {
+        User extractedUser = userService.findByIdOptional(id).orElseGet(() -> {
             User newUser = new User();
             newUser.setId(id);
             newUser.setPassword(UUID.randomUUID().toString());

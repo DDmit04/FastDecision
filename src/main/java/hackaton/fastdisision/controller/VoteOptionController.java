@@ -3,6 +3,7 @@ package hackaton.fastdisision.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import hackaton.fastdisision.data.User;
 import hackaton.fastdisision.data.VoteOption;
+import hackaton.fastdisision.excaptions.NotFoundException;
 import hackaton.fastdisision.excaptions.VoteException;
 import hackaton.fastdisision.excaptions.VotingAccessException;
 import hackaton.fastdisision.service.AcceptVoteFacade;
@@ -22,7 +23,7 @@ import java.security.Principal;
  * Controller that handles requests for websocket votes
  *
  * @author Dmitrochenkov Daniil
- * @version 1.2
+ * @version 1.3
  */
 @Controller
 public class VoteOptionController {
@@ -41,10 +42,12 @@ public class VoteOptionController {
                              @DestinationVariable String votingKey,
                              @Payload Long optionId,
                              SimpMessageHeaderAccessor ipHandshakeInterceptor,
-                             Principal principal) throws VotingAccessException, VoteException {
+                             Principal principal) throws VotingAccessException, VoteException, NotFoundException {
         String votedIp = (String) ipHandshakeInterceptor.getSessionAttributes().get("ip");
-        User user = (User) ((Authentication) principal).getPrincipal();
-        VoteOption voteOption = acceptVoteFacade.acceptVote(user, optionId, votedIp, votingKey);
-        return voteOption;
+        User user = null;
+        if (principal != null) {
+            user = (User) ((Authentication) principal).getPrincipal();
+        }
+        return acceptVoteFacade.acceptVote(user, optionId, votedIp, votingKey);
     }
 }

@@ -11,8 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * DTO for Voting class
+ *
  * @author Daniil Dmitrochenkov
  * @vrsion 1.2
+ * @see Voting
  **/
 @Getter
 @AllArgsConstructor
@@ -31,8 +34,8 @@ public class VotingDTO {
         this.votedIps = voting.getVotedIps();
         this.votingOptions = voting.getVotingOptions();
         this.totalVotes = voting.getVotingOptions().stream()
-                .mapToLong(option -> option.getPluses())
-                .reduce((optPlus1, optPlus2) -> optPlus1 + optPlus2).orElse(0);
+                .mapToLong(VoteOption::getPluses)
+                .reduce(Long::sum).orElse(0);
     }
 
     public VotingDTO(Voting voting, long totalVotes) {

@@ -4,6 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 /**
  * Represents user roles/authorities
+ *
  * @author Dmitrochenkov Daniil
  * @version 1.1
  */
