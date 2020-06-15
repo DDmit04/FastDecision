@@ -25,9 +25,17 @@
     import user from "../api/user";
     import {mapState} from 'vuex'
 
+    /**
+     * Component for display user profile info
+     * @displayName User info component
+     * @example ./../examples/components/userTitle.md
+     * @author Dmitrochenkov Daniil
+     * @version 1.3
+     */
     export default {
         name: "userTitle",
         props: {
+            /** user ID for fetch info **/
             userId: {
                 required: true,
                 type: [Number, String]
@@ -41,15 +49,14 @@
         },
         async created() {
             await this.loadUserData()
-            await console.log(this.currentUser)
-            await console.log(this.loadedUser)
         },
         computed: {
             ...mapState(['currentUser'])
         },
         methods: {
             /**
-             *
+             * @public
+             * Fetch user info by ID
              **/
             async loadUserData() {
                 this.userIsLoading = true
