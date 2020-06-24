@@ -10,7 +10,8 @@ spring:
   jpa:
     generate-ddl: true
     show-sql: true
-    hibernate.ddl-auto: create-drop
+    hibernate:
+      ddl-auto: validate
     properties:
       hibernate:
         jdbc:
@@ -23,7 +24,10 @@ spring:
       initialize-schema: always
       table-name: SPRING_SESSION
       schema: classpath:session_tables.sql
-
+      store-type: jdbc
+      cookie:
+        http-only: true
+        secure: true
 google:
   client:
     clientId: ${googleClient}
@@ -54,6 +58,9 @@ github:
 
 server:
   port: 9002
+  servlet:
+    session:
+      timeout: 24h
 
 admin:
   password: ${adminPassword}

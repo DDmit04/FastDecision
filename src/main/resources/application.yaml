@@ -10,19 +10,24 @@ spring:
   jpa:
     generate-ddl: true
     show-sql: false
-    hibernate.hbm2ddl.auto: update
-    hibernate.ddl-auto: validate
+    hibernate:
+      ddl-auto: validate
     properties:
       hibernate:
         jdbc:
           lob:
             non_contextual_creation: true
+        format_sql: true
 
-  session:
-    jdbc:
-      initialize-schema: always
-      table-name: SPRING_SESSION
-      schema: classpath:session_tables.sql
+    session:
+      jdbc:
+        initialize-schema: always
+        table-name: SPRING_SESSION
+        schema: classpath:session_tables.sql
+        store-type: jdbc
+        cookie:
+          http-only: true
+          secure: true
 
 google:
   client:
@@ -52,9 +57,13 @@ github:
 
 server:
   port: 9002
+  servlet:
+    session:
+      timeout: 3h
 
-admin:
-  password: ${adminPassword}
+personalSettings:
+  admin:
+    password: ${adminPassword}
 
 voting:
   public:

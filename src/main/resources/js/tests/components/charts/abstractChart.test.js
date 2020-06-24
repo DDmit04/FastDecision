@@ -1,4 +1,12 @@
-import {flushPromises, localVue, mount, setupedRouter, setupedVuetify, shallowMount, Vuex} from '../../baseTest'
+import {
+    flushPromises,
+    localVueMock,
+    mount,
+    setupedRouterMock,
+    setupedVuetifyMock,
+    shallowMount,
+    VuexMock
+} from '../../baseTest'
 import abstractChart from "../../../components/charts/abstractChart"
 import filters from "../../../filters/filters"
 import server from "../../../api/server"
@@ -8,8 +16,8 @@ server.deleteOne = jest.fn(() => {
     return {ok: true}
 })
 
-let router = setupedRouter
-let vuetify = setupedVuetify
+let routerMock = setupedRouterMock
+let vuetifyMock = setupedVuetifyMock
 
 let currentUser
 let otherVotingOwner
@@ -55,10 +63,10 @@ describe('chart test', () => {
         }
         
         state = {currentUser: currentUser}
-        store = new Vuex.Store({state})
+        store = new VuexMock.Store({state})
     })
     it('test go to voting', async () => {
-        const wrapper = mount(abstractChart, {vuetify, router, localVue, store,
+        const wrapper = mount(abstractChart, {vuetify: vuetifyMock, router: routerMock, localVue: localVueMock, store,
             propsData: {chartData: testChartData}
         })
 
@@ -70,7 +78,8 @@ describe('chart test', () => {
     })
     it('test go to voting owner', async () => {
         commonVoting.owner = currentUser
-        const wrapper = mount(abstractChart, {vuetify, router, localVue, store,
+
+        const wrapper = mount(abstractChart, {vuetify: vuetifyMock, router: routerMock, localVue: localVueMock, store,
             propsData: {chartData: testChartData}
         })
 
@@ -81,7 +90,7 @@ describe('chart test', () => {
         expect(wrapper.vm.$route.path).toBe('/dashboard/' + currentUser.id)
     })
     it('test voitng count', () => {
-        const wrapper = shallowMount(abstractChart, {vuetify, router, localVue, store,
+        const wrapper = shallowMount(abstractChart, {vuetify: vuetifyMock, router: routerMock, localVue: localVueMock, store,
             propsData: {chartData: testChartData}
         })
         
@@ -89,7 +98,8 @@ describe('chart test', () => {
     })
     it('test voitng title', () => {
         commonVoting.votingTitle = 'votingTitle'
-        const wrapper = shallowMount(abstractChart, {vuetify, router, localVue, store,
+
+        const wrapper = shallowMount(abstractChart, {vuetify: vuetifyMock, router: routerMock, localVue: localVueMock, store,
             propsData: {chartData: testChartData}
         })
         
@@ -98,7 +108,8 @@ describe('chart test', () => {
     })
     it('test voitng total votes', () => {
         commonVoting.totalVotes = 10
-        const wrapper = shallowMount(abstractChart, {vuetify, router, localVue, store,
+
+        const wrapper = shallowMount(abstractChart, {vuetify: vuetifyMock, router: routerMock, localVue: localVueMock, store,
             propsData: {chartData: testChartData}
         })
         
@@ -107,7 +118,8 @@ describe('chart test', () => {
     })
     it('test unknown author', () => {
         commonVoting.owner = null
-        const wrapper = shallowMount(abstractChart, {vuetify, router, localVue, store,
+
+        const wrapper = shallowMount(abstractChart, {vuetify: vuetifyMock, router: routerMock, localVue: localVueMock, store,
             propsData: {chartData: testChartData}
         })
         
@@ -117,7 +129,8 @@ describe('chart test', () => {
     })
     it('test defined voting author', () => {
         commonVoting.owner = otherVotingOwner
-        const wrapper = shallowMount(abstractChart, {vuetify, router, localVue, store,
+
+        const wrapper = shallowMount(abstractChart, {vuetify: vuetifyMock, router: routerMock, localVue: localVueMock, store,
             propsData: {chartData: testChartData}
         })
         
@@ -127,7 +140,8 @@ describe('chart test', () => {
     })
     it('test is protected icon', () => {
         commonVoting.isProtectedVoting = true
-        const wrapper = mount(abstractChart, {vuetify, router, localVue, store,
+
+        const wrapper = mount(abstractChart, {vuetify: vuetifyMock, router: routerMock, localVue: localVueMock, store,
             propsData: {chartData: testChartData}
         })
         
@@ -135,7 +149,8 @@ describe('chart test', () => {
     })
     it('test delete voting btn by it author', () => {
         commonVoting.owner = currentUser
-        const wrapper = shallowMount(abstractChart, {vuetify, router, localVue, store,
+
+        const wrapper = shallowMount(abstractChart, {vuetify: vuetifyMock, router: routerMock, localVue: localVueMock, store,
             propsData: {chartData: testChartData}
         })
         
@@ -143,7 +158,8 @@ describe('chart test', () => {
     })
     it('test delete voting btn by other user', () => {
         commonVoting.owner = otherVotingOwner
-        const wrapper = mount(abstractChart, {vuetify, router, localVue, store,
+
+        const wrapper = mount(abstractChart, {vuetify: vuetifyMock, router: routerMock, localVue: localVueMock, store,
             propsData: {chartData: testChartData}
         })
         
@@ -152,7 +168,8 @@ describe('chart test', () => {
     it('test delete voting btn by admin', () => {
         currentUser.roles = ['ADMIN']
         commonVoting.owner = currentUser
-        const wrapper = shallowMount(abstractChart, {vuetify, router, localVue, store,
+
+        const wrapper = shallowMount(abstractChart, {vuetify: vuetifyMock, router: routerMock, localVue: localVueMock, store,
             propsData: {chartData: testChartData}
         })
         
@@ -161,7 +178,8 @@ describe('chart test', () => {
     it('test call delete voting', async () => {
         currentUser.roles = ['ADMIN']
         commonVoting.owner = currentUser
-        const wrapper = mount(abstractChart, {vuetify, router, localVue, store,
+
+        const wrapper = mount(abstractChart, {vuetify: vuetifyMock, router: routerMock, localVue: localVueMock, store,
             propsData: {chartData: testChartData}
         })
         
@@ -174,7 +192,8 @@ describe('chart test', () => {
     it('test delete voting', async () => {
         currentUser.roles = ['ADMIN']
         commonVoting.owner = currentUser
-        const wrapper = mount(abstractChart, {vuetify, router, localVue, store, server,
+
+        const wrapper = mount(abstractChart, {vuetify: vuetifyMock, router: routerMock, localVue: localVueMock, store, server,
             propsData: {chartData: testChartData}
         })
         
