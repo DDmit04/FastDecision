@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AdminServiceImpl implements AdminService {
 
-    @Value("${admin.password}")
+    @Value("${personalSettings.admin.password}")
     private String serverAdminPassword;
 
     protected final UserService userService;
