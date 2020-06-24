@@ -1,17 +1,41 @@
-import {flushPromises, localVue, mount, setupedVuetify, shallowMount, Vuex} from '../../baseTest'
+import {
+    flushPromises,
+    localVueMock,
+    mount,
+    setupedRouterMock,
+    setupedVuetifyMock,
+    shallowMount,
+    VuexMock
+} from '../../baseTest'
 import createVoting from "../../../pages/voting/createVoting";
+import routesNames from "../../../router/routesNames";
 
-let store
-let actions
-let vuetify = setupedVuetify
+let currentStoreVotingMock = {
+    id: 1,
+    votingKey: 'public',
+    votingOptions: [{id:2}, {id:3}]
+}
+let storeMock
+let actionsMock
+let stateMock
+let vuetifyMock = setupedVuetifyMock
+let routerMock = setupedRouterMock
 
 describe('test create voting', () => {
     beforeEach(() => {
-        actions = {addNewVotingAction: jest.fn()}
-        store = new Vuex.Store({actions})
+        actionsMock = {
+            addNewVotingAction: jest.fn()
+        }
+        stateMock = {
+            currentStoreVoting: currentStoreVotingMock
+        }
+        storeMock = new VuexMock.Store({
+            state: stateMock,
+            actions: actionsMock
+        })
     })
     it('add new option on click', async () => {
-        const wrapper = shallowMount(createVoting, {store, vuetify, localVue})
+        const wrapper = shallowMount(createVoting, {store: storeMock, vuetify: vuetifyMock, localVue: localVueMock})
 
         wrapper.find("#newVotingOption1").vm.$emit("click")
         await flushPromises()
@@ -20,7 +44,7 @@ describe('test create voting', () => {
         expect(wrapper.find("#newVotingOption2").exists()).toBeTruthy()
     })
     it('add new option on focus', async () => {
-        const wrapper = shallowMount(createVoting, {store, vuetify, localVue})
+        const wrapper = shallowMount(createVoting, {store: storeMock, vuetify: vuetifyMock, localVue: localVueMock})
 
         wrapper.find("#newVotingOption1").vm.$emit("focus")
         await flushPromises()
@@ -29,7 +53,7 @@ describe('test create voting', () => {
         expect(wrapper.find("#newVotingOption2").exists()).toBeTruthy()
     })
     it('add new voting', async () => {
-        const wrapper = mount(createVoting, {store, vuetify, localVue})
+        const wrapper = mount(createVoting, {store: storeMock, vuetify: vuetifyMock, localVue: localVueMock, router: routerMock})
 
         const votingTitle = wrapper.find("#newVotingTitle")
         votingTitle.element.value = 'title'
@@ -47,7 +71,14 @@ describe('test create voting', () => {
         await flushPromises()
 
         wrapper.find("#addVotingBtn").trigger("click")
+        
+        expect(actionsMock.addNewVotingAction).toBeCalled()
+        await flushPromises()
 
-        expect(actions.addNewVotingAction).toBeCalled()
+        expect(wrapper.vm.$route.name).toBe(routesNames.CURRENT_VOTING)
+        expect(wrapper.vm.$route.path).toBe("/" + stateMock.currentStoreVoting.id + "/vote")
+        expect(wrapper.vm.$route.params.votingId).toBe(stateMock.currentStoreVoting.id)
+        expect(wrapper.vm.$route.params.votingKey).toBe(stateMock.currentStoreVoting.votingKey)
+        expect(wrapper.vm.$route.params.currentVotingProp).toStrictEqual(stateMock.currentStoreVoting)
     })
 })

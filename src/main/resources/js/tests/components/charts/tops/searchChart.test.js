@@ -1,16 +1,16 @@
-import {flushPromises, localVue, setupedVuetify, shallowMount,} from '../../../baseTest'
+import {flushPromises, localVueMock, setupedVuetifyMock, shallowMount,} from '../../../baseTest'
 import searchChart from "../../../../pages/charts/searchChart";
 import votingChart from "../../../../api/votingChart";
 
 votingChart.search = jest.fn()
 
-let vuetify = setupedVuetify
+let vuetifyMock = setupedVuetifyMock
 
 let testStringToSearch = 'search'
 
 describe('search votings test', () => {
     it('test votings search', async () => {
-        const wrapper = shallowMount(searchChart, {vuetify, localVue,
+        const wrapper = shallowMount(searchChart, {vuetify: vuetifyMock, localVue: localVueMock,
             propsData: {stringToSearch: testStringToSearch}
         })
 

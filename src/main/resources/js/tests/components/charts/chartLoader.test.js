@@ -1,10 +1,10 @@
-import {flushPromises, localVue, setupedVuetify, shallowMount} from '../../baseTest'
+import {flushPromises, localVueMock, setupedVuetifyMock, shallowMount} from '../../baseTest'
 import chartLoader from "../../../components/charts/chartLoader";
 
 let commonVoting
-let loadFunction
+let loadFunctionMock
 
-let vuetify = setupedVuetify
+let vuetifyMock = setupedVuetifyMock
 
 describe('chart loader test', () => {
     beforeEach(() => {
@@ -15,7 +15,7 @@ describe('chart loader test', () => {
             totalVotes: 0,
             owner: null
         }
-        loadFunction = jest.fn((currentPage, userId) => {
+        loadFunctionMock = jest.fn((currentPage, userId) => {
             return {
                 number: 0,
                 content: [commonVoting]
@@ -24,10 +24,10 @@ describe('chart loader test', () => {
     })
     it('test load data', async () => {
         const wrapper = shallowMount(chartLoader, {
-            vuetify, localVue,
+            vuetify: vuetifyMock, localVue: localVueMock,
             propsData: {
                 userId: null,
-                loadFunction: loadFunction
+                loadFunction: loadFunctionMock
             }
         })
         expect(wrapper.find("#loadCircle").exists()).toBeTruthy()
@@ -40,16 +40,16 @@ describe('chart loader test', () => {
     })
     it('test load next page', async () => {
         const wrapper = shallowMount(chartLoader, {
-            vuetify, localVue,
+            vuetify: vuetifyMock, localVue: localVueMock,
             propsData: {
                 userId: null,
-                loadFunction: loadFunction
+                loadFunction: loadFunctionMock
             }
         })
         await flushPromises()
         wrapper.setData({currentPage : 2})
         await flushPromises()
-        expect(loadFunction).toBeCalledTimes(3)
+        expect(loadFunctionMock).toBeCalledTimes(3)
         expect(wrapper.vm.$data.currentPage).toBe(1)
     })
 })

@@ -1,13 +1,13 @@
-import {flushPromises, localVue, mount, setupedRouter, setupedVuetify} from '../../baseTest'
+import {flushPromises, localVueMock, mount, setupedRouterMock, setupedVuetifyMock} from '../../baseTest'
 import protectedVotintgAccess from "../../../pages/voting/protectedVotintgAccess";
 import routesNames from "../../../router/routesNames";
 
-let router = setupedRouter
-let vuetify = setupedVuetify
+let routerMock = setupedRouterMock
+let vuetifyMock = setupedVuetifyMock
 
 describe('test voting access', () => {
     it('test access redirect', async () => {
-        const wrapper = mount(protectedVotintgAccess, {vuetify, router, localVue,
+        const wrapper = mount(protectedVotintgAccess, {vuetify: vuetifyMock, router: routerMock, localVue: localVueMock,
             propsData: {votingId: 1}
         })
 

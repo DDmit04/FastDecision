@@ -1,15 +1,15 @@
-import {flushPromises, localVue, setupedVuetify, shallowMount, Vuex} from '../../../baseTest'
+import {flushPromises, localVueMock, setupedVuetifyMock, shallowMount, VuexMock} from '../../../baseTest'
 import userChart from "../../../../pages/charts/userChart"
 import votingChart from "../../../../api/votingChart";
 
 votingChart.getUserPrivate = jest.fn()
 votingChart.getUserPublic = jest.fn()
 
-let vuetify = setupedVuetify
+let vuetifyMock = setupedVuetifyMock
 let currentUser
 
-let store
-let state
+let storeMock
+let stateMock
 
 describe('user chart test', () => {
     beforeEach(() => {
@@ -18,11 +18,11 @@ describe('user chart test', () => {
             username: 'username',
             roles: []
         }
-        state = {currentUser: currentUser}
-        store = new Vuex.Store({state})
+        stateMock = {currentUser: currentUser}
+        storeMock = new VuexMock.Store({state: stateMock})
     })
     it('test user chart by owner',  () => {
-        const wrapper = shallowMount(userChart, {vuetify, localVue, store,
+        const wrapper = shallowMount(userChart, {vuetify: vuetifyMock, localVue: localVueMock, store: storeMock,
             propsData: {userId: 1}
         })
 
@@ -30,7 +30,7 @@ describe('user chart test', () => {
         expect(wrapper.find("#privateVotingsTab").exists()).toBeTruthy()
     })
     it('test user chart by other user', () => {
-        const wrapper = shallowMount(userChart, {vuetify, localVue, store,
+        const wrapper = shallowMount(userChart, {vuetify: vuetifyMock, localVue: localVueMock, store: storeMock,
             propsData: {userId: 2}
         })
 
@@ -38,7 +38,7 @@ describe('user chart test', () => {
         expect(wrapper.find("#privateVotingsTab").exists()).toBeFalsy()
     })
     it('test public chart load function', async () => {
-        const wrapper = shallowMount(userChart, {vuetify, localVue, store,
+        const wrapper = shallowMount(userChart, {vuetify: vuetifyMock, localVue: localVueMock, store: storeMock,
             propsData: {userId: 2}
         })
 
@@ -48,7 +48,7 @@ describe('user chart test', () => {
         expect(votingChart.getUserPublic).toBeCalledWith(wrapper.props().userId, 0)
     })
     it('test private chart load function', async () => {
-        const wrapper = shallowMount(userChart, {vuetify, localVue, store,
+        const wrapper = shallowMount(userChart, {vuetify: vuetifyMock, localVue: localVueMock, store: storeMock,
             propsData: {userId: 1}
         })
 

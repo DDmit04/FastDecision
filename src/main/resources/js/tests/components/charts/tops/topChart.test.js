@@ -1,18 +1,18 @@
-import {flushPromises, localVue, setupedVuetify, shallowMount,} from '../../../baseTest'
+import {flushPromises, localVueMock, setupedVuetifyMock, shallowMount,} from '../../../baseTest'
 import topChart from "../../../../pages/charts/topChart";
 import votingChart from "../../../../api/votingChart";
 
 votingChart.getPopular = jest.fn()
 votingChart.getNewest = jest.fn()
 
-let vuetify = setupedVuetify
+let vuetifyMock = setupedVuetifyMock
 
 let chartTypePopular = 'popular'
 let chartTypeNewest = 'newest'
 
 describe('top chart test', () => {
     it('test popular chart load function', async () => {
-        const wrapper = shallowMount(topChart, {vuetify, localVue,
+        const wrapper = shallowMount(topChart, {vuetify: vuetifyMock, localVue: localVueMock,
             propsData: {topChartType: chartTypePopular}
         })
 
@@ -22,7 +22,7 @@ describe('top chart test', () => {
         expect(votingChart.getPopular).toBeCalledWith(0)
     })
     it('test newest chart load function', async () => {
-        const wrapper = shallowMount(topChart, {vuetify, localVue,
+        const wrapper = shallowMount(topChart, {vuetify: vuetifyMock, localVue: localVueMock,
             propsData: {topChartType: chartTypeNewest}
         })
 

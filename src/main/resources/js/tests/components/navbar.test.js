@@ -1,31 +1,32 @@
-import {flushPromises, localVue, mount, setupedRouter, setupedVuetify, Vuex} from '../baseTest'
+import {flushPromises, localVueMock, mount, setupedRouterMock, setupedVuetifyMock, VuexMock} from '../baseTest'
 import navbar from "../../components/navbar"
 import routesNames from "../../router/routesNames";
 
-let store
-let mutations
-let state
-let vuetify = setupedVuetify
-let router = setupedRouter
+let currentUserMock = {
+    id: 1,
+    username: 'username',
+    userPic: null
+}
+let storeMock
+let mutationsMock
+let stateMock
+let vuetifyMock = setupedVuetifyMock
+let routerMock = setupedRouterMock
 
 describe('common user navbar', () => {
     beforeEach(() => {
-        state = {
-            currentUser: {
-                id: 1,
-                username: 'username',
-                userPic: null
-            },
+        stateMock = {
+            currentUser: currentUserMock,
             isDarkTheme: false
         }
-        mutations = {changeThemeMutation: jest.fn(() => state.isDarkTheme = !state.isDarkTheme)}
-        store = new Vuex.Store({
-            state,
-            mutations
+        mutationsMock = {changeThemeMutation: jest.fn(() => stateMock.isDarkTheme = !stateMock.isDarkTheme)}
+        storeMock = new VuexMock.Store({
+            state: stateMock,
+            mutations: mutationsMock
         })
     })
     it('click on icon turns to main page', async () => {
-        const wrapper = mount(navbar, {store, vuetify, router, localVue})
+        const wrapper = mount(navbar, {store: storeMock, vuetify: vuetifyMock, router: routerMock, localVue: localVueMock})
 
         wrapper.find('#mainPageBtn').trigger('click')
         await flushPromises()
@@ -34,7 +35,7 @@ describe('common user navbar', () => {
         expect(wrapper.vm.$route.path).toBe('/')
     })
     it('click on username icon turns to user votings page', async () => {
-        const wrapper = mount(navbar, {store, vuetify, router, localVue})
+        const wrapper = mount(navbar, {store: storeMock, vuetify: vuetifyMock, router: routerMock, localVue: localVueMock})
 
         wrapper.find('#userVotingsBtn').trigger('click')
         await flushPromises()
@@ -43,16 +44,16 @@ describe('common user navbar', () => {
         expect(wrapper.vm.$route.path).toBe('/dashboard/1')
     })
     it('switch theme', async () => {
-        const wrapper = mount(navbar, {store, vuetify, router, localVue})
+        const wrapper = mount(navbar, {store: storeMock, vuetify: vuetifyMock, router: routerMock, localVue: localVueMock})
 
         wrapper.find('#switchThemeBtn').trigger('click')
         await flushPromises()
 
         expect(wrapper.vm.$vuetify.theme.dark).toBeTruthy()
-        expect(mutations.changeThemeMutation).toBeCalled()
+        expect(mutationsMock.changeThemeMutation).toBeCalled()
     })
     it('search votings', async () => {
-        const wrapper = mount(navbar, {store, vuetify, router, localVue})
+        const wrapper = mount(navbar, {store: storeMock, vuetify: vuetifyMock, router: routerMock, localVue: localVueMock})
 
         const searchInput = wrapper.find("#votingSearch")
         searchInput.element.value = 'testSearch'
@@ -70,18 +71,18 @@ describe('common user navbar', () => {
 
 describe('empty user navbar', () => {
     beforeEach(() => {
-        state = {
+        stateMock = {
             currentUser: null,
             isDarkTheme: false
         }
-        mutations = {changeThemeMutation: jest.fn(() => state.isDarkTheme = !state.isDarkTheme)}
-        store = new Vuex.Store({
-            state,
-            mutations
+        mutationsMock = {changeThemeMutation: jest.fn(() => stateMock.isDarkTheme = !stateMock.isDarkTheme)}
+        storeMock = new VuexMock.Store({
+            state: stateMock,
+            mutations: mutationsMock
         })
     })
     it('click on username icon calls auth modal', async () => {
-        const wrapper = mount(navbar, {store, vuetify, router, localVue})
+        const wrapper = mount(navbar, {store: storeMock, vuetify: vuetifyMock, router: routerMock, localVue: localVueMock})
 
         wrapper.find('#userVotingsBtn').trigger('click')
         await flushPromises()

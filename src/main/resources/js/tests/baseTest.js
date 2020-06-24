@@ -1,24 +1,24 @@
 import {createLocalVue, mount, shallowMount} from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import Vue from 'vue'
-import Vuex from 'vuex'
+import VuexMock from 'vuex'
 import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
 import {opts} from "../../plugins/vuetifyOptions"
 import filters from "../filters/filters";
 import routesNames from "../router/routesNames";
 
-const localVue = createLocalVue()
-localVue.use(Vuex)
-localVue.use(VueRouter)
+const localVueMock = createLocalVue()
+localVueMock.use(VuexMock)
+localVueMock.use(VueRouter)
 Vue.use(Vuetify)
 
 for(let name in filters) {
-    localVue.filter(name, filters[name]);
+    localVueMock.filter(name, filters[name]);
 }
 
-const setupedVuetify = new Vuetify(opts)
-const setupedRouter = new VueRouter({
+const setupedVuetifyMock = new Vuetify(opts)
+const setupedRouterMock = new VueRouter({
     routes: [
         {
             path: '/',
@@ -66,9 +66,9 @@ const setupedRouter = new VueRouter({
 export {
     shallowMount, mount,
     flushPromises,
-    localVue,
-    Vuex,
+    localVueMock,
+    VuexMock,
     Vuetify,
-    setupedRouter,
-    setupedVuetify
+    setupedRouterMock,
+    setupedVuetifyMock
 }

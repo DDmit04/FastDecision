@@ -1,14 +1,14 @@
-import {flushPromises, localVue, mount, setupedRouter, setupedVuetify} from '../baseTest'
+import {flushPromises, localVueMock, mount, setupedRouterMock, setupedVuetifyMock} from '../baseTest'
 import dataRevealer from "../../components/dataRevealer";
 
-let router = setupedRouter
-let vuetify = setupedVuetify
+let routerMock = setupedRouterMock
+let vuetifyMock = setupedVuetifyMock
 
 let testDataToReveal = 'dataToReveal'
 
 describe('data reviler test', () => {
     it('reveal data', async () => {
-        const wrapper = mount(dataRevealer, {vuetify, router, localVue,
+        const wrapper = mount(dataRevealer, {vuetify: vuetifyMock, router: routerMock, localVue: localVueMock,
             propsData: {dataToReveal: testDataToReveal,}
         })
 
@@ -21,7 +21,7 @@ describe('data reviler test', () => {
         expect(wrapper.find("#data").element.value).toBe(testDataToReveal)
     })
     it('hide data', async () => {
-        const wrapper = mount(dataRevealer, {vuetify, router, localVue,
+        const wrapper = mount(dataRevealer, {vuetify: vuetifyMock, router: routerMock, localVue: localVueMock,
             propsData: {dataToReveal: testDataToReveal,},
             data() {
                 return {dataIsReviled: true}
