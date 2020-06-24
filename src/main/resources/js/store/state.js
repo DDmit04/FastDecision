@@ -1,13 +1,13 @@
 export let state = {
     currentUser: currentUser,
-        isDarkTheme: false,
-        currentVoting: null,
+    isDarkTheme: false,
+    currentStoreVoting: null,
     /**
      * inside each currentSessionVotings: {
      *           votingId: voting.id,
      *          votingKey: voting.votingKey
      *  }
      */
-        currentSessionVotings: [],
-        version: ''
+    currentSessionVotings: [],
+    version: ''
 }

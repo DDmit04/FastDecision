@@ -27,7 +27,7 @@ export let mutations = {
      * @param{[]} newRoles new user roles
      */
     refreshCurrentUserRolesMutations(state, newRoles) {
-        state.currentUser.roles = newRoles
+        state.currentUser.roles = [...new Set(state.currentUser.roles.concat(newRoles))]
     },
     /**
      * @public
@@ -42,7 +42,7 @@ export let mutations = {
      * @param{Object} voting voting to create new voting session
      */
     addCurrentSessionVotingMutation(state, voting) {
-        state.currentVoting = voting
+        state.currentStoreVoting = voting
         let votingId = voting.votingId || voting.id
         let votingKey = voting.votingKey || 'public'
         state.currentSessionVotings.push({

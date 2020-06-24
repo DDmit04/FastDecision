@@ -1,5 +1,5 @@
 import serverValidation from "../api/serverValidation";
-import api from "../api/server";
+import server from "../api/server";
 import router from "../router/router";
 import rotesNames from "../router/routesNames";
 
@@ -38,20 +38,14 @@ export let actions = {
      */
     async addNewVotingAction({commit}, newVoting) {
         try {
-            const data = await api.addVoting(newVoting)
+            const data = await server.addVoting(newVoting)
             await commit("addCurrentSessionVotingMutation", data)
         } catch (err) {
             let allReasons = ''
-            let separator = ', '
             if(err.data.errors.length != 0) {
-                await err.data.errors.forEach((error, index) => {
-                    if (index == err.data.errors.length - 1) {
-                        separator = ''
-                    }
-                    allReasons += error.defaultMessage + separator
-                })
+                allReasons = await err.data.errors.join(', ')
             } else {
-                allReasons = err.data.message
+                allReasons = await err.data.message
             }
             await router.push({
                 name: rotesNames.ERROR_PAGE,
