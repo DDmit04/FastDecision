@@ -79,8 +79,8 @@
     import {mdiAlertCircleOutline} from '@mdi/js'
     import {mapActions, mapState} from 'vuex'
     import tooltip from "../../components/tooltip.vue"
-    import router from "../../router/router";
-    import rotesNames from "../../router/routesNames";
+    import rotesNames from "../../router/routesNames"
+    import cloneDeep from "lodash.clonedeep"
 
     /**
      * Page to create new voting
@@ -127,7 +127,7 @@
             this.newVoting.votingOptions.push(this.voteOption2)
         },
         computed: {
-            ...mapState(['currentVoting', 'currentUser']),
+            ...mapState(['currentStoreVoting', 'currentUser']),
             /**
              * @public
              * Validate current voting
@@ -175,11 +175,13 @@
                 this.buttonLoading = true
                 this.newVoting.votingOptions = this.newVoting.votingOptions.filter(option => option.voteDiscription != '')
                 await this.addNewVotingAction(this.newVoting)
-                await router.push({
+                let storedVoting = cloneDeep(this.currentStoreVoting)
+                await this.$router.push({
                     name: rotesNames.CURRENT_VOTING,
                     params: {
-                        votingId: this.currentVoting.id,
-                        votingKey: this.currentVoting.votingKey
+                        currentVotingProp: storedVoting,
+                        votingId: storedVoting.id,
+                        votingKey: storedVoting.votingKey
                     },
                 })
             },

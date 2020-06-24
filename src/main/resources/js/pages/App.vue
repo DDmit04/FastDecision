@@ -7,9 +7,7 @@
             </v-container>
         </v-content>
         <v-footer class="justify-center pl-0"
-                  color="info"
-                  inset
-                  app>
+                  color="info">
             <v-btn href="https://github.com/DDmit04/FastDecision" class="white--text" text>
                 <v-icon>{{githubIcon}}</v-icon>
             </v-btn>

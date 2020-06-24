@@ -1,4 +1,4 @@
-import {flushPromises, localVue, mount, setupedRouter, Vuex} from '../baseTest'
+import {flushPromises, localVueMock, mount, setupedRouterMock, VuexMock} from '../baseTest'
 import votingConnectMixin from "../../mixins/votingConnectMixin"
 import * as ws from "../../utils/websocket";
 import server from "../../api/server";
@@ -12,31 +12,32 @@ const mixinComponent = {
     mixins: [votingConnectMixin]
 }
 
-let store
-let actions
-let getters
-let router = setupedRouter
+let storeMock
+let actionsMock
+let gettersMock
+let routerMock = setupedRouterMock
 
 describe('test voting connect mixin', () => {
     beforeEach(() => {
-        actions = {checkCurrentSessionVotingAction: jest.fn()}
-        getters = {
+        actionsMock = {checkCurrentSessionVotingAction: jest.fn()}
+        gettersMock = {
             getVotingById: () => jest.fn(() => {
                 return {
                     votingKey: ""
                 }
             })
         }
-        store = new Vuex.Store({
-            actions,
-            getters
+        storeMock = new VuexMock.Store({
+            actions: actionsMock,
+            getters: gettersMock
         })
     })
     it('test connect to voting', async () => {
-        const wrapper = mount(mixinComponent, {store, router, localVue, ws, server})
+        const wrapper = mount(mixinComponent, {store: storeMock, router: routerMock, localVue: localVueMock, ws, server})
 
         const mockMixinCheckVotingSession = jest.fn()
         const mockMixinGetVoting = jest.fn()
+
         wrapper.vm.mixinGetVoting = mockMixinGetVoting
         wrapper.vm.mixinCheckVotingSession = mockMixinCheckVotingSession
 
@@ -48,15 +49,15 @@ describe('test voting connect mixin', () => {
         expect(ws.connectWebsocket).toBeCalled()
     })
     it('test check session', async () => {
-        const wrapper = mount(mixinComponent, {store, router, localVue, ws, server})
+        const wrapper = mount(mixinComponent, {store: storeMock, router: routerMock, localVue: localVueMock, ws, server})
 
         wrapper.vm.mixinCheckVotingSession()
         await flushPromises()
 
-        expect(actions.checkCurrentSessionVotingAction).toBeCalled()
+        expect(actionsMock.checkCurrentSessionVotingAction).toBeCalled()
     })
     it('test get voting', async () => {
-        const wrapper = mount(mixinComponent, {store, router, localVue, ws, server})
+        const wrapper = mount(mixinComponent, {store: storeMock, router: routerMock, localVue: localVueMock, ws, server})
 
         wrapper.vm.mixinGetVoting()
         await flushPromises()

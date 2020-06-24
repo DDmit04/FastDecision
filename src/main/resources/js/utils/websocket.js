@@ -2,15 +2,23 @@ import SockJS from 'sockjs-client'
 import Stomp from 'webstomp-client'
 
 var handlers = []
+var errorHandlers = []
 let stompClient = null
 
 export function addHandler(handler) {
     handlers.push(handler)
 }
 
-export function sendVote(optionId, votingId, votingKey) {
+export function addErrorHandler(handler) {
+    errorHandlers.push(handler)
+}
+
+export async function sendVote(optionId, votingId, votingKey) {
     if (stompClient && stompClient.connected) {
-        stompClient.send('/app/voting-websocket/' + votingId + '/' + votingKey, optionId, {})
+        await stompClient.send('/app/voting-websocket/' + votingId + '/' + votingKey, optionId, {})
+        return true
+    } else {
+        return false
     }
 }
 
@@ -22,12 +30,13 @@ export function connectWebsocket(votingId, votingKey) {
             handlers.forEach(handler => handler(JSON.parse(data.body)))
         })
     }, error => {
-        console.log('disconnected! Reason: ' + error.body)
+        errorHandlers.forEach(handler => handler(error.body))
     })
 }
 
 export function disconnectWebsocket() {
     if (stompClient && stompClient.connected) {
+        console.log("DISCONNECTED")
         stompClient.disconnect()
     }
 }

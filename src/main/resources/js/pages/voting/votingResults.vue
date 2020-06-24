@@ -65,7 +65,7 @@
 </template>
 
 <script>
-    import {addHandler} from '../../utils/websocket'
+    import {addHandler, connectWebsocket} from '../../utils/websocket'
     import votingMixin from "../../mixins/votingConnectMixin"
 
     /**
@@ -76,12 +76,18 @@
      * @version 1.1
      */
     export default {
+        name: "votingResults",
         props: {
             /** result voting ID */
             votingId: {
                 required: true,
                 type: [String, Number],
                 default: 1
+            },
+            /** result voting itself for get voting from other component not fetch from server **/
+            currentVotingProp: {
+                required: false,
+                type: Object
             },
             /** result voting key */
             votingKey: {
@@ -90,7 +96,6 @@
                 default: 'public'
             },
         },
-        name: "votingResults",
         mixins: [votingMixin],
         data() {
             return {
@@ -107,11 +112,16 @@
         },
         /**
          * @public
-         * Download current voting from server
+         * Prepare current voting
          */
         async created() {
-            await this.mixinConnectToVoting(this.votingId, this.votingKey)
-            this.currentVoting = this.mixinVoting
+            if(this.currentVotingProp == null) {
+                await this.mixinConnectToVoting(this.votingId, this.votingKey)
+                this.currentVoting = this.mixinVoting
+            } else {
+                this.currentVoting = this.currentVotingProp
+                await connectWebsocket(this.votingId, this.votingKey)
+            }
         },
         mounted() {
             /**

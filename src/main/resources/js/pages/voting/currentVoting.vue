@@ -71,10 +71,11 @@
 </template>
 
 <script>
-    import {sendVote} from '../../utils/websocket'
+    import {connectWebsocket, sendVote} from '../../utils/websocket'
     import routesNames from "../../router/routesNames"
     import votingConnectMixin from "../../mixins/votingConnectMixin";
     import dataRevealer from "../../components/dataRevealer.vue"
+    import cloneDeep from "lodash.clonedeep"
 
     /**
      * Page of current voting to vote
@@ -91,6 +92,11 @@
                 required: true,
                 type: [String, Number],
                 default: 0
+            },
+            /** current voting itself for get voting from other component not fetch from server **/
+            currentVotingProp: {
+                required: false,
+                type: Object
             },
             /** key of current voting */
             votingKey: {
@@ -115,9 +121,15 @@
          * Download current voting from server
          */
         async created() {
-            await this.mixinConnectToVoting(this.votingId, this.votingKey)
-            this.currentVoting = this.mixinVoting
-            this.modifiedVotingKey = this.mixinVotingKey
+            if(this.currentVotingProp == null) {
+                await this.mixinConnectToVoting(this.votingId, this.votingKey)
+                this.currentVoting = this.mixinVoting
+                this.modifiedVotingKey = this.mixinVotingKey
+            } else {
+                this.currentVoting = cloneDeep(this.currentVotingProp)
+                this.modifiedVotingKey = this.votingKey
+                await connectWebsocket(this.currentVoting.id, this.modifiedVotingKey)
+            }
         },
         computed: {
             /**
@@ -141,6 +153,7 @@
                     this.votingId,
                     this.modifiedVotingKey
                 )
+                this.currentVoting.votingOptions[this.selectedOptionIndex].pluses++
                 await this.goToResults()
             },
             /**
@@ -151,6 +164,7 @@
                 this.$router.push({
                     name: routesNames.VOTING_RESULTS,
                     params: {
+                        currentVotingProp: this.currentVoting,
                         votingId: this.votingId,
                         votingKey: this.modifiedVotingKey
                     },

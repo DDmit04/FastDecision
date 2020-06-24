@@ -32,6 +32,7 @@ export const routes = [
         name: routesNames.CURRENT_VOTING,
         component: currentVoting,
         props: (route) => ({
+            currentVotingProp: route.params.currentVotingProp || null,
             votingKey: route.query.votingKey || route.params.votingKey,
             votingId: route.params.votingId
         })
@@ -47,6 +48,7 @@ export const routes = [
         name: routesNames.VOTING_RESULTS,
         component: votingResults,
         props: (route) => ({
+            currentVotingProp: route.params.currentVotingProp || null,
             votingKey: route.query.votingKey || route.params.votingKey,
             votingId: route.params.votingId
         })
