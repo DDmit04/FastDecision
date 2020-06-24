@@ -12,6 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -22,11 +24,12 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author Daniil Dmitrochenkov
- * @version 1.2
+ * @version 1.3
  */
 @AutoConfigureMockMvc
 @Sql(scripts = "classpath:create-user-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -42,7 +45,7 @@ public class AdminControllerTest extends BasicTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Value("${admin.password}")
+    @Value("${personalSettings.admin.password}")
     private String rightAdminPassword;
 
     private String wrongAdminPassword = " wrongAdminPassword";
@@ -53,11 +56,14 @@ public class AdminControllerTest extends BasicTest {
     private String otherCommonUserId = "4";
 
     private User adminUser;
+    private User otherAdminUser;
     private User commonUser;
 
     @Test
     void giveAdmin() throws Exception {
         adminUser = userRepo.findById(adminUserId).get();
+        commonUser = userRepo.findById(commonUserId).get();
+
         mockMvc.perform(post("/admin/giveAdmin/{id}", commonUserId).with(user(adminUser)))
                 .andDo(print())
                 .andDo(document("{ClassName}/{methodName}",
@@ -71,11 +77,18 @@ public class AdminControllerTest extends BasicTest {
                                 fieldWithPath("roles")
                                         .description("roles of unadmined user."),
                                 fieldWithPath("userPic")
-                                        .type(String.class)
                                         .description("unadmined user avatar link.")
                         )
                 ))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(commonUser.getId()))
+                .andExpect(jsonPath("$.username").value(commonUser.getUsername()))
+                .andExpect(jsonPath("$.userPic").value(commonUser.getUserPic()))
+                .andExpect(jsonPath("$.roles").isArray())
+                .andExpect(jsonPath("$.roles", hasSize(2)))
+                .andExpect(jsonPath("$.roles", hasItem(UserRole.ADMIN.toString())))
+                .andExpect(jsonPath("$.roles", hasItem(UserRole.USER.toString())));
+
 
         User adminedCommonUser = userRepo.findById(commonUserId).get();
         assertTrue(adminedCommonUser.isAdmin(), "admin role was not given to common user!");
@@ -84,6 +97,7 @@ public class AdminControllerTest extends BasicTest {
     @Test
     void giveAdminDenied() throws Exception {
         commonUser = userRepo.findById(commonUserId).get();
+
         mockMvc.perform(post("/admin/giveAdmin/{id}", otherCommonUserId).with(user(commonUser)))
                 .andDo(print())
                 .andExpect(status().isForbidden());
@@ -95,6 +109,8 @@ public class AdminControllerTest extends BasicTest {
     @Test
     void removeAdmin() throws Exception {
         adminUser = userRepo.findById(adminUserId).get();
+        otherAdminUser = userRepo.findById(otherAdminUserId).get();
+
         mockMvc.perform(post("/admin/removeAdmin/{id}", otherAdminUserId).with(user(adminUser))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(rightAdminPassword))
@@ -111,11 +127,16 @@ public class AdminControllerTest extends BasicTest {
                                 fieldWithPath("roles")
                                         .description("roles of unadmined user."),
                                 fieldWithPath("userPic")
-                                        .type(String.class)
                                         .description("unadmined user avatar link.")
-                                )
+                        )
                 ))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(otherAdminUser.getId()))
+                .andExpect(jsonPath("$.username").value(otherAdminUser.getUsername()))
+                .andExpect(jsonPath("$.userPic").value(otherAdminUser.getUserPic()))
+                .andExpect(jsonPath("$.roles").isArray())
+                .andExpect(jsonPath("$.roles", hasSize(1)))
+                .andExpect(jsonPath("$.roles", hasItem(UserRole.USER.toString())));
 
         User unadminedCommonUser = userRepo.findById(otherAdminUserId).get();
         assertFalse(unadminedCommonUser.isAdmin(), "admin role was not removed!");
@@ -125,6 +146,8 @@ public class AdminControllerTest extends BasicTest {
     @Test
     void removeAdminDeniedByPassword() throws Exception {
         adminUser = userRepo.findById(adminUserId).get();
+        otherAdminUser = userRepo.findById(otherAdminUserId).get();
+
         mockMvc.perform(post("/admin/removeAdmin/{id}", otherAdminUserId).with(user(adminUser))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(wrongAdminPassword))
@@ -138,6 +161,8 @@ public class AdminControllerTest extends BasicTest {
     @Test
     void removeAdminDeniedByRole() throws Exception {
         commonUser = userRepo.findById(commonUserId).get();
+        adminUser = userRepo.findById(adminUserId).get();
+
         mockMvc.perform(post("/admin/removeAdmin/{id}", adminUserId).with(user(commonUser))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(rightAdminPassword))

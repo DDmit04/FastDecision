@@ -6,7 +6,7 @@ import hackaton.fastdisision.data.UserRole;
 import hackaton.fastdisision.data.VoteOption;
 import hackaton.fastdisision.data.Voting;
 import hackaton.fastdisision.excaptions.AccessDeniedException;
-import hackaton.fastdisision.excaptions.VotingNotFoundException;
+import hackaton.fastdisision.excaptions.NotFoundException;
 import hackaton.fastdisision.repo.UserRepo;
 import hackaton.fastdisision.repo.VotingRepo;
 import hackaton.fastdisision.service.intrface.VotingService;
@@ -25,7 +25,7 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 /**
  * @author Daniil Dmitrochenkov
- * @version 1.2
+ * @version 1.3
  */
 class VotingServiceTest extends BasicTest {
 
@@ -96,7 +96,7 @@ class VotingServiceTest extends BasicTest {
         votingService.addVoting(voting, commonUser);
 
         voting.getVotingOptions().stream()
-                .peek(voteOption -> assertTrue(voteOption.getVoting().equals(voting)));
+                .forEach(voteOption -> assertEquals(voteOption.getVoting(), voting));
         Mockito.verify(votingRepo, times(1)).save(voting);
         assertNotNull(voting.getOwner(), "voting owner is empty!");
         assertNotNull(voting.getVotingKey(), "voting key is empty!");
@@ -118,9 +118,7 @@ class VotingServiceTest extends BasicTest {
     void deleteVotingByCommonUserFailed() {
         voting.setOwner(adminUser);
         adminUser.getUserVotings().add(voting);
-        assertThrows(AccessDeniedException.class, () -> {
-            votingService.deleteVoting(voting, commonUser);
-        }, "voting must not be deleted and throw exception!");
+        assertThrows(AccessDeniedException.class, () -> votingService.deleteVoting(voting, commonUser), "voting must not be deleted and throw exception!");
     }
 
     @Test
@@ -135,16 +133,14 @@ class VotingServiceTest extends BasicTest {
     }
 
     @Test
-    void validateVotingKey() throws VotingNotFoundException {
+    void validateVotingKey() throws NotFoundException {
         boolean votingKeyIsValid = votingService.validateVotingKey(voting, rightVotingKey);
         assertTrue(votingKeyIsValid, "Key must be valid!");
     }
 
     @Test
     void validateVotingKeyNullVoting() {
-        assertThrows(VotingNotFoundException.class, () -> {
-            votingService.validateVotingKey(null, rightVotingKey);
-        }, "Null voting must be detected!");
+        assertThrows(NotFoundException.class, () -> votingService.validateVotingKey(null, rightVotingKey), "Null voting must be detected!");
     }
 
     @Test

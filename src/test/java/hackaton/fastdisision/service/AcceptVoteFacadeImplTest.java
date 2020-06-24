@@ -21,6 +21,10 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+/**
+ * @author Daniil Dmitrochenkov
+ * @version 1.3
+ */
 class AcceptVoteFacadeImplTest extends BasicTest {
 
     @Autowired
@@ -99,9 +103,7 @@ class AcceptVoteFacadeImplTest extends BasicTest {
         voting.getVotedIps().add(voteIp);
         Mockito.when(voteOptionRepo.findById(firstVoteOption.getId())).thenReturn(Optional.of(firstVoteOption));
 
-        assertThrows(VoteException.class, () -> {
-            acceptVoteFacade.acceptVote(votedUser, firstVoteOption.getId(), voteIp, rightVotingKey);
-        }, "Voted IP can not vote again!");
+        assertThrows(VoteException.class, () -> acceptVoteFacade.acceptVote(votedUser, firstVoteOption.getId(), voteIp, rightVotingKey), "Voted IP can not vote again!");
     }
 
     @Test
@@ -110,9 +112,7 @@ class AcceptVoteFacadeImplTest extends BasicTest {
 
         Mockito.when(voteOptionRepo.findById(firstVoteOption.getId())).thenReturn(Optional.of(firstVoteOption));
 
-        assertThrows(VotingAccessException.class, () -> {
-            acceptVoteFacade.acceptVote(votedUser, firstVoteOption.getId(), voteIp, wrongVotingKey);
-        }, "Invalid key must throw exception!");
+        assertThrows(VotingAccessException.class, () -> acceptVoteFacade.acceptVote(votedUser, firstVoteOption.getId(), voteIp, wrongVotingKey), "Invalid key must throw exception!");
     }
 
 

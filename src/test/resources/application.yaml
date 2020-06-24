@@ -16,9 +16,12 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
+            format_sql: true
+        format_sql: true
 
   session:
     jdbc:
+      store-type: jdbc
       initialize-schema: always
       table-name: SPRING_SESSION
       schema: classpath:session_tables.sql
@@ -38,18 +41,6 @@ google:
 
 github:
   client:
-    clientId: ${githubClient}
-    clientSecret: ${githubSecret}
-    accessTokenUri: https://github.com/login/oauth/access_token
-    userAuthorizationUri: https://github.com/login/oauth/authorize
-    tokenName: oauth_token
-    authenticationScheme: query
-    clientAuthenticationScheme: form
-  resource:
-    userInfoUri: https://api.github.com/user
-
-github-dev:
-  client:
     clientId: ${githubDevClient}
     clientSecret: ${githubDevSecret}
     accessTokenUri: https://github.com/login/oauth/access_token
@@ -65,8 +56,9 @@ github-dev:
 server:
   port: 9002
 
-admin:
-  password: 123456789
+personalSettings:
+  admin:
+    password: 123456789
 
 voting:
   public:

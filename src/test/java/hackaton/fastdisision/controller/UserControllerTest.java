@@ -2,6 +2,7 @@ package hackaton.fastdisision.controller;
 
 import hackaton.fastdisision.BasicTest;
 import hackaton.fastdisision.data.User;
+import hackaton.fastdisision.data.UserRole;
 import hackaton.fastdisision.repo.UserRepo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -19,11 +22,12 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author Daniil Dmitrochenkov
- * @version 1.2
+ * @version 1.3
  */
 @AutoConfigureMockMvc
 @Sql(scripts = "classpath:create-user-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -36,7 +40,7 @@ public class UserControllerTest extends BasicTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Value("${admin.password}")
+    @Value("${personalSettings.admin.password}")
     private String rightAdminPassword;
 
     private String wrongAdminPassword = " wrongAdminPassword";
@@ -61,11 +65,17 @@ public class UserControllerTest extends BasicTest {
                                 fieldWithPath("roles")
                                         .description("admined user roles."),
                                 fieldWithPath("userPic")
-                                        .type(String.class)
                                         .description("admined user avatar.")
                         )
                 ))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(commonUser.getId()))
+                .andExpect(jsonPath("$.username").value(commonUser.getUsername()))
+                .andExpect(jsonPath("$.userPic").value(commonUser.getUserPic()))
+                .andExpect(jsonPath("$.roles").isArray())
+                .andExpect(jsonPath("$.roles", hasSize(2)))
+                .andExpect(jsonPath("$.roles", hasItem(UserRole.ADMIN.toString())))
+                .andExpect(jsonPath("$.roles", hasItem(UserRole.USER.toString())));
 
         User adminedCommonUser = userRepo.findById(commonUserId).get();
         assertTrue(adminedCommonUser.isAdmin(), "user did not get admin role!");

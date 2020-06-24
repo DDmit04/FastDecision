@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -21,7 +22,7 @@ import static org.mockito.Mockito.times;
 
 /**
  * @author Daniil Dmitrochenkov
- * @version 1.2
+ * @version 1.3
  */
 class UserServiceTest extends BasicTest {
 
@@ -105,11 +106,12 @@ class UserServiceTest extends BasicTest {
 
     @Test
     void findById() {
+        String idToSearch = "1";
 
-        String isToSearch = "1";
+        Mockito.when(userRepo.findById(idToSearch)).thenReturn(Optional.of(new User()));
 
-        userService.findById(isToSearch);
-        Mockito.verify(userRepo, times(1)).findById(isToSearch);
+        userService.findById(idToSearch);
+        Mockito.verify(userRepo).findById(idToSearch);
     }
 
 }

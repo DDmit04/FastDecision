@@ -26,7 +26,7 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
  */
 class AdminServiceTest extends BasicTest {
 
-    @Value("${admin.password}")
+    @Value("${personalSettings.admin.password}")
     private String rightAdminPassword;
 
     private String wrongAdminPassword = "wrongAdminPassword";

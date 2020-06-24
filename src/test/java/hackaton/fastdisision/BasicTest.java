@@ -9,6 +9,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * Superclass for all test classes
+ *
  * @author Dmitrochencov Daniil
  * @version 1.0
  */

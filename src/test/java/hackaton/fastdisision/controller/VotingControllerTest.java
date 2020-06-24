@@ -26,11 +26,12 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author Daniil Dmitrochenkov
- * @version 1.2
+ * @version 1.3
  */
 @AutoConfigureMockMvc
 @Sql(scripts = {"classpath:create-user-before.sql", "classpath:create-votings-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -66,6 +67,7 @@ class VotingControllerTest extends BasicTest {
     @Test
     void getPublicVotingById() throws Exception {
         User votingOwner = userRepo.findById(votingsOwnerUserId).get();
+
         MvcResult mvcResult = mockMvc.perform(get("/voteApi/votings/{id}", commonVotingId))
                 .andDo(print())
                 .andDo(document("{ClassName}/{methodName}",
@@ -87,17 +89,17 @@ class VotingControllerTest extends BasicTest {
                         )
                 ))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(commonVotingId))
+                .andExpect(jsonPath("$.creationDate").doesNotHaveJsonPath())
+                .andExpect(jsonPath("$.isPrivateVoting").doesNotHaveJsonPath())
+                .andExpect(jsonPath("$.isCheckingIpVoting").doesNotHaveJsonPath())
+                .andExpect(jsonPath("$.votedIps").doesNotHaveJsonPath())
                 .andReturn();
 
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
         User user = mapper.readValue(responseObj.get("owner").toString(), User.class);
 
-        assertEquals(commonVotingId, (int) responseObj.get("id"), "voting id in request not compared to id in result!");
         assertEquals(user, votingOwner);
-        assertFalse(responseObj.has("creationDate"));
-        assertFalse(responseObj.has("isPrivateVoting"));
-        assertFalse(responseObj.has("votedIps"));
-
     }
 
     @Test
@@ -107,21 +109,23 @@ class VotingControllerTest extends BasicTest {
                 .with(user(votingOwner)).param("votingKey", wrongProtectedVotingKey))
                 .andDo(print())
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(protectedVotingId))
+                .andExpect(jsonPath("$.creationDate").doesNotHaveJsonPath())
+                .andExpect(jsonPath("$.isPrivateVoting").doesNotHaveJsonPath())
+                .andExpect(jsonPath("$.isCheckingIpVoting").doesNotHaveJsonPath())
+                .andExpect(jsonPath("$.votedIps").doesNotHaveJsonPath())
                 .andReturn();
 
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
         User user = mapper.readValue(responseObj.get("owner").toString(), User.class);
 
-        assertEquals(protectedVotingId, (int) responseObj.get("id"), "voting id in request not compared to id in result!");
         assertEquals(user, votingOwner);
-        assertFalse(responseObj.has("creationDate"));
-        assertFalse(responseObj.has("isPrivateVoting"));
-        assertFalse(responseObj.has("votedIps"));
     }
 
     @Test
     void getProtectedVotingById() throws Exception {
         User votingOwner = userRepo.findById(votingsOwnerUserId).get();
+
         MvcResult mvcResult = mockMvc.perform(get("/voteApi/votings/{id}", protectedVotingId).param("votingKey", rightProtectedVotingKey))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -146,6 +150,12 @@ class VotingControllerTest extends BasicTest {
                                 fieldWithPath("votingOptions[].pluses").description("voting option pluses.")
                         )
                 ))
+                .andExpect(jsonPath("$.id").value(protectedVotingId))
+                .andExpect(jsonPath("$.votingKey").doesNotHaveJsonPath())
+                .andExpect(jsonPath("$.creationDate").doesNotHaveJsonPath())
+                .andExpect(jsonPath("$.isPrivateVoting").doesNotHaveJsonPath())
+                .andExpect(jsonPath("$.isCheckingIpVoting").doesNotHaveJsonPath())
+                .andExpect(jsonPath("$.votedIps").doesNotHaveJsonPath())
                 .andReturn();
 
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
@@ -153,10 +163,6 @@ class VotingControllerTest extends BasicTest {
 
         assertEquals(protectedVotingId, (int) responseObj.get("id"), "voting id in request not compared to id in result!");
         assertEquals(user, votingOwner);
-        assertFalse(responseObj.has("votingKey"));
-        assertFalse(responseObj.has("creationDate"));
-        assertFalse(responseObj.has("isPrivateVoting"));
-        assertFalse(responseObj.has("votedIps"));
     }
 
     @Test
@@ -198,15 +204,15 @@ class VotingControllerTest extends BasicTest {
                                 fieldWithPath("votingOptions[].voteDiscription").description("Option discription."),
                                 fieldWithPath("votingOptions[].pluses").description("Option pluses(votes)."))
                 ))
+                .andExpect(jsonPath("$.votingTitle").value(requestVoting.get("votingTitle")))
+                .andExpect(jsonPath("$.isProtectedVoting").value(requestVoting.get("isProtectedVoting")))
+                .andExpect(jsonPath("$.votingOptions[0].voteDiscription").value(requestVotingOptions.get(0).get("voteDiscription")))
+                .andExpect(jsonPath("$.votingOptions[1].voteDiscription").value(requestVotingOptions.get(1).get("voteDiscription")))
+                .andExpect(jsonPath("$.votedIps").doesNotHaveJsonPath())
                 .andReturn();
+
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
         VotingDTO voting = mapper.readValue(responseObj.toString(), VotingDTO.class);
-
-        //check response
-        assertEquals(voting.getVotingTitle(), requestVoting.get("votingTitle"), "Wrong response voting title!");
-        assertEquals(voting.isProtectedVoting(), requestVoting.get("isProtectedVoting"), "Wrong response 'is protected voting'!");
-        assertEquals(voting.getVotingOptions().get(0).getVoteDiscription(), requestVotingOptions.get(0).get("voteDiscription"), "Wrong response first 'voting option disc'!");
-        assertEquals(voting.getVotingOptions().get(1).getVoteDiscription(), requestVotingOptions.get(1).get("voteDiscription"), "Wrong response sec 'voting option disc'!");
 
         Optional<Voting> votingOnServer = votingRepo.findById(voting.getId());
 

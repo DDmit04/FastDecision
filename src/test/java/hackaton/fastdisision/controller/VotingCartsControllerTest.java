@@ -26,11 +26,12 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author Daniil Dmitrochenkov
- * @version 1.2
+ * @version 1.3
  */
 @AutoConfigureMockMvc
 @Sql(scripts = {"classpath:create-user-before.sql", "classpath:create-votings-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -51,9 +52,14 @@ public class VotingCartsControllerTest extends BasicTest {
     private long votingId = 3;
     private String nonOwnerUserId = "4";
 
+    private User commonUser;
+    private User adminUser;
+    private User otherCommonUser;
+
     @Test
     void searchVotings() throws Exception {
         String searchString = "search";
+
         MvcResult mvcResult = mockMvc.perform(get("/voteApi/charts/search").param("search", searchString))
                 .andDo(print())
                 .andDo(document("{ClassName}/{methodName}",
@@ -85,16 +91,14 @@ public class VotingCartsControllerTest extends BasicTest {
                         )
                 ))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalElements").value(3))
+                .andExpect(jsonPath("$.numberOfElements").value(3))
                 .andReturn();
         
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
         List<VotingDTO> content = Arrays.asList(mapper.readValue(responseObj.get("content").toString(), VotingDTO[].class));
 
-        assertEquals( 3, (int)responseObj.get("totalElements"), "total elements count is wrong!");
-        assertEquals( 3, (int)responseObj.get("numberOfElements"), "number of elements is wrong!");
-        content.forEach(voting -> {
-            assertTrue(voting.getVotingTitle().contains(searchString), "voting title isn't contain searched string!");
-        });
+        content.forEach(voting -> assertTrue(voting.getVotingTitle().contains(searchString), "voting title isn't contain searched string!"));
     }
 
     @Test
@@ -125,12 +129,12 @@ public class VotingCartsControllerTest extends BasicTest {
                         )
                 ))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalElements").value(5))
+                .andExpect(jsonPath("$.numberOfElements").value(5))
                 .andReturn();
+
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
         List<VotingDTO> content = Arrays.asList(mapper.readValue(responseObj.get("content").toString(), VotingDTO[].class));
-
-        assertEquals(5, (int)responseObj.get("totalElements"), "total elements count is wrong!");
-        assertEquals(5, (int)responseObj.get("numberOfElements"), "number of elements is wrong!");
 
         for(int i = 0; i < content.size() - 1; i++) {
             // check ID's because API doesn't return CreationDate in response (change SQL file carefully!!!)
@@ -167,12 +171,12 @@ public class VotingCartsControllerTest extends BasicTest {
                         )
                 ))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalElements").value(5))
+                .andExpect(jsonPath("$.numberOfElements").value(5))
                 .andReturn();
+
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
         List<VotingDTO> content = Arrays.asList(mapper.readValue(responseObj.get("content").toString(), VotingDTO[].class));
-
-        assertEquals(5, (int)responseObj.get("totalElements"), "total elements count is wrong!");
-        assertEquals(5, (int)responseObj.get("numberOfElements"), "number of elements is wrong!");
 
         for(int i = 0; i < content.size() - 1; i++) {
             // change SQL file carefully!!!
@@ -182,7 +186,7 @@ public class VotingCartsControllerTest extends BasicTest {
 
     @Test
     void getUserPublic() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/voteApi/charts/userPublic/" + votingId))
+        mockMvc.perform(get("/voteApi/charts/userPublic/" + votingId))
                 .andDo(print())
                 .andDo(document("{ClassName}/{methodName}",
                         responseFields(
@@ -212,15 +216,14 @@ public class VotingCartsControllerTest extends BasicTest {
                         )
                 ))
                 .andExpect(status().isOk())
-                .andReturn();
-        JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
-        assertEquals(5, (int)responseObj.get("totalElements"), "total elements count is wrong!");
-        assertEquals(5, (int)responseObj.get("numberOfElements"), "number of elements is wrong!");
+                .andExpect(jsonPath("$.totalElements").value(5))
+                .andExpect(jsonPath("$.numberOfElements").value(5));
     }
 
     @Test
     void getUserPrivate() throws Exception {
-        User commonUser = userRepo.findById(commonUserID).get();
+        commonUser = userRepo.findById(commonUserID).get();
+
         MvcResult mvcResult = mockMvc.perform(get("/voteApi/charts/userPrivate/" + votingId).with(user(commonUser)))
                 .andDo(print())
                 .andDo(document("{ClassName}/{methodName}",
@@ -251,42 +254,44 @@ public class VotingCartsControllerTest extends BasicTest {
                         )
                 ))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalElements").value(2))
+                .andExpect(jsonPath("$.numberOfElements").value(2))
                 .andReturn();
 
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
         List<VotingDTO> content = Arrays.asList(mapper.readValue(responseObj.get("content").toString(), VotingDTO[].class));
 
-        assertEquals(2, (int)responseObj.get("totalElements"), "total elements count is wrong!");
-        assertEquals(2, (int)responseObj.get("numberOfElements"), "number of elements is wrong!");
         for(int i = 0; i < content.size() - 1; i++) {
             // change SQL file carefully!!!
-            assertTrue(content.get(i).getOwner().equals(commonUser), "user is not owner of it's public voitngs! (pay extra attantion to SQL and this test)");
+            assertEquals(content.get(i).getOwner(), commonUser, "user is not owner of it's public voitngs! (pay extra attantion to SQL and this test)");
         }
     }
 
     @Test
     void getUserPrivateByAdmin() throws Exception {
-        User commonUser = userRepo.findById(commonUserID).get();
-        User adminUser = userRepo.findById(adminUserID).get();
+        commonUser = userRepo.findById(commonUserID).get();
+        adminUser = userRepo.findById(adminUserID).get();
+
         MvcResult mvcResult = mockMvc.perform(get("/voteApi/charts/userPrivate/" + votingId).with(user(adminUser)))
                 .andDo(print())
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalElements").value(2))
+                .andExpect(jsonPath("$.numberOfElements").value(2))
                 .andReturn();
 
         JSONObject responseObj = new JSONObject(mvcResult.getResponse().getContentAsString());
         List<VotingDTO> content = Arrays.asList(mapper.readValue(responseObj.get("content").toString(), VotingDTO[].class));
 
-        assertEquals(2, (int)responseObj.get("totalElements"), "total elements count is wrong!");
-        assertEquals(2, (int)responseObj.get("numberOfElements"), "number of elements is wrong!");
         for(int i = 0; i < content.size() - 1; i++) {
             // change SQL file carefully!!!
-            assertTrue(content.get(i).getOwner().equals(commonUser), "user is not owner of it's public voitngs! (pay extra attantion to SQL and this test)");
+            assertEquals(content.get(i).getOwner(), commonUser, "user is not owner of it's public voitngs! (pay extra attantion to SQL and this test)");
         }
     }
 
     @Test
     void getUserPrivateByOtherUser() throws Exception {
-        User otherCommonUser = userRepo.findById(nonOwnerUserId).get();
+        otherCommonUser = userRepo.findById(nonOwnerUserId).get();
+
         mockMvc.perform(get("/voteApi/charts/userPrivate/" + votingId).with(user(otherCommonUser)))
                 .andDo(print())
                 .andExpect(status().isForbidden());
