@@ -197,6 +197,15 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>yarn fix depends</id>
+                        <goals>
+                            <goal>yarn</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>add -D vue-template-compiler@2.6.11</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>yarn build</id>
                         <goals>
                             <goal>yarn</goal>
