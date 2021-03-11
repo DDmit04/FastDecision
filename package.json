@@ -37,7 +37,7 @@
     "regenerator-runtime": "^0.13.5",
     "sockjs-client": "^1.4.0",
     "typescript": "^3.8.3",
-    "vue": "2.6.11",
+    "vue": "^2.6.12",
     "vue-awesome": "^3.5.4",
     "vue-css-donut-chart": "^1.1.6",
     "vue-i18n": "^8.16.0",
@@ -55,6 +55,7 @@
     "@babel/runtime-corejs3": "^7.9.2",
     "@types/jest": "^25.1.4",
     "@vue/test-utils": "^1.0.0-beta.32",
+    "add": "^2.0.6",
     "babel-jest": "^25.1.0",
     "babel-loader": "^8.0.6",
     "babel-preset-env": "^1.7.0",
@@ -72,11 +73,12 @@
     "vue-docgen-api": "^4.15.0",
     "vue-loader": "^15.9.2",
     "vue-styleguidist": "^4.15.0",
-    "vue-template-compiler": "^2.6.11",
+    "vue-template-compiler": "^2.6.12",
     "webpack": "^4.35.2",
     "webpack-cli": "^3.3.5",
     "webpack-dev-server": "^3.7.2",
-    "webpack-merge": "^4.2.1"
+    "webpack-merge": "^4.2.1",
+    "yarn": "^1.22.10"
   },
   "jest": {
     "verbose": true,
