@@ -80,14 +80,14 @@ public class VotingServiceImpl implements VotingService {
 
     @Override
     public Page<VotingDTO> getNewest(Pageable pageable) {
-        return votingRepo.findByIsPrivateVotingOrderByCreationDate(false, pageable);
+        return votingRepo.findByIsPrivateVoting(false, pageable);
     }
 
     @Override
     public Page<VotingDTO> getUserPublic(User user, Pageable pageable) {
         Page<VotingDTO> votings = new PageImpl<VotingDTO>(Collections.EMPTY_LIST, pageable, 0);
         if (user != null) {
-            votings = votingRepo.findByOwner_IdAndIsPrivateVotingOrderByCreationDate(user.getId(), false, pageable);
+            votings = votingRepo.findByOwner_IdAndIsPrivateVoting(user.getId(), false, pageable);
         }
         return votings;
     }
@@ -96,7 +96,7 @@ public class VotingServiceImpl implements VotingService {
     public Page<VotingDTO> getUserPrivate(User user, User currentUser, Pageable pageable) throws AccessDeniedException {
         Page<VotingDTO> votings = new PageImpl<VotingDTO>(Collections.EMPTY_LIST, pageable, 0);
         if (user != null && (user.equals(currentUser) || currentUser.isAdmin())) {
-            votings = votingRepo.findByOwner_IdAndIsPrivateVotingOrderByCreationDate(user.getId(), true, pageable);
+            votings = votingRepo.findByOwner_IdAndIsPrivateVoting(user.getId(), true, pageable);
         } else {
             throw new AccessDeniedException("You can access this section!");
         }

@@ -54,8 +54,9 @@ public interface VotingRepo extends CrudRepository<Voting, Long> {
      * @return page of votings DTO
      * @see VotingDTO
      */
+    //findByIsPrivateVotingOrderByCreationDate
     @EntityGraph(value = "votingGraphWithOwner")
-    Page<VotingDTO> findByIsPrivateVotingOrderByCreationDate(boolean isPrivate, Pageable pageable);
+    Page<VotingDTO> findByIsPrivateVoting(boolean isPrivate, Pageable pageable);
 
     /**
      * returns page of user votings DTO ordered by creation date
@@ -67,7 +68,7 @@ public interface VotingRepo extends CrudRepository<Voting, Long> {
      * @see VotingDTO
      */
     @EntityGraph(value = "votingGraphWithOwner")
-    Page<VotingDTO> findByOwner_IdAndIsPrivateVotingOrderByCreationDate(String id, boolean isPrivate, Pageable pageable);
+    Page<VotingDTO> findByOwner_IdAndIsPrivateVoting(String id, boolean isPrivate, Pageable pageable);
 
     /**
      * returns page of votings DTO which titles contains searched string
